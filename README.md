@@ -1,4 +1,4 @@
-# Project: Lower Silesia Attractions
+# Lower Silesia Attractions
 
 ## Authors:
 
