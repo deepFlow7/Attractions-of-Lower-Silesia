@@ -1,3 +1,5 @@
+--USAGE: psql -f skrypt_bazowy.sql
+
 CREATE DATABASE maps;
 
 \c maps
