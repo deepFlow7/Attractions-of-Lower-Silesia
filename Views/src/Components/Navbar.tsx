@@ -1,3 +1,4 @@
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -6,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
-import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects'; // Dodajemy import ikony EmojiObjectsIcon
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 
 const Navbar = () => {
   return (
@@ -33,11 +34,9 @@ const Navbar = () => {
           <ThumbUpAltIcon />
         </IconButton>
         <IconButton color="inherit">
-        <IconButton color="inherit">
           <EmojiObjectsIcon />
         </IconButton>
-</IconButton>
-
+        <Button color="inherit">Zaloguj</Button> {/* Dodajemy przycisk logowania */}
       </Toolbar>
     </AppBar>
   );
