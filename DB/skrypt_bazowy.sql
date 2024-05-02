@@ -65,6 +65,19 @@ CREATE TABLE rankings (
     attraction_id INTEGER NOT NULL REFERENCES attractions(id)
 );
 
+CREATE TABLE challenges (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL DEFAULT 'Amazing challenge',
+    description TEXT NOT NULL,
+    points INTEGER NOT NULL DEFAULT 10
+);
+
+CREATE TABLE challenge_attractions (
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id)
+)
+
+
 -- Inserting sample data into the attractions table
 INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) 
 VALUES 
