@@ -13,7 +13,6 @@ const AttractionView: React.FC<AttractionViewProps> = ({ attraction, comments })
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        {/* Dodajemy wyświetlanie nazwy atrakcji */}
         <Typography variant="h4" gutterBottom>{name}</Typography>
       </Grid>
       
