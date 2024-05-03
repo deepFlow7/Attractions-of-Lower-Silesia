@@ -100,7 +100,19 @@ AFTER INSERT OR UPDATE OR DELETE ON challenges_finished
 FOR EACH STATEMENT
 EXECUTE FUNCTION update_total_amount();
 
+CREATE OR REPLACE FUNCTION insert_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO rankings(user_id) VALUES (NEW.id);
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE TRIGGER users_trigger
+AFTER INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION insert_new_user();
 
 
 -- Inserting sample data into the attractions table
@@ -142,11 +154,6 @@ VALUES
   ('First challenge'),
   ('Second challenge'),
   ('Third challenge');
-
--- Initialize rankings
-INSERT INTO rankings (user_id)
-SELECT id FROM users;
-
 
 -- Inserting sample data into the challenges_finished table
 INSERT INTO challenges_finished (user_id, challenge_id) 
