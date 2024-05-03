@@ -236,39 +236,12 @@ class db_api {
     }
 
     //------RANKINGS--------
-    async add_user_ranking(user_id, points, attraction_id) {
+    async get_user_ranking(user_id) {
         try {
-            await pool.query('INSERT INTO rankings (user_id, points, attraction_id) VALUES ($1, $2, $3)', [user_id, points, attraction_id]);
-        } catch (error) {
-            console.error('Error adding user ranking:', error);
-            throw error;
-        }
-    }
-
-    async get_user_ranking(user_id, attraction_id) {
-        try {
-            const { rows } = await pool.query('SELECT * FROM rankings WHERE user_id = $1 AND attraction_id = $2', [user_id, attraction_id]);
+            const { rows } = await pool.query('SELECT * FROM rankings WHERE user_id = $1', [user_id]);
             return rows[0];
         } catch (error) {
             console.error('Error fetching user ranking:', error);
-            throw error;
-        }
-    }
-
-    async edit_ranking(user_id, attraction_id, points) {
-        try {
-            await pool.query('UPDATE rankings SET points = $1 WHERE user_id = $2 AND attraction_id = $3', [points, user_id, attraction_id]);
-        } catch (error) {
-            console.error("Error updating ranking:", error);
-            throw error;
-        }
-    }
-
-    async delete_ranking(user_id, attraction_id) {
-        try {
-            await pool.query('DELETE FROM rankings WHERE user_id = $1 AND attraction_id = $2', [user_id, attraction_id]);
-        } catch (error) {
-            console.error('Error deleting ranking:', error);
             throw error;
         }
     }
@@ -329,6 +302,15 @@ class db_api {
             await pool.query('DELETE FROM challenge_attractions WHERE challenge_id = $1 AND attraction_id = $2', [challenge_id, attraction_id]);
         } catch (error) {
             console.error('Error deleting challenge attraction:', error);
+            throw error;
+        }
+    }
+
+    async finish_challenge(challenge_id,user_id){
+        try {
+            await pool.query('INSERT INTO challenges_finished (challenge_id, user_id) VALUES ($1, $2)', [challenge_id, user_id]);
+        } catch (error) {
+            console.error("Error finishing challenge:", error);
             throw error;
         }
     }
