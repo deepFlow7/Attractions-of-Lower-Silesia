@@ -61,8 +61,7 @@ CREATE TABLE comments (
 
 CREATE TABLE rankings (
     user_id INTEGER REFERENCES users(id),
-    points INTEGER NOT NULL DEFAULT 0,
-    attraction_id INTEGER NOT NULL REFERENCES attractions(id)
+    points INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE challenges (
@@ -72,10 +71,36 @@ CREATE TABLE challenges (
     points INTEGER NOT NULL DEFAULT 10
 );
 
+CREATE TABLE challenges_finished (
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id)
+);
+
 CREATE TABLE challenge_attractions (
     challenge_id INTEGER NOT NULL REFERENCES challenges(id),
     attraction_id INTEGER NOT NULL REFERENCES attractions(id)
-)
+);
+
+CREATE OR REPLACE FUNCTION update_total_amount()
+RETURNS TRIGGER AS $$
+DECLARE
+  row RECORD;
+BEGIN
+    FOR row IN SELECT id FROM users LOOP
+      UPDATE rankings
+      SET points = (SELECT SUM(points) FROM challenges_finished JOIN challenges ON challenge_id=id WHERE user_id=row.id)
+      WHERE user_id=row.id;
+    END LOOP;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ranking_trigger
+AFTER INSERT OR UPDATE OR DELETE ON challenges_finished
+FOR EACH STATEMENT
+EXECUTE FUNCTION update_total_amount();
+
+
 
 
 -- Inserting sample data into the attractions table
@@ -111,12 +136,24 @@ VALUES
   (2, 'I love this castle!', 8, 2),
   (1, 'Amazing history here.', 5, 3);
 
--- Inserting sample data into the rankings table
-INSERT INTO rankings (user_id, points, attraction_id) 
+-- Inserting sample data into the challenges table
+INSERT INTO challenges (description) 
 VALUES 
-  (1, 100, 1),
-  (2, 80, 2),
-  (1, 90, 3);
+  ('First challenge'),
+  ('Second challenge'),
+  ('Third challenge');
+
+-- Initialize rankings
+INSERT INTO rankings (user_id)
+SELECT id FROM users;
+
+
+-- Inserting sample data into the challenges_finished table
+INSERT INTO challenges_finished (user_id, challenge_id) 
+VALUES 
+  (1, 1),
+  (2, 2),
+  (1, 3);
 
 
 
