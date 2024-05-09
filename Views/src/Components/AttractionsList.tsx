@@ -1,16 +1,18 @@
 import React from 'react';
 import { List, ListItem, ListItemText } from '@mui/material';
+import { Attraction } from '../types'; // Importujemy interfejs Attraction
 
 interface ListProps {
-  items: string[];
+  items: Attraction[]; // Zmiana typu listy na Attraction[]
 }
 
 const AttractionsList: React.FC<ListProps> = ({ items }) => {
   return (
     <List>
-      {items.map((item, index) => (
+      {items.map((attraction, index) => (
         <ListItem key={index}>
-          <ListItemText primary={item} />
+          {/* Wyświetlamy nazwę atrakcji */}
+          <ListItemText primary={attraction.name} />
         </ListItem>
       ))}
     </List>
