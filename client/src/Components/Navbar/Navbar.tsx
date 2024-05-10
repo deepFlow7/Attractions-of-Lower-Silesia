@@ -7,10 +7,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <AppBar position="static">
+    <AppBar className='navbar' position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Atrakcje Dolnego Śląska

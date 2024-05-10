@@ -1,0 +1,1 @@
+{"name":"app","version":"0.1.0","private":true,"scripts":{"dev":"(xterm -T server -e node server/index.js)&\n cd client \n (xterm -T client -e npm run start)& \n cd .."},"dependencies":{"react-router-dom":"^6.23.0"}}
