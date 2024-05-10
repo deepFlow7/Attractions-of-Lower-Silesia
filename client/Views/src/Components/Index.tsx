@@ -2,7 +2,6 @@ import Navbar from './Components/Navbar'
 import Filter from './Components/Filter'
 import Map from './Components/Map'
 import AtractionsList from './Components/AttractionsList'
-import './Index.css'
 
 function handleFilterChange() {}
 
