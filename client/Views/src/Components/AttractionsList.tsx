@@ -9,6 +9,7 @@ interface ListProps {
 const AttractionsList: React.FC<ListProps> = ({ items }) => {
   return (
     <List>
+      Lista Atrakcji
       {items.map((attraction, index) => (
         <ListItem key={index}>
           {/* Wyświetlamy nazwę atrakcji */}
