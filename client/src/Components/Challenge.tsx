@@ -7,7 +7,6 @@ import { Challenge, Ranking } from '../types';
 const ChallengeView: React.FC<{ rankings: Ranking[]; challenge: Challenge }> = ({ rankings, challenge }) => {
   return (
     <div>
-      <Map/>
       <AttractionsList items={challenge.attractions} />
       <RankingTable rankings={rankings} />
     </div>

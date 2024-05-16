@@ -1,9 +1,14 @@
 import React from 'react'
-import Filter from './Filter.tsx'
-import Map from './Map/Map.tsx'
-import AtractionsList from './AttractionsList.tsx'
+import Filter from './Filter'
+import Map from './Map'
+import AttractionsList from './AttractionsList'
+import { Attraction } from '../types';
 
-function handleFilterChange() {}
+interface HomeProps {
+  attractions: Attraction[]; 
+  filterOptions: string[]; 
+}
+
 
 
   const x = 51.1079;
@@ -11,15 +16,18 @@ function handleFilterChange() {}
 
 
 
-function Home() {
+function Home({ attractions, filterOptions} : HomeProps) {
+  function handleFilterChange() {
+  // Tutaj można dodać logikę obsługi zmiany filtru, jeśli jest potrzebna
+  }
   return (
     <>
-    <Map x={x} y={y} />
+      <Map x={x} y={y} />
       <Filter
-        options={['Opcja 1', 'Opcja 2', 'Opcja 3']}
+        options={filterOptions}
         onChange={handleFilterChange}
       />
-        <AtractionsList items={[]} /> 
+      <AttractionsList items={attractions} />
     
     </>
   )

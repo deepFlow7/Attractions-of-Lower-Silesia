@@ -3,7 +3,7 @@ import { Grid, Typography, Card, CardContent, List, ListItem, ListItemText } fro
 import { Attraction, Comment } from '../types';
 
 interface AttractionViewProps {
-  attraction: Attraction;
+  attraction: Attraction;  // To powinno być wzięte z kontekstu
   comments: Comment[];
 }
 

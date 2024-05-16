@@ -7,7 +7,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
-import './Navbar.css';
+
+
+
 
 const Navbar = () => {
   return (
@@ -26,7 +28,9 @@ const Navbar = () => {
           }
           sx={{ mr: 2, flexGrow: 1 }}
         />
-        <Button color="inherit">Wyzwanie</Button>
+        <Button color="inherit">
+          Wyzwanie
+        </Button>
         <IconButton color="inherit">
           <SettingsIcon />
         </IconButton>
@@ -36,7 +40,9 @@ const Navbar = () => {
         <IconButton color="inherit">
           <EmojiObjectsIcon />
         </IconButton>
-        <Button color="inherit">Zaloguj</Button> {/* Dodajemy przycisk logowania */}
+        <Button color="inherit">
+          Zaloguj
+        </Button> 
       </Toolbar>
     </AppBar>
   );
