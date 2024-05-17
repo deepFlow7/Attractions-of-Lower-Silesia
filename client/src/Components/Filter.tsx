@@ -1,9 +1,27 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import React, { useState } from 'react';
+import { Typography, FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
 
 interface FilterProps {
   options: string[];
   onChange: (selectedOptions: string[]) => void;
 }
+
+const StyledCard = styled(Card)`
+  padding: 16px;
+`;
+
+const Title = styled(Typography)`
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 16px;
+`;
+
+const StyledFormControlLabel = styled(FormControlLabel)`
+  display: block;
+`;
 
 const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -17,21 +35,25 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   };
 
   return (
-    <div>
-      Filtrowanie
-      {options.map((option) => (
-        <div key={option}>
-          <input
-            type="checkbox"
-            id={option}
-            value={option}
-            checked={selectedOptions.includes(option)}
-            onChange={() => handleCheckboxChange(option)}
+    <StyledCard>
+      <CardContent>
+        <Title variant="h5">Filtrowanie</Title>
+        {options.map((option) => (
+          <StyledFormControlLabel
+            key={option}
+            control={
+              <Checkbox
+                checked={selectedOptions.includes(option)}
+                onChange={() => handleCheckboxChange(option)}
+                name={option}
+                color="primary"
+              />
+            }
+            label={option}
           />
-          <label htmlFor={option}>{option}</label>
-        </div>
-      ))}
-    </div>
+        ))}
+      </CardContent>
+    </StyledCard>
   );
 };
 

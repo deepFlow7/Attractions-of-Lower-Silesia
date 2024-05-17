@@ -20,7 +20,7 @@ const Title = styled(Typography)`
 `;
 
 const Container = styled.div`
-  margin: 0 2%;
+  margin: 1.5% 1.5%;
 `;
 
 const AttractionView: React.FC<AttractionViewProps> = ({ attraction, comments }) => {

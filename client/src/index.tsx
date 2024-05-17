@@ -49,6 +49,27 @@ const data={
       description:"Greatest challenge of them all",
       points:100,
       attractions: [],
+    },
+    {
+      id:0,
+      name:"Great challenge1",
+      description:"Greatest challenge of them all",
+      points:100,
+      attractions: [],
+    },
+    {
+      id:0,
+      name:"Great challenge2",
+      description:"Greatest challenge of them all",
+      points:100,
+      attractions: [],
+    },
+    {
+      id:0,
+      name:"Great challenge3",
+      description:"Greatest challenge of them all",
+      points:100,
+      attractions: [],
     }
   ],
   username: "Joe",
