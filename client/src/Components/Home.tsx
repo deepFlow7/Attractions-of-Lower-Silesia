@@ -15,6 +15,10 @@ interface HomeProps {
 const TileCard = styled(Card)`
   margin: 1%;
 `;
+const Container = styled.div`
+  margin: 1% 1%;
+`;
+
 
 const Home: React.FC<HomeProps> = ({ attractions, filterOptions }) => {
   const x = 51.1079;
@@ -25,27 +29,29 @@ const Home: React.FC<HomeProps> = ({ attractions, filterOptions }) => {
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <TileCard>
-          <Map x={x} y={y} />
-        </TileCard>
-      </Grid>
+    <Container>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={5}>
+          <TileCard>
+            <Map x={x} y={y} />
+          </TileCard>
+        </Grid>
 
-      <Grid item xs={12} md={4}>
-        <TileCard>
-          <AttractionsList items={attractions} />
-        </TileCard>
+        <Grid item xs={12} md={4}>
+          <TileCard>
+            <AttractionsList items={attractions} />
+          </TileCard>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TileCard>
+            <Filter
+              options={filterOptions}
+              onChange={handleFilterChange}
+            />
+          </TileCard>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={2}>
-        <TileCard>
-          <Filter
-            options={filterOptions}
-            onChange={handleFilterChange}
-          />
-        </TileCard>
-      </Grid>
-    </Grid>
+    </Container>
   );
 };
 
