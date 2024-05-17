@@ -91,6 +91,42 @@ class db_api {
         }
     }
 
+    //----FAVOURITES-------
+    async change_favourite(user_id,attr_id,fav){
+        try {
+            await pool.query('INSERT INTO favourites (user_id, attraction_id, favourite) VALUES ($1,$2,$3) \
+                                ON CONFLICT UPDATE favourites SET favourite = $3 WHERE user_id=$1 attraction_id=$2'[user_id,attr_id,fav]);
+        } catch (error){
+            console.error('Error setting favourite: ', error);
+            throw error;
+        }
+    }
+    async add_to_favourites(user_id, attr_id) {
+        try { 
+            await this.change_favourite(user_id,attr_id,true);
+        } catch (error){
+            throw error;
+        }
+    }
+
+    async remove_from_favourites(user_id,attr_id){
+        try{
+            await this.change_favourite(user_id,attr_id,false);
+        } catch(error){
+            throw error;
+        }
+    }
+
+    async set_thoughts(user_id, attr_id, thought){
+        try {
+            await pool.query('INSERT INTO favourites (user_id, attraction_id, interest) VALUES ($1,$2,$3) \
+                                ON CONFLICT UPDATE favourites SET interest = $3 WHERE user_id=$1 attraction_id=$2'[user_id,attr_id,thought]);
+        } catch (error){
+            console.error('Error setting thought: ', error);
+            throw error;
+        }
+    }
+
     //----ATTRACTIONS------
     async new_attraction(name, coords, type, subtype, interactivity, time_it_takes, rating, description) {
         try {

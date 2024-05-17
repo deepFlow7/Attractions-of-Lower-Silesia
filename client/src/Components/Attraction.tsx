@@ -3,7 +3,7 @@ import { Grid, Typography, Card, CardContent, List, ListItem, ListItemText } fro
 import { Attraction, Comment } from '../types';
 
 interface AttractionViewProps {
-  attraction: Attraction;
+  attraction: Attraction;  // To powinno być wzięte z kontekstu
   comments: Comment[];
 }
 
@@ -13,7 +13,6 @@ const AttractionView: React.FC<AttractionViewProps> = ({ attraction, comments })
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        {/* Dodajemy wyświetlanie nazwy atrakcji */}
         <Typography variant="h4" gutterBottom>{name}</Typography>
       </Grid>
       

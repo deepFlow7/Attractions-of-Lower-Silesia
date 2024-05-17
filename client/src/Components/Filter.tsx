@@ -18,6 +18,7 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
 
   return (
     <div>
+      Filtrowanie
       {options.map((option) => (
         <div key={option}>
           <input

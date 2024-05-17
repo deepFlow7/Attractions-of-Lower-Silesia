@@ -8,9 +8,12 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 
+
+
+
 const Navbar = () => {
   return (
-    <AppBar position="static">
+    <AppBar className='navbar' position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Atrakcje Dolnego Śląska
@@ -25,7 +28,9 @@ const Navbar = () => {
           }
           sx={{ mr: 2, flexGrow: 1 }}
         />
-        <Button color="inherit">Wyzwanie</Button>
+        <Button color="inherit">
+          Wyzwanie
+        </Button>
         <IconButton color="inherit">
           <SettingsIcon />
         </IconButton>
@@ -35,7 +40,9 @@ const Navbar = () => {
         <IconButton color="inherit">
           <EmojiObjectsIcon />
         </IconButton>
-        <Button color="inherit">Zaloguj</Button> {/* Dodajemy przycisk logowania */}
+        <Button color="inherit">
+          Zaloguj
+        </Button> 
       </Toolbar>
     </AppBar>
   );

@@ -47,5 +47,15 @@ export interface Ranking {
   points: number;
 }
 
-export type possible_type = "Type1" | "Type2" | "Type3";
-export type subtypes = "Subtype1" | "Subtype2" | "Subtype3";
+export interface Challenge {
+  id: number;
+  name: string;
+  description: string;
+  points: number;
+  attractions: Attraction[];
+}
+
+
+export type possible_type = "Type1" | "Type2" | "Type3" | "Muzeum" | "Park Rozrywki";
+export type subtypes = "Subtype1" | "Subtype2" | "Subtype3" | "Historia" | "Rozrywka";
+

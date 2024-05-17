@@ -41,6 +41,16 @@ CREATE TABLE users (
     mail TEXT UNIQUE NOT NULL DEFAULT 'jan@kowalski.com'
 );
 
+CREATE TYPE thoughts AS ENUM ('been there', 'want to visit', 'indifferent', 'not interested');
+
+CREATE TABLE favourites (
+  user_id INTEGER REFERENCES users(id);
+  attraction_id INTEGER REFERENCES attractions(id);
+  favourite BOOLEAN NOT NULL DEFAULT false;
+  interest thoughts NOT NULL DEFAULT 'indifferent';
+  UNIQE (user_id,attraction_id);
+);
+
 CREATE TYPE role AS ENUM ('admin','user');
 
 CREATE TABLE logins (
