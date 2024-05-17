@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button, MenuItem } from '@mui/material';
+import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/material';
 import { Attraction, Photo, possible_type, subtypes } from '../types';
+import styled from '@emotion/styled';
+
+
+const FormContainer = styled.div`
+  max-width: 600px;
+  margin: 4% auto; 
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
 
 interface NewAttractionFormProps {
   onSubmit: (attraction: Attraction) => void;
@@ -58,6 +69,7 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
   };
 
   return (
+    <FormContainer>
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant="h4" gutterBottom>Nowa Atrakcja</Typography>
@@ -100,7 +112,9 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
           ))}
           <Grid item>
             <TextField fullWidth label="URL Zdjęcia" value={photoUrls[photos.length] || ''} onChange={(e) => setPhotoUrls([...photoUrls.slice(0, photos.length), e.target.value])} />
+            <Box mt={2}/>
             <TextField fullWidth label="Podpis Zdjęcia" value={photoCaptions[photos.length] || ''} onChange={(e) => setPhotoCaptions([...photoCaptions.slice(0, photos.length), e.target.value])} />
+            <Box mt={2}/>
             <Button variant="contained" onClick={handleAddPhoto}>Dodaj Zdjęcie</Button>
           </Grid>
         </Grid>
@@ -109,6 +123,7 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
         <Button variant="contained" color="primary" onClick={handleSubmit}>Zapisz Atrakcję</Button>
       </Grid>
     </Grid>
+    </FormContainer>
   );
 };
 

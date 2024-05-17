@@ -37,7 +37,6 @@ const ChallengeView: React.FC<ChallengeViewProps> = ({ rankings, challenge }) =>
         <Grid item xs={12} md={5}>
           <Section>
             <CardContent>
-              <Title variant="h5">Mapa</Title>
               <Map x={x} y={y} />
             </CardContent>
           </Section>
