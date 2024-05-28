@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
-import React from 'react';
+import React,{useEffect,useState} from 'react';
+import axios from 'axios';
 import { Grid, Card } from '@mui/material';
 import Filter from './Filter';
 import Map from './Map';
@@ -8,8 +9,6 @@ import AttractionsList from './AttractionsList';
 import { Attraction } from '../types';
 
 interface HomeProps {
-  attractions: Attraction[];
-  filterOptions: string[];
 }
 
 const TileCard = styled(Card)`
@@ -20,9 +19,25 @@ const Container = styled.div`
 `;
 
 
-const Home: React.FC<HomeProps> = ({ attractions, filterOptions }) => {
+const Home: React.FC<HomeProps> = () => {
+    const filterOptions=["ladne", "nieladne", "a"];
   const x = 51.1079;
   const y = 17.0385;
+  const [attractions,setAttractions] = useState<Attraction[]|null>(null);
+
+    useEffect(() => {
+        axios.get('/api/attractions')
+            .then(response => {
+            setAttractions(response.data);
+            })
+            .catch(error => {
+            console.error('There was an error fetching the data!', error);
+            });
+    }, []);
+
+    if(!attractions){
+        return <div> Loading...</div>;
+    }
 
   function handleFilterChange() {
     // Tutaj można dodać logikę obsługi zmiany filtru, jeśli jest potrzebna
@@ -39,7 +54,7 @@ const Home: React.FC<HomeProps> = ({ attractions, filterOptions }) => {
 
         <Grid item xs={12} md={4}>
           <TileCard>
-            <AttractionsList items={attractions} />
+            <AttractionsList attractions={attractions} type_filter={filterOptions}/>
           </TileCard>
         </Grid>
         <Grid item xs={12} md={3}>
