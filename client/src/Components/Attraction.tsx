@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import { Grid, Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
-import { Attraction, Comment } from '../types';
+import { Attraction, Comment, Photo } from '../types';
 
 interface AttractionViewProps {
-  attraction: Attraction;  // To powinno być wzięte z kontekstu
-  comments: Comment[];
+    attraction: Attraction;  
+    comments: Comment[];
 }
 
 const TileCard = styled(Card)`
@@ -23,19 +25,41 @@ const Container = styled.div`
   margin: 1.5% 1.5%;
 `;
 
-const AttractionView: React.FC<AttractionViewProps> = ({ attraction, comments }) => {
-  const { name, photos, type, subtype, description, interactivity, time_it_takes, rating } = attraction;
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+const AttractionView: React.FC = () => {
+    const [attr_info, setAttractionInfo] = useState<AttractionViewProps | null>(null);
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
-  const handleNextPhoto = () => {
-    setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
-  };
+    const {id} = useParams();
 
-  const handlePreviousPhoto = () => {
-    setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
-  };
+    const handleNextPhoto = (photos:Photo[]) => {
+        setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
+    };
+    
+    const handlePreviousPhoto = (photos:Photo[]) => {
+        setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
+    };
 
-  return (
+    useEffect(() => {
+        axios.get('/api/attraction/'+id)
+            .then(response => {
+            setAttractionInfo(response.data);
+            })
+            .catch(error => {
+            console.error('There was an error fetching the data!', error);
+            });
+    }, []);
+
+    if(!attr_info){
+        return <div>Loading...</div>;
+    }
+    const {attraction, comments} = attr_info;
+    
+    const { name, photos, type, subtype, description, interactivity, time_it_takes, rating } = attraction;
+    
+    
+    
+    
+    return (
     <Container>
       <Grid container spacing={2}>
        
@@ -53,10 +77,10 @@ const AttractionView: React.FC<AttractionViewProps> = ({ attraction, comments })
                     <Typography variant="caption">{photos[currentPhotoIndex].caption}</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Button onClick={handlePreviousPhoto} variant="contained" color="primary" fullWidth>Poprzednie</Button>
+                    <Button onClick={()=>handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
                   </Grid>
                   <Grid item xs={6}>
-                    <Button onClick={handleNextPhoto} variant="contained" color="primary" fullWidth>Następne</Button>
+                    <Button onClick={()=>handleNextPhoto(photos)} variant="contained" color="primary" fullWidth>Następne</Button>
                   </Grid>
                 </Grid>
               </CardContent>
