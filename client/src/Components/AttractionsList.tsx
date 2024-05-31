@@ -1,12 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React from 'react';
-import { List, ListItem, ListItemText, Typography } from '@mui/material';
-import { Attraction } from '../types'; // Importujemy interfejs Attraction
+import React,{useState, useEffect} from 'react';
+import axios from 'axios';
+import { Button, List, ListItem, ListItemText, Typography } from '@mui/material';
+import {Link} from 'react-router-dom';
+import { possible_type, Attraction } from '../types'; // Importujemy interfejs Attraction
 
 interface ListProps {
-  items: Attraction[]; // Zmiana typu listy na Attraction[]
+    attractions: Attraction[];
+  type_filter?: possible_type[];
 }
 
 const StyledList = styled(List)`
@@ -26,14 +29,19 @@ const Title = styled(Typography)`
   font-weight: bold;
 `;
 
-const AttractionsList: React.FC<ListProps> = ({ items }) => {
+
+const AttractionsList: React.FC<ListProps> = ({attractions,type_filter}) => {
+
+    
   return (
     <StyledList>
       <Title variant="h5">Lista Atrakcji</Title>
-      {items.map((attraction, index) => (
-        <StyledListItem key={index}>
-          <ListItemText primary={attraction.name} />
-        </StyledListItem>
+      {attractions.filter((attraction)=>true).map((attraction) => (
+        <Button component={Link} to={"/attraction/"+attraction.id} color="inherit">
+            <StyledListItem key={attraction.id}>
+                <ListItemText primary={attraction.name} />
+            </StyledListItem>
+        </Button>
       ))}
     </StyledList>
   );

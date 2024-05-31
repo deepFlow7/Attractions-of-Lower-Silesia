@@ -44,11 +44,11 @@ CREATE TABLE users (
 CREATE TYPE thoughts AS ENUM ('been there', 'want to visit', 'indifferent', 'not interested');
 
 CREATE TABLE favourites (
-  user_id INTEGER REFERENCES users(id);
-  attraction_id INTEGER REFERENCES attractions(id);
-  favourite BOOLEAN NOT NULL DEFAULT false;
-  interest thoughts NOT NULL DEFAULT 'indifferent';
-  UNIQE (user_id,attraction_id);
+  user_id INTEGER REFERENCES users(id),
+  attraction_id INTEGER REFERENCES attractions(id),
+  favourite BOOLEAN NOT NULL DEFAULT false,
+  interest thoughts NOT NULL DEFAULT 'indifferent',
+  UNIQUE (user_id,attraction_id)
 );
 
 CREATE TYPE role AS ENUM ('admin','user');
@@ -167,6 +167,13 @@ VALUES
 
 -- Inserting sample data into the challenges_finished table
 INSERT INTO challenges_finished (user_id, challenge_id) 
+VALUES 
+  (1, 1),
+  (2, 2),
+  (1, 3);
+
+-- Inserting sample data into the challenges_attractions table
+INSERT INTO challenge_attractions (challenge_id, attraction_id) 
 VALUES 
   (1, 1),
   (2, 2),

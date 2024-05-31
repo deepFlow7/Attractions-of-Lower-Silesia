@@ -1,17 +1,19 @@
+
+import React,{useState,useEffect} from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React from 'react';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
+
 import Map from './Map';
 import AttractionsList from './AttractionsList';
 import RankingTable from './Ranking';
-import { Challenge, Ranking } from '../types';
+import { Challenge } from '../types';
 
-interface ChallengeViewProps {
-  rankings: Ranking[];
-  challenge: Challenge;
-}
+
+
 
 const Container = styled.div`
   padding: 20px;
@@ -30,6 +32,22 @@ const Title = styled(Typography)`
 const ChallengeView: React.FC<ChallengeViewProps> = ({ rankings, challenge }) => {
   const x = 51.1079;
   const y = 17.0385;
+  const [challenge, setChallenge] = useState<Challenge|null>(null);
+
+  const {id} = useParams();
+
+  useEffect(() => {
+    axios.get('/api/challenge/'+id)
+      .then(response => {
+        setChallenge(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+  }, []);
+
+  if(!challenge){return <div>Loading...</div>;}
+   
 
   return (
     <Container>
@@ -52,7 +70,7 @@ const ChallengeView: React.FC<ChallengeViewProps> = ({ rankings, challenge }) =>
           <Section>
             <CardContent>
               <Title variant="h5">Ranking</Title>
-              <RankingTable rankings={rankings} />
+              <RankingTable />
             </CardContent>
           </Section>
         </Grid>
