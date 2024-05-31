@@ -11,9 +11,29 @@ ALTER ROLE pg SET timezone TO 'UTC';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO pg;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO pg;
 
--- TODO: rethink types and subtypes
 CREATE TYPE possible_type as ENUM ('natura', 'urbanistyka');
-CREATE TYPE subtypes as ENUM ('park','zamek','ruiny'); 
+CREATE TYPE subtypes AS ENUM (
+    'zamek',
+    'kościół',
+    'muzeum',
+    'szczyt górski',
+    'formacja skalna',
+    'kopalnia',
+    'jaskinia',
+    'twierdza',
+    'sanktuarium',
+    'wodospad',
+    'ruiny',
+    'kompleks podziemny',
+    'ogród botaniczny',
+    'zabytek architektury',
+    'ogród',
+    'makieta kolejowa',
+    'centrum edukacyjne',
+    'ogród zoologiczny',
+    'zbiorniki wodne',
+    'bazylika'
+);
 
 CREATE TABLE attractions (
     id SERIAL PRIMARY KEY,
@@ -123,61 +143,3 @@ CREATE OR REPLACE TRIGGER users_trigger
 AFTER INSERT ON users
 FOR EACH ROW
 EXECUTE FUNCTION insert_new_user();
-
-
--- Inserting sample data into the attractions table
-INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) 
-VALUES 
-  ('Central Park', POINT(40.785091, -73.968285), 'natura', 'park', 8, 120, 4.5, 'A beautiful park in the heart of New York City.'),
-  ('Wawel Castle', POINT(50.054622, 19.937156), 'urbanistyka', 'zamek', 7, 90, 4.7, 'Historic castle located in Krakow, Poland.'),
-  ('Roman Forum', POINT(41.892166, 12.485004), 'urbanistyka', 'ruiny', 6, 60, 4.3, 'Ancient ruins of the Roman Forum in Rome, Italy.');
-
--- Inserting sample data into the photos table
-INSERT INTO photos (attraction_id, caption) 
-VALUES 
-  (1, 'Beautiful scenery of Central Park.'),
-  (2, 'A breathtaking view of Wawel Castle.'),
-  (3, 'Amazing ancient ruins of the Roman Forum.');
-
--- Inserting sample data into the users table
-INSERT INTO users (name, surname, mail) 
-VALUES 
-  ('John', 'Doe', 'john.doe@example.com'),
-  ('Alice', 'Smith', 'alice.smith@example.com');
-
--- Inserting sample data into the logins table
-INSERT INTO logins (user_id, login, password, role) 
-VALUES 
-  (1, 'johndoe', 'password123', 'admin'),
-  (2, 'alicesmith', 'password456', 'user');
-
--- Inserting sample data into the comments table
-INSERT INTO comments (author, content, votes, attraction) 
-VALUES 
-  (1, 'Great place!', 10, 1),
-  (2, 'I love this castle!', 8, 2),
-  (1, 'Amazing history here.', 5, 3);
-
--- Inserting sample data into the challenges table
-INSERT INTO challenges (description) 
-VALUES 
-  ('First challenge'),
-  ('Second challenge'),
-  ('Third challenge');
-
--- Inserting sample data into the challenges_finished table
-INSERT INTO challenges_finished (user_id, challenge_id) 
-VALUES 
-  (1, 1),
-  (2, 2),
-  (1, 3);
-
--- Inserting sample data into the challenges_attractions table
-INSERT INTO challenge_attractions (challenge_id, attraction_id) 
-VALUES 
-  (1, 1),
-  (2, 2),
-  (1, 3);
-
-
-

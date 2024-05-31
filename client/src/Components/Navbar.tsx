@@ -9,10 +9,6 @@ import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import {Link} from 'react-router-dom';
 
-
-
-
-
 const Navbar = () => {
   return (
     <AppBar className='navbar' position="static">
