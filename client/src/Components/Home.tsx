@@ -48,7 +48,7 @@ const Home: React.FC<HomeProps> = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
           <TileCard>
-            <Map x={x} y={y} />
+            <Map x={x} y={y} attractions={attractions}/>
           </TileCard>
         </Grid>
 
