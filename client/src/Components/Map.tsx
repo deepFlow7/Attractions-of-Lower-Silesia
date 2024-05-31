@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import L, { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Attraction } from '../types';
 
 interface MapProps {
     x: number;
     y: number;
+    attractions: Attraction[];
 }
 
 interface IPoints {
@@ -28,7 +30,8 @@ const example_points: IPoints[] = [
     }
 ];
 
-export default function Map({ x, y } : MapProps) {
+export default function Map({ x, y, attractions} : MapProps) {
+
     const mapContainer = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<L.Map | null>(null);
 
@@ -48,9 +51,9 @@ export default function Map({ x, y } : MapProps) {
                 iconAnchor: [25, 5], 
             });
 
-            example_points.forEach(point => {
-                const marker = L.marker(point.coordinates,  { icon: customIcon }).addTo(mapInstance);
-                marker.bindPopup(point.name).closePopup();
+            attractions.forEach(attraction => {
+                const marker = L.marker([attraction.coords.x, attraction.coords.y],  { icon: customIcon }).addTo(mapInstance);
+                marker.bindPopup(attraction.name).closePopup();
             });
         }
 
