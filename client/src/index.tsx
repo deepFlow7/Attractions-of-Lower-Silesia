@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
-import './index.css';
 import Navbar from './Components/Navbar';
 import Home from './Components/Home';
 import Attraction from "./Components/Attraction";
@@ -145,7 +144,7 @@ root.render(
         <Route path="/challenges" element={<Challenges  completedChallenges={data.challenges} />} />
         <Route path="/login" element={<LoginForm onLogin={{}} />} />
         <Route path="/new_attraction" element={<NewAttractionForm onSubmit={{}} />} />
-        <Route path="/ranking" element={<Ranking rankings={data.ranking} />} />
+        <Route path="/ranking" element={<Ranking />} />
         <Route path="/signup" element={<SignUpForm onRegister={{}} />} />
       </Routes>
     </BrowserRouter>

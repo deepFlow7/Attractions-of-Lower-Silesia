@@ -29,7 +29,7 @@ const Title = styled(Typography)`
   margin-bottom: 16px;
 `;
 
-const ChallengeView: React.FC<ChallengeViewProps> = ({ rankings, challenge }) => {
+const ChallengeView: React.FC = () => {
   const x = 51.1079;
   const y = 17.0385;
   const [challenge, setChallenge] = useState<Challenge|null>(null);
@@ -62,7 +62,7 @@ const ChallengeView: React.FC<ChallengeViewProps> = ({ rankings, challenge }) =>
         <Grid item xs={12} md={4}>
           <Section>
             <CardContent>
-              <AttractionsList items={challenge.attractions} />
+              <AttractionsList attractions={challenge.attractions} />
             </CardContent>
           </Section>
         </Grid>

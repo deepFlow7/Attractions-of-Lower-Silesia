@@ -56,6 +56,6 @@ export interface Challenge {
 }
 
 
-export type possible_type = "Type1" | "Type2" | "Type3" | "Muzeum" | "Park Rozrywki";
+export type possible_type = "Type1" | "Type2" | "Type3" | "Muzeum" | "Park Rozrywki" | "Natura" | "Urbanistyka";
 export type subtypes = "Subtype1" | "Subtype2" | "Subtype3" | "Historia" | "Rozrywka";
 
