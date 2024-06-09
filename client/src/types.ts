@@ -18,6 +18,18 @@ export interface Attraction {
   photos: Photo[];
 }
 
+export interface NewAttraction {
+  name: string;
+  coords: { x: number; y: number };
+  type: possible_type;
+  subtype: subtypes;
+  interactivity: number;
+  time_it_takes: number;
+  rating?: number;
+  description?: string;
+  photos: Photo[];
+}
+
 export interface User {
   id: number;
   name: string;
@@ -30,6 +42,14 @@ export interface Login {
   login: string;
   password: string;
   role: 'admin' | 'user';
+}
+
+export interface NewUser {
+  name: string;
+  surname: string;
+  mail: string;
+  login: string;
+  password: string;
 }
 
 export interface Comment {

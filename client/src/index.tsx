@@ -10,6 +10,8 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import Ranking from './Components/Ranking';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
+import onSubmit from './newAtraction';
+import onRegister from './newUser';
 
 //Tu pobrać dane z serwera tj. atrakcje i wyzwania
 const data={
@@ -153,7 +155,7 @@ const router=createBrowserRouter([
       },
       {
         path: "/new_attraction",
-        element: <NewAttractionForm onSubmit={{}}/>
+        element: <NewAttractionForm onSubmit={onSubmit}/>
       },
       {
         path: "/ranking",
@@ -161,7 +163,7 @@ const router=createBrowserRouter([
       },
       {
         path: "/signup",
-        element: <SignUpForm onRegister={{}}/>
+        element: <SignUpForm onRegister={onRegister}/>
       },
     ]
 )
