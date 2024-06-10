@@ -10,9 +10,10 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import Ranking from './Components/Ranking';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
+import onSubmit from './newAtraction';
+import onRegister from './newUser';
 import axios from 'axios';
 import { AuthProvider } from './Components/AuthContext';
-
 
 
 
@@ -27,11 +28,11 @@ root.render(
         <Route path="/" element={<Home />} />
         <Route path="/attraction/:id" element={<Attraction />} />
         <Route path="/challenge/:id" element={<ChallengeView />} />
-        <Route path="/challenges" element={<Challenges completedChallenges={[]}/>} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/new_attraction" element={<NewAttractionForm onSubmit={{}} />} />
+        <Route path="/challenges" element={<Challenges  completedChallenges={} />} />
+        <Route path="/login" element={<LoginForm  />} />
+        <Route path="/new_attraction" element={<NewAttractionForm onSubmit={onSubmit} />} />
         <Route path="/ranking" element={<Ranking />} />
-        <Route path="/signup" element={<SignUpForm onRegister={{}} />} />
+        <Route path="/signup" element={<SignUpForm onRegister={onRegister} />} />
       </Routes>
     </BrowserRouter>
     </AuthProvider>

@@ -65,7 +65,7 @@ export default function Map({ x, y, attractions} : MapProps) {
     }, [x, y]);
 
     return (
-        <div style={{ padding: 0, margin: 0, width: "80%", height: "50vh" }} ref={mapContainer}></div>
+        <div style={{ padding: 0, margin: 0, width: "100%", height: "50vh" }} ref={mapContainer}></div>
     );
 
 }

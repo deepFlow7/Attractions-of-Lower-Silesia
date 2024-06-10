@@ -44,21 +44,21 @@ CREATE TABLE attractions (
     interactivity INTEGER NOT NULL CHECK (interactivity>0 and interactivity<11),
     time_it_takes INTEGER NOT NULL,
     rating FLOAT,
-    description TEXT NOT NULL DEFAULT 'Amazing place worth checking out.'
+    description TEXT NOT NULL 
 );
 
 CREATE TABLE photos (
     id SERIAL PRIMARY KEY,
     attraction_id INTEGER NOT NULL REFERENCES attractions(id),
     photo TEXT,
-    caption TEXT DEFAULT 'Check out this amazing photo I took.'
+    caption TEXT 
 );
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL DEFAULT 'Jan',
-    surname TEXT NOT NULL DEFAULT 'Kowalski',
-    mail TEXT UNIQUE NOT NULL DEFAULT 'jan@kowalski.com'
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    mail TEXT UNIQUE NOT NULL
 );
 
 CREATE TYPE thoughts AS ENUM ('been there', 'want to visit', 'indifferent', 'not interested');
@@ -75,7 +75,7 @@ CREATE TYPE role AS ENUM ('admin','user');
 
 CREATE TABLE logins (
     user_id INTEGER PRIMARY KEY REFERENCES users(id),
-    login TEXT UNIQUE NOT NULL DEFAULT 'jankowalski',
+    login TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role role NOT NULL DEFAULT 'user'
 );
@@ -83,7 +83,7 @@ CREATE TABLE logins (
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     author INTEGER NOT NULL REFERENCES users(id),
-    content TEXT NOT NULL DEFAULT 'I agree.',
+    content TEXT NOT NULL,
     votes INTEGER NOT NULL DEFAULT 0,
     attraction INTEGER NOT NULL REFERENCES attractions(id),
     parent INTEGER REFERENCES comments(id)
@@ -96,9 +96,9 @@ CREATE TABLE rankings (
 
 CREATE TABLE challenges (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL DEFAULT 'Amazing challenge',
+    name TEXT NOT NULL,
     description TEXT NOT NULL,
-    points INTEGER NOT NULL DEFAULT 10
+    points INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE challenges_finished (

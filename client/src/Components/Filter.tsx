@@ -37,7 +37,6 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   return (
     <StyledCard>
       <CardContent>
-        <Title variant="h5">Filtrowanie</Title>
         {options.map((option) => (
           <StyledFormControlLabel
             key={option}

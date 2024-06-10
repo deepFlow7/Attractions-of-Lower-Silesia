@@ -18,6 +18,22 @@ export interface Attraction {
   photos: Photo[];
 }
 
+export interface NewPhoto {
+  photo: string;
+  caption?: string;
+}
+
+export interface NewAttraction {
+  name: string;
+  coords: { x: number; y: number };
+  type: possible_type;
+  subtype: subtypes;
+  interactivity: number;
+  time_it_takes: number;
+  description: string;
+  photos: NewPhoto[];
+}
+
 export interface User {
   id: number;
   name: string;
@@ -30,6 +46,14 @@ export interface Login {
   login: string;
   password: string;
   role: 'admin' | 'user';
+}
+
+export interface NewUser {
+  name: string;
+  surname: string;
+  mail: string;
+  login: string;
+  password: string;
 }
 
 export interface Comment {
@@ -55,7 +79,63 @@ export interface Challenge {
   attractions: Attraction[];
 }
 
+export type possible_type = "natura" | "urbanistyka";
+export type subtypes = 
+  | "zamek"
+  | "kościół"
+  | "muzeum"
+  | "szczyt górski"
+  | "formacja skalna"
+  | "kopalnia"
+  | "jaskinia"
+  | "twierdza"
+  | "sanktuarium"
+  | "wodospad"
+  | "ruiny"
+  | "kompleks podziemny"
+  | "ogród botaniczny"
+  | "zabytek architektury"
+  | "ogród"
+  | "makieta kolejowa"
+  | "centrum edukacyjne"
+  | "ogród zoologiczny"
+  | "zbiorniki wodne"
+  | "bazylika";
 
-export type possible_type = "Type1" | "Type2" | "Type3" | "Muzeum" | "Park Rozrywki" | "Natura" | "Urbanistyka";
-export type subtypes = "Subtype1" | "Subtype2" | "Subtype3" | "Historia" | "Rozrywka";
+export const possibleTypes: possible_type[] = ["natura", "urbanistyka"];
+export const possibleSubtypes: subtypes[] = [
+  "zamek",
+  "kościół",
+  "muzeum",
+  "szczyt górski",
+  "formacja skalna",
+  "kopalnia",
+  "jaskinia",
+  "twierdza",
+  "sanktuarium",
+  "wodospad",
+  "ruiny",
+  "kompleks podziemny",
+  "ogród botaniczny",
+  "zabytek architektury",
+  "ogród",
+  "makieta kolejowa",
+  "centrum edukacyjne",
+  "ogród zoologiczny",
+  "zbiorniki wodne",
+  "bazylika"
+];
+export interface ChallengeForm {
+  name: string;
+  description: string;
+  points: number;
+  attractions: String[];
+}
 
+
+export interface ChallengeForm {
+  name: string;
+  description: string;
+  points: number;
+  attractions: String[];
+}
