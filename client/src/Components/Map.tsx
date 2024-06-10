@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import L, { LatLngExpression } from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Attraction } from '../types';
 
@@ -8,64 +7,61 @@ interface MapProps {
     x: number;
     y: number;
     attractions: Attraction[];
+    onMapClick?: (coords: { x: number; y: number }) => void;
 }
 
-interface IPoints {
-    coordinates: LatLngExpression,
-    name: string
-}
-
-const example_points: IPoints[] = [
-    {
-        coordinates: [51.1106, 17.0601],
-        name: "Location 1"
-    },
-    {
-        coordinates: [51.115, 17.055],
-        name: "Location 2"
-    },
-    {
-        coordinates: [51.108, 17.065],
-        name: "Location 3"
-    }
-];
-
-export default function Map({ x, y, attractions} : MapProps) {
-
+export default function Map({ x, y, attractions, onMapClick }: MapProps) {
     const mapContainer = useRef<HTMLDivElement>(null);
-    const [map, setMap] = useState<L.Map | null>(null);
+    const mapInstance = useRef<L.Map | null>(null);
+    const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
+
+    const customIcon = L.icon({
+        iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
+        iconSize: [50, 50],
+        iconAnchor: [25, 5],
+    });
 
     useEffect(() => {
-        const mapInstance = L.map(mapContainer.current!, { attributionControl: false }).setView([x, y], 13);
+        if (mapContainer.current && !mapInstance.current) {
+            mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(mapInstance);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(mapInstance.current);
 
-        setMap(mapInstance);
+            if (onMapClick) {
+                mapInstance.current.on('click', (e) => {
+                    const newCoords = { x: e.latlng.lat, y: e.latlng.lng };
 
-        if (mapInstance) {
-            const customIcon = L.icon({
-                iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
-                iconSize: [50, 50], 
-                iconAnchor: [25, 5], 
+                    if (!markerInstance) {
+                        const newMarker = L.marker([newCoords.x, newCoords.y], { icon: customIcon }).addTo(mapInstance.current!);
+                        setMarkerInstance(newMarker);
+                    } else {
+                        markerInstance.setLatLng(e.latlng);
+                    }
+
+                    onMapClick(newCoords);
+                });
+            }
+        }
+    }, [onMapClick, customIcon, markerInstance]);
+
+    useEffect(() => {
+        if (mapInstance.current) {
+            mapInstance.current.eachLayer((layer) => {
+                if (layer instanceof L.Marker && layer !== markerInstance) {
+                    mapInstance.current?.removeLayer(layer);
+                }
             });
 
             attractions.forEach(attraction => {
-                const marker = L.marker([attraction.coords.x, attraction.coords.y],  { icon: customIcon }).addTo(mapInstance);
+                const marker = L.marker([attraction.coords.x, attraction.coords.y], { icon: customIcon }).addTo(mapInstance.current!);
                 marker.bindPopup(attraction.name).closePopup();
             });
         }
-
-        return () => {
-            if (mapInstance) {
-                mapInstance.remove();
-            }
-        };
-    }, [x, y]);
+    }, [attractions, customIcon]);
 
     return (
         <div style={{ padding: 0, margin: 0, width: "100%", height: "50vh" }} ref={mapContainer}></div>
     );
-
 }
