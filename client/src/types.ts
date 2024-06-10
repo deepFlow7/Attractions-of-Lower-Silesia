@@ -79,9 +79,49 @@ export interface Challenge {
   attractions: Attraction[];
 }
 
-export type possible_type = "Muzeum" | "Park Rozrywki" | "natura";
-export type subtypes = "Historia" | "Rozrywka" | "park";
+export type possible_type = "natura" | "urbanistyka";
+export type subtypes = 
+  | "zamek"
+  | "kościół"
+  | "muzeum"
+  | "szczyt górski"
+  | "formacja skalna"
+  | "kopalnia"
+  | "jaskinia"
+  | "twierdza"
+  | "sanktuarium"
+  | "wodospad"
+  | "ruiny"
+  | "kompleks podziemny"
+  | "ogród botaniczny"
+  | "zabytek architektury"
+  | "ogród"
+  | "makieta kolejowa"
+  | "centrum edukacyjne"
+  | "ogród zoologiczny"
+  | "zbiorniki wodne"
+  | "bazylika";
 
-export const possibleTypes: possible_type[] = ["Muzeum", "Park Rozrywki", "natura"];
-export const possibleSubtypes: subtypes[] = ["Historia", "Rozrywka", "park"];
-
+export const possibleTypes: possible_type[] = ["natura", "urbanistyka"];
+export const possibleSubtypes: subtypes[] = [
+  "zamek",
+  "kościół",
+  "muzeum",
+  "szczyt górski",
+  "formacja skalna",
+  "kopalnia",
+  "jaskinia",
+  "twierdza",
+  "sanktuarium",
+  "wodospad",
+  "ruiny",
+  "kompleks podziemny",
+  "ogród botaniczny",
+  "zabytek architektury",
+  "ogród",
+  "makieta kolejowa",
+  "centrum edukacyjne",
+  "ogród zoologiczny",
+  "zbiorniki wodne",
+  "bazylika"
+];
