@@ -10,6 +10,8 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import Ranking from './Components/Ranking';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
+import onSubmit from './newAtraction';
+import onRegister from './newUser';
 
 
 
@@ -131,7 +133,6 @@ const data = {
 };
 
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -143,9 +144,9 @@ root.render(
         <Route path="/challenge/:id" element={<ChallengeView />} />
         <Route path="/challenges" element={<Challenges  completedChallenges={data.challenges} />} />
         <Route path="/login" element={<LoginForm onLogin={{}} />} />
-        <Route path="/new_attraction" element={<NewAttractionForm onSubmit={{}} />} />
+        <Route path="/new_attraction" element={<NewAttractionForm onSubmit={onSubmit} />} />
         <Route path="/ranking" element={<Ranking />} />
-        <Route path="/signup" element={<SignUpForm onRegister={{}} />} />
+        <Route path="/signup" element={<SignUpForm onRegister={onRegister} />} />
       </Routes>
     </BrowserRouter>
 
