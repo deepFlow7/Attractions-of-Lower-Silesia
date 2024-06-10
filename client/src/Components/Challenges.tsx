@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React from 'react';
-import { Typography, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
 import { Challenge } from '../types'; // Importujemy interfejs Challenge
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface ChallengesProps {
-  allChallenges: Challenge[];
   completedChallenges: Challenge[];
 }
 
@@ -26,7 +27,22 @@ const SectionTitle = styled(Typography)`
   margin: 1%;
 `;
 
-const Challenges: React.FC<ChallengesProps> = ({ allChallenges, completedChallenges }) => {
+const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
+    const [allChallenges,setAllChallenges] = useState<Challenge[]|null>(null);
+
+    useEffect(() => {
+        axios.get('/api/challenges')
+          .then(response => {
+            setAllChallenges(response.data);
+          })
+          .catch(error => {
+            console.error('There was an error fetching challenges:', error);
+          });
+      }, []);
+      console.log(allChallenges);
+    if(!allChallenges){
+        return <div>Loading...</div>
+    }
   return (
     <Container>
       <Section>
@@ -34,9 +50,11 @@ const Challenges: React.FC<ChallengesProps> = ({ allChallenges, completedChallen
           <SectionTitle variant="h5">Wszystkie wyzwania</SectionTitle>
           <List>
             {allChallenges.map(challenge => (
-              <ListItem key={challenge.id}>
-                <ListItemText primary={challenge.name} />
-              </ListItem>
+                <Button component={Link} to={'/challenge/'+challenge.id} color="inherit">
+                    <ListItem key={challenge.id+1}>
+                        <ListItemText primary={challenge.name} />
+                    </ListItem>
+                </Button>
             ))}
           </List>
         </CardContent>

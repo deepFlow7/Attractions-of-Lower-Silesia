@@ -79,7 +79,6 @@ export interface Challenge {
   attractions: Attraction[];
 }
 
-
 export type possible_type = "Muzeum" | "Park Rozrywki" | "natura";
 export type subtypes = "Historia" | "Rozrywka" | "park";
 

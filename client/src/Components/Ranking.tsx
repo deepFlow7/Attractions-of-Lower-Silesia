@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import { Ranking } from '../types';
+import axios from 'axios';
 import styled from '@emotion/styled';
 
 const StyledTableContainer = styled.div`
@@ -21,9 +22,20 @@ const StyledTable = styled(Table)`
 `;
 
 interface RankingTableProps {
-  rankings: Ranking[];
 }
-const RankingTable: React.FC<RankingTableProps> = ({ rankings }) => {
+
+const RankingTable: React.FC<RankingTableProps> = () => {
+  const [rankings, setRankings] = useState<Ranking[]|null>(null);
+  useEffect(() => {
+      axios.get('/api/rankings')
+        .then(response => {
+          setRankings(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
+  }, []);
+  if(!rankings){return <div>Loading...</div>;}
   return (
     <StyledTableContainer>
       <StyledPaper>

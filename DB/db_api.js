@@ -195,6 +195,18 @@ class db_api {
         }
     }
 
+    async get_comments_by_attraction(attr_id){
+        try{
+            const {rows} = await pool.query('SELECT * FROM comments WHERE attraction = $1',[attr_id]);
+            return rows;
+        }
+        catch(error){
+            console.error('Error fetching comments:'+error);
+            throw error;
+        }
+        
+    }
+
     async get_comments_by_user(author) {
         try {
             const { rows } = await pool.query('SELECT * FROM comments WHERE author = $1', [author]);
@@ -282,6 +294,16 @@ class db_api {
         }
     }
 
+    async get_rankings(){
+        try {
+            const { rows } = await pool.query('SELECT * FROM rankings', []);
+            return rows;
+        } catch (error) {
+            console.error('Error fetching rankings:', error);
+            throw error;
+        }
+    }
+
     //---Challenges----
     async add_challenge(name,description,points,attractions) {
         try {
@@ -299,9 +321,19 @@ class db_api {
         try {
             const { rows } = await pool.query('SELECT * FROM challenges WHERE id = $1', [challenge_id]);
             const { rows: attractions } = await pool.query('SELECT attraction_id FROM challenge_attractions WHERE challenge_id = $1', [challenge_id]);
-            return { challenge: rows[0], attractions: attractions.map(attraction => attraction.attraction_id) };
+            return { challenge: rows[0], attractions: attractions.map(attr => attr.attraction_id)};
         } catch (error) {
-            console.error('Error fetching user ranking:', error);
+            console.error('Error fetching challenge info:', error);
+            throw error;
+        }
+    }
+    //TODO Przemyśleć
+    async get_challenges(){
+        try {
+            const { rows } = await pool.query('SELECT * FROM challenges ', []);
+            return rows;
+        } catch (error) {
+            console.error('Error fetching challenge info:', error);
             throw error;
         }
     }
