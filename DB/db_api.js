@@ -31,15 +31,15 @@ class db_api {
         }
     }
 
-    async get_user_id(login) {
+    async get_user(id) {
         try {
-            const { rows } = await pool.query('SELECT id FROM logins WHERE login = $1', [login]);
-            if (rows.length <= 0) {
-                throw "User does not exist: " + login;
+            const { rows } = await pool.query('SELECT * FROM users WHERE id=$1',[id]);
+            if(rows.length<=0){
+                throw "User not found";
             }
-            return rows[0].id;
+            return rows[0];
         } catch (error) {
-            console.error('Error getting user ID:', error);
+            console.error('Error fetching user:', error);
             throw error;
         }
     }
@@ -68,6 +68,21 @@ class db_api {
             await pool.query('INSERT INTO logins (user_id, login, password, role) VALUES ($1, $2, $3, $4)', [user_id, login, hash, role]);
         } catch (error) {
             console.error('Error creating new login:', error);
+            throw error;
+        }
+    }
+
+    async check_login(login,password){
+        try{
+            const {rows} = await pool.query('SELECT * FROM logins WHERE login=$1',[login]);
+            if (rows.length<=0){
+                throw "User with this login does not exist: "+login;
+            }
+            const check=await bcrypt.compare(password,rows[0].password);
+            return {user:rows[0], check:1};
+        }
+        catch (error){
+            console.error("Error checking password:",error);
             throw error;
         }
     }

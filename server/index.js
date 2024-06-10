@@ -3,10 +3,68 @@ const db = require('../DB/db_api.js');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-
-app.use(cors())
 app.use(bodyParser.json());
+app.use(cors({
+    //origin: 'http://localhost:5173',
+    credentials: true
+}));
+app.use(session({
+    secret: 'O Great Key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+
+
+app.post('/login', async (req, res) => {
+    const { login, password } = req.body;
+
+    try {
+        const result = await db.check_login(login,password);
+
+        const {user,check} = result;
+
+        if (!check) {
+            return res.status(400).json({ error: 'Invalid password' });
+        }
+
+        req.session.userId = user.user_id;
+        req.session.role = user.role
+        res.json({ message: 'Logged in successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Logged out successfully' });
+    });
+});
+
+app.get('/profile', async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        const user = await db.get_user(req.session.userId);
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 app.get('/', (req, res) => {
       res.send('Hello from our server!')
