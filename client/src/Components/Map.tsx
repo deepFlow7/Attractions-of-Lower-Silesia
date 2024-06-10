@@ -29,6 +29,15 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(mapInstance.current);
 
+            const southWest = L.latLng(50.1, 14.8); 
+            const northEast = L.latLng(51.81, 17.8); 
+            const bounds = L.latLngBounds(southWest, northEast);
+            mapInstance.current.setMaxBounds(bounds);
+            mapInstance.current.setMinZoom(8);
+            mapInstance.current.on('drag', function () {
+                mapInstance.current!.panInsideBounds(bounds, { animate: false });
+            });
+
             if (onMapClick) {
                 mapInstance.current.on('click', (e) => {
                     const newCoords = { x: e.latlng.lat, y: e.latlng.lng };
@@ -56,7 +65,8 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
 
             attractions.forEach(attraction => {
                 const marker = L.marker([attraction.coords.x, attraction.coords.y], { icon: customIcon }).addTo(mapInstance.current!);
-                marker.bindPopup(attraction.name).closePopup();
+                const link = `<a href="/attraction/${attraction.id}" target="_blank" style="color: black; text-decoration: underline;">${attraction.name}</a>`;
+                marker.bindPopup(link).closePopup();
             });
         }
     }, [attractions, customIcon]);
