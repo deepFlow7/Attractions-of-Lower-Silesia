@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React,{useState, useEffect} from 'react';
-import axios from 'axios';
+import React  from 'react';
 import { Button, List, ListItem, ListItemText, Typography } from '@mui/material';
 import {Link} from 'react-router-dom';
 import { possible_type, Attraction } from '../types'; // Importujemy interfejs Attraction
