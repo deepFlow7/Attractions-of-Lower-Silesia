@@ -18,6 +18,11 @@ export interface Attraction {
   photos: Photo[];
 }
 
+export interface NewPhoto {
+  photo: string;
+  caption?: string;
+}
+
 export interface NewAttraction {
   name: string;
   coords: { x: number; y: number };
@@ -25,9 +30,8 @@ export interface NewAttraction {
   subtype: subtypes;
   interactivity: number;
   time_it_takes: number;
-  rating?: number;
-  description?: string;
-  photos: Photo[];
+  description: string;
+  photos: NewPhoto[];
 }
 
 export interface User {
@@ -76,6 +80,9 @@ export interface Challenge {
 }
 
 
-export type possible_type = "Type1" | "Type2" | "Type3" | "Muzeum" | "Park Rozrywki";
-export type subtypes = "Subtype1" | "Subtype2" | "Subtype3" | "Historia" | "Rozrywka";
+export type possible_type = "Muzeum" | "Park Rozrywki" | "natura";
+export type subtypes = "Historia" | "Rozrywka" | "park";
+
+export const possibleTypes: possible_type[] = ["Muzeum", "Park Rozrywki", "natura"];
+export const possibleSubtypes: subtypes[] = ["Historia", "Rozrywka", "park"];
 
