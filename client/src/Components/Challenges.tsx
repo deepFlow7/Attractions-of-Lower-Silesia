@@ -39,7 +39,6 @@ const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
             console.error('There was an error fetching challenges:', error);
           });
       }, []);
-      console.log(allChallenges);
     if(!allChallenges){
         return <div>Loading...</div>
     }

@@ -79,7 +79,7 @@ class db_api {
                 throw "User with this login does not exist: "+login;
             }
             const check=await bcrypt.compare(password,rows[0].password);
-            return {user:rows[0], check:1};
+            return {user:rows[0], check:check};
         }
         catch (error){
             console.error("Error checking password:",error);

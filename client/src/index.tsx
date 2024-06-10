@@ -28,7 +28,7 @@ root.render(
         <Route path="/" element={<Home />} />
         <Route path="/attraction/:id" element={<Attraction />} />
         <Route path="/challenge/:id" element={<ChallengeView />} />
-        <Route path="/challenges" element={<Challenges  completedChallenges={} />} />
+        <Route path="/challenges" element={<Challenges completedChallenges={[]} />} />
         <Route path="/login" element={<LoginForm  />} />
         <Route path="/new_attraction" element={<NewAttractionForm onSubmit={onSubmit} />} />
         <Route path="/ranking" element={<Ranking />} />

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { User } from '../types';
 
@@ -61,6 +61,11 @@ const LoginForm: React.FC<LoginProps> = () => {
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>Zaloguj się</Button>
           </Grid>
+
+          <Grid item xs={12}>
+            <Button  component={Link} to='/signup' variant="contained" color="secondary" fullWidth>Zarejestruj</Button>
+          </Grid>
+
         </Grid>
       </div>
     </FormContainer>
