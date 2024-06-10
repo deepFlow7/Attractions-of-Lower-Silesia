@@ -55,7 +55,7 @@ const ChallengeView: React.FC = () => {
         <Grid item xs={12} md={5}>
           <Section>
             <CardContent>
-              <Map x={x} y={y} />
+              <Map x={x} y={y} attractions={challenge.attractions}/>
             </CardContent>
           </Section>
         </Grid>
