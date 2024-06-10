@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 interface ChallengesProps {
-  completedChallenges: Challenge[];
+  completedChallenges: Challenge[] ;
 }
 
 const Container = styled.div`

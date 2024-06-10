@@ -39,7 +39,7 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
     ('Zamek w Książęcej Górze', POINT(50.9167, 15.8333), 'urbanistyka', 'zamek', 6, 60, NULL, 'Zamek w Książęcej Górze to malownicza warownia, która zachwyca swoją architekturą i położeniem w otoczeniu górskich krajobrazów. Jest to miejsce pełne historii i pięknych widoków.'),
     ('Zamek w Rogowie Sobóckim', POINT(51.1333, 17.2000), 'urbanistyka', 'zamek', 6, 60, NULL, 'Zamek w Rogowie Sobóckim to historyczna rezydencja położona w malowniczym otoczeniu. Jest to doskonałe miejsce na spacer i poznanie historii regionu.'),
     ('Zamek w Bystrzycy Kłodzkiej', POINT(50.3000, 16.6500), 'urbanistyka', 'zamek', 7, 90, NULL, 'Zamek w Bystrzycy Kłodzkiej to malownicza warownia, która oferuje fascynującą podróż w przeszłość. Zamek jest doskonałym punktem widokowym na miasto i okolice.'),
-    ('Zamek w Ścinawce Średniej', POINT(50.6167, 16.5167), 'urbanistyka', 'zamek', 6, 60, NULL, 'Zamek w Ścinawce Średniej to malownicza warownia położona wśród górskich krajobrazów. Jest to miejsce o bogatej historii, idealne na spokojny spacer i poznanie lokalnej kultury.')
+    ('Zamek w Ścinawce Średniej', POINT(50.6167, 16.5167), 'urbanistyka', 'zamek', 6, 60, NULL, 'Zamek w Ścinawce Średniej to malownicza warownia położona wśród górskich krajobrazów. Jest to miejsce o bogatej historii, idealne na spokojny spacer i poznanie lokalnej kultury.');
 
 INSERT INTO users (name, surname, mail) 
 VALUES 
@@ -159,4 +159,4 @@ INSERT INTO photos (attraction_id, photo, caption) VALUES
 (38, 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/77045439.jpg?k=0e03de60cc2494150c8ec786de19acea3b0804f4df4247cdbef8dbd058b2e7c9&o=&hp=1', ''),
 (39, 'https://www.zamki.pl/xz/r_rogow1.jpg', ''),
 (40, 'https://sway.to/download//1505/srebrnagora.jpeg', ''),
-(41, 'https://kukushka.eu/_gallery/albums/userpics/10001/2013_07_21_601_Polska_Poland_Scinawka_Srednia_Zamek_Kapitanowo.jpg', '')
+(41, 'https://kukushka.eu/_gallery/albums/userpics/10001/2013_07_21_601_Polska_Poland_Scinawka_Srednia_Zamek_Kapitanowo.jpg', '');

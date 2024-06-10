@@ -4,7 +4,7 @@ CREATE DATABASE maps;
 
 \c maps
 
-CREATE USER pg WITH PASSWORD 'pg';
+CREATE OR UPDATE USER pg WITH PASSWORD 'pg';
 ALTER ROLE pg SET client_encoding TO 'utf8';
 ALTER ROLE pg SET default_transaction_isolation TO 'read committed';
 ALTER ROLE pg SET timezone TO 'UTC';

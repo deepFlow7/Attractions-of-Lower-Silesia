@@ -3,10 +3,12 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
-import { Login } from '../types';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import { User } from '../types';
 
 interface LoginProps {
-  onLogin: (loginData: Login) => void;
 }
 
 const FormContainer = styled.div`
@@ -26,21 +28,23 @@ const Title = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-const LoginForm: React.FC<LoginProps> = ({ onLogin }) => {
-  const [login, setLogin] = useState<string>('');
+const LoginForm: React.FC<LoginProps> = () => {
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const { isAuthenticated, login, updateUser } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    const loginData: Login = {
-      user_id: 0, // temporary placeholder value
-      login,
-      password,
-      role: 'user' // temporary placeholder value
-    };
-    onLogin(loginData);
-    // Clear form fields
-    setLogin('');
-    setPassword('');
+  const handleSubmit = async (e: React.FormEvent) =>  {
+    e.preventDefault();
+    try {
+        await axios.post('/api/login', { login:username, password });
+        const response = await axios.get('/api/profile');
+        updateUser(response.data as User);
+        login();
+        navigate('/');
+    } catch (error) {
+        console.error("error logging in ", error);
+    }
   };
 
   return (
@@ -49,7 +53,7 @@ const LoginForm: React.FC<LoginProps> = ({ onLogin }) => {
         <Title variant="h4">Logowanie</Title>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField fullWidth label="Login" value={login} onChange={(e) => setLogin(e.target.value)} />
+            <TextField fullWidth label="Login" value={username} onChange={(e) => setUsername(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
             <TextField fullWidth label="Hasło" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />

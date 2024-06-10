@@ -6,7 +6,7 @@ import { Grid, Card } from '@mui/material';
 import Filter from './Filter';
 import Map from './Map';
 import AttractionsList from './AttractionsList';
-import { Attraction } from '../types';
+import { Attraction, possible_type } from '../types';
 
 interface HomeProps {
 }
@@ -54,7 +54,7 @@ const Home: React.FC<HomeProps> = () => {
 
         <Grid item xs={12} md={4}>
           <TileCard>
-            <AttractionsList attractions={attractions} type_filter={filterOptions}/>
+            <AttractionsList attractions={attractions} type_filter={filterOptions as possible_type[]}/>
           </TileCard>
         </Grid>
         <Grid item xs={12} md={3}>
