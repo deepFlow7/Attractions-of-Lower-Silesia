@@ -28,6 +28,7 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [mapKey, setMapKey] = useState<number>(0);
 
   const handleAddPhoto = () => {
     const newPhotoUrl = photoUrls[photos.length] || '';
@@ -96,6 +97,8 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
     setPhotos([]);
     setPhotoUrls([]);
     setPhotoCaptions([]);
+    setCoords(null);
+    setMapKey(prevKey => prevKey + 1);
     setErrors({});
   };
 
@@ -181,7 +184,7 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
-          <Map x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
+          <Map key={mapKey} x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
           {coords && (
             <Typography >Wybrane współrzędne: {coords.x}, {coords.y}</Typography>
           )}
