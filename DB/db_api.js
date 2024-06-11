@@ -145,7 +145,11 @@ class db_api {
     //----ATTRACTIONS------
     async new_attraction(name, coords, type, subtype, interactivity, time_it_takes, rating, description) {
         try {
-            await pool.query('INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) VALUES ($1, POINT($2, $3), $4, $5, $6, $7, $8, $9)', [name, coords.x, coords.y, type, subtype, interactivity, time_it_takes, rating, description]);
+            const {rows} = await pool.query('INSERT INTO attractions (name, coords, type, subtype,\
+                interactivity, time_it_takes, rating, description) \
+                VALUES ($1, POINT($2, $3), $4, $5, $6, $7, $8, $9) RETURNING id', 
+            [name, coords.x, coords.y, type, subtype, interactivity, time_it_takes, rating, description]);
+            return rows[0].id;
         } catch (error) {
             console.error('Error creating new attraction:', error);
             throw error;

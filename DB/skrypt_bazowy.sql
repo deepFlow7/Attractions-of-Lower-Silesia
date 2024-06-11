@@ -50,7 +50,7 @@ CREATE TABLE attractions (
 CREATE TABLE photos (
     id SERIAL PRIMARY KEY,
     attraction_id INTEGER NOT NULL REFERENCES attractions(id),
-    photo TEXT,
+    photo TEXT NOT NULL,
     caption TEXT 
 );
 
