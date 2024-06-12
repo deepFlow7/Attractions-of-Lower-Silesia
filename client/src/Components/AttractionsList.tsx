@@ -8,9 +8,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
-import { useAuth } from "./AuthContext";
 
 interface ListProps {
   attractions: Attraction[];
@@ -47,19 +46,9 @@ const AddAttractionButton = styled(Button)`
 `;
 
 const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter }) => {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
   return (
     <StyledList>
       <Title variant="h5">Lista Atrakcji</Title>
-      {isAuthenticated && (
-        <div>
-          <AddAttractionButton onClick={() => navigate("/new_attraction")}>
-            Dodaj nową atrakcję
-          </AddAttractionButton>
-        </div>
-      )}
       {attractions
         .filter((attraction) => true)
         .map((attraction) => (

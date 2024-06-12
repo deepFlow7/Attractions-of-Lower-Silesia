@@ -53,7 +53,11 @@ const Navbar = () => {
           sx={{ mr: 2, flexGrow: 1 }}
         />
 
-        
+      {isAuthenticated && (
+        <Button component={Link} to="/new_attraction" color="inherit">
+          Dodaj atrakcję
+        </Button>
+      )}
         <Button component={Link} to="/challenges" color="inherit">
             Wyzwanie
         </Button>
@@ -66,7 +70,7 @@ const Navbar = () => {
         <IconButton color="inherit">
           <EmojiObjectsIcon />
         </IconButton>
-        {isAuthenticated?
+        {isAuthenticated && user?
             (
                 <>
                     <Typography  variant="h6" component="div">
