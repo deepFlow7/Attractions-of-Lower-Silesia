@@ -63,61 +63,57 @@ VALUES
 
 
 -- Przykładowe wpisy do tabeli challenges
-INSERT INTO challenges (name, description, points) VALUES
-    ('Dolnośląskie Zamki', 'Odwiedź wszystkie zamki na Dolnym Śląsku, aby odkryć bogatą historię regionu.', 50),
-    ('Górskie Wyprawy', 'Zdobądź najpiękniejsze szczyty i formacje skalne w Dolnym Śląsku.', 40),
-    ('Kulturalne Dziedzictwo', 'Zwiedź najważniejsze muzea, kościoły i zabytki architektury w regionie.', 30);
+INSERT INTO challenges (name, description, coords, zoom)
+VALUES 
+    ('Mountain Hike', 'A challenging hike up the mountain.', '(50.5, 15.0)', 12),
+    ('City Scavenger Hunt', 'Find hidden treasures in the city.', '(51.0, 16.0)', 14),
+    ('Beach Cleanup', 'Help clean up the beach and earn points.', '(51.5, 17.0)', 10);
 
 -- Przykładowe wpisy do tabeli challenge_attractions
-INSERT INTO challenge_attractions (challenge_id, attraction_id) VALUES
+INSERT INTO challenge_attractions (challenge_id, attraction_id, points) VALUES
     -- Dolnośląskie Zamki
-    (1, 1), -- Zamek Książ
-    (1, 7), -- Zamek Czocha
-    (1, 10), -- Twierdza Kłodzko
-    (1, 11), -- Zamek Grodno
-    (1, 14), -- Zamek Chojnik
-    (1, 26), -- Zamek w Leśnicy
-    (1, 27), -- Zamek w Świebodzicach
-    (1, 28), -- Zamek w Niemczy
-    (1, 29), -- Zamek w Siedlęcinie
-    (1, 30), -- Zamek w Bolkowie
-    (1, 31), -- Zamek w Oławie
-    (1, 32), -- Zamek w Grodźcu
-    (1, 33), -- Zamek w Pieskowej Skale
-    (1, 34), -- Zamek w Mosznej
-    (1, 35), -- Zamek w Karpnikach
-    (1, 36), -- Zamek w Starej Kamienicy
-    (1, 37), -- Zamek w Wojcieszowie
-    (1, 38), -- Zamek w Książęcej Górze
-    (1, 39), -- Zamek w Rogowie Sobóckim
-    (1, 40), -- Zamek w Bystrzycy Kłodzkiej
-    (1, 41), -- Zamek w Ścinawce Średniej
+    (1, 1, 50), -- Zamek Książ
+    (1, 7, 60), -- Zamek Czocha
+    (1, 10, 70), -- Twierdza Kłodzko
+    (1, 11, 80), -- Zamek Grodno
+    (1, 14, 90), -- Zamek Chojnik
+    (1, 26, 100), -- Zamek w Leśnicy
+    (1, 27, 40), -- Zamek w Świebodzicach
+    (1, 28, 30), -- Zamek w Niemczy
+    (1, 29, 20), -- Zamek w Siedlęcinie
+    (1, 30, 10), -- Zamek w Bolkowie
+    (1, 31, 60), -- Zamek w Oławie
+    (1, 32, 70), -- Zamek w Grodźcu
+    (1, 33, 80), -- Zamek w Pieskowej Skale
+    (1, 34, 90), -- Zamek w Mosznej
+    (1, 35, 100), -- Zamek w Karpnikach
+    (1, 36, 40), -- Zamek w Starej Kamienicy
+    (1, 37, 30), -- Zamek w Wojcieszowie
+    (1, 38, 20), -- Zamek w Książęcej Górze
+    (1, 39, 10), -- Zamek w Rogowie Sobóckim
+    (1, 40, 50), -- Zamek w Bystrzycy Kłodzkiej
+    (1, 41, 60), -- Zamek w Ścinawce Średniej
 
     -- Górskie Wyprawy
-    (2, 4), -- Śnieżka
-    (2, 5), -- Szczeliniec Wielki
-    (2, 6), -- Błędne Skały
-    (2, 13), -- Wodospad Kamieńczyka
-    (2, 24), -- Kolorowe Jeziorka
+    (2, 4, 70), -- Śnieżka
+    (2, 5, 80), -- Szczeliniec Wielki
+    (2, 6, 90), -- Błędne Skały
+    (2, 13, 100), -- Wodospad Kamieńczyka
+    (2, 24, 40), -- Kolorowe Jeziorka
 
     -- Kulturalne Dziedzictwo
-    (3, 2), -- Kościół Pokoju w Świdnicy
-    (3, 3), -- Panorama Racławicka
-    (3, 15), -- Podziemne Miasta Riese
-    (3, 16), -- Arboretum Wojsławice
-    (3, 17), -- Hala Stulecia we Wrocławiu
-    (3, 18), -- Ogród Japoński we Wrocławiu
-    (3, 19), -- Kolejkowo we Wrocławiu
-    (3, 20), -- Hydropolis we Wrocławiu
-    (3, 21), -- ZOO Wrocław
-    (3, 22), -- Bazylika w Bardzie
-    (3, 23); -- Muzeum Papiernictwa w Dusznikach-Zdroju
+    (3, 2, 30), -- Kościół Pokoju w Świdnicy
+    (3, 3, 20), -- Panorama Racławicka
+    (3, 15, 10), -- Podziemne Miasta Riese
+    (3, 16, 60), -- Arboretum Wojsławice
+    (3, 17, 70), -- Hala Stulecia we Wrocławiu
+    (3, 18, 80), -- Ogród Japoński we Wrocławiu
+    (3, 19, 90), -- Kolejkowo we Wrocławiu
+    (3, 20, 100), -- Hydropolis we Wrocławiu
+    (3, 21, 40), -- ZOO Wrocław
+    (3, 22, 30), -- Bazylika w Bardzie
+    (3, 23, 20); -- Muzeum Papiernictwa w Dusznikach-Zdroju
 
-INSERT INTO challenges_finished (user_id, challenge_id) 
-VALUES 
-  (1, 1),
-  (2, 2),
-  (1, 3);
 
 INSERT INTO photos (attraction_id, photo, caption) VALUES
 (1, 'https://dolnyslask.travel/wp-content/uploads/2021/12/476_-Ksiaz_szer.jpg', 'zdjęcie z drona'),
