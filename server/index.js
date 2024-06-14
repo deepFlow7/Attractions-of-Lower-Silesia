@@ -103,6 +103,16 @@ app.get('/challenges', async (req,res)=>{
   }
 })
 
+app.post('/start_challenge/:challenge_id/:user_id', async (req, res) => {
+    const { challenge_id, user_id } = req.body;
+    try {
+          await db.start_challenge(challenge_id, user_id);
+          res.json({ success: true });
+    } catch (error) {
+          res.json({ success: false, error: error });
+    }
+})
+
 app.get('/attraction/:id', async (req,res) =>{
     try{
         var attraction = await db.get_attraction(req.params["id"]);
@@ -126,9 +136,9 @@ app.get('/attractions', async (req,res) =>{
     }
 })
 
-app.get('/rankings', async (req,res) =>{
+app.get('/ranking/:challenge_id', async (req,res) =>{
     try{
-        var rankings = await db.get_rankings();
+        var rankings = await db.get_challenge_ranking(req.params["challenge_id"]);
         res.json(rankings);
     }
     catch(error){

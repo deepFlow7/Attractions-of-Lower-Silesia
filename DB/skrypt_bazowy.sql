@@ -4,7 +4,15 @@ CREATE DATABASE maps;
 
 \c maps
 
-ALTER USER pg WITH PASSWORD 'pg';
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'pg') THEN
+        CREATE USER pg WITH PASSWORD 'pg';
+    ELSE
+        ALTER USER pg WITH PASSWORD 'pg';
+    END IF;
+END $$;
+
 ALTER ROLE pg SET client_encoding TO 'utf8';
 ALTER ROLE pg SET default_transaction_isolation TO 'read committed';
 ALTER ROLE pg SET timezone TO 'UTC';

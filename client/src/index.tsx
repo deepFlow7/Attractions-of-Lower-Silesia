@@ -12,7 +12,7 @@ import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
 import onSubmit from './newAtraction';
 import onRegister from './newUser';
-import axios from 'axios';
+import NewChallengeForm from './Components/NewChallengeForm';
 import { AuthProvider } from './Components/AuthContext';
 
 
@@ -31,6 +31,8 @@ root.render(
         <Route path="/challenges" element={<Challenges completedChallenges={[]} />} />
         <Route path="/login" element={<LoginForm  />} />
         <Route path="/new_attraction" element={<NewAttractionForm onSubmit={onSubmit} />} />
+        {/* tylko dla admina */}
+        <Route path="/new_challenge" element={<NewChallengeForm onSubmit={{}} />} /> 
         <Route path="/ranking" element={<Ranking />} />
         <Route path="/signup" element={<SignUpForm onRegister={onRegister} />} />
       </Routes>

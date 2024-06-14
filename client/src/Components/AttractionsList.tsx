@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
+import { possible_type, Attraction, ChallengeAttraction } from "../types"; // Importujemy interfejs Attraction
 
 interface ListProps {
-  attractions: Attraction[];
+  attractions: (Attraction | ChallengeAttraction)[];
   type_filter?: possible_type[];
 }
 
@@ -50,12 +50,13 @@ const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter }) => {
     <StyledList>
       <Title variant="h5">Lista Atrakcji</Title>
       {attractions
-        .filter((attraction) => true)
+       // .filter((attraction) => true)
         .map((attraction) => (
           <Button
             component={Link}
             to={"/attraction/" + attraction.id}
             color="inherit"
+            key={attraction.id}
           >
             <StyledListItem key={attraction.id}>
               <ListItemText primary={attraction.name} />

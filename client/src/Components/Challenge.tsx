@@ -5,12 +5,13 @@ import { useParams } from 'react-router-dom';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography, Button } from '@mui/material';
 
 import Map from './Map';
 import AttractionsList from './AttractionsList';
 import RankingTable from './Ranking';
 import { Challenge } from '../types';
+import { useAuth } from './AuthContext';
 
 
 
@@ -22,17 +23,22 @@ const Container = styled.div`
 const Section = styled(Card)`
   margin-bottom: 20px;
 `;
-
 const Title = styled(Typography)`
   text-align: center;
   font-weight: bold;
   margin-bottom: 16px;
+  margin-top: 16px;
+`;
+
+const Description = styled(Typography)`
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
 `;
 
 const ChallengeView: React.FC = () => {
-  const x = 51.1079;
-  const y = 17.0385;
   const [challenge, setChallenge] = useState<Challenge|null>(null);
+  const {isAuthenticated, user} = useAuth();
 
   const {id} = useParams();
 
@@ -46,16 +52,33 @@ const ChallengeView: React.FC = () => {
       });
   }, []);
 
+  
   if(!challenge){return <div>Loading...</div>;}
+
+  const handleParticipation = () => {
+    if (!user) return;
+    axios.post('/api/start_challenge/'+ challenge.id + '/' + user.id)
+      .then(response => {
+        setChallenge(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error starting the challenge:', error);
+      });
+  };
    
 
   return (
     <Container>
+      <Section>
+        <Title variant="h4">{challenge.name}</Title>
+        <Description variant="h6" >{challenge.description}</Description>
+      </Section>
       <Grid container spacing={3}>
         <Grid item xs={12} md={5}>
           <Section>
             <CardContent>
-              <Map x={x} y={y} attractions={challenge.attractions}/>
+              <Map x={challenge.coords.x} y={challenge.coords.y} 
+              attractions={challenge.attractions}/>
             </CardContent>
           </Section>
         </Grid>
@@ -70,7 +93,12 @@ const ChallengeView: React.FC = () => {
           <Section>
             <CardContent>
               <Title variant="h5">Ranking</Title>
-              <RankingTable />
+              <RankingTable challenge_id={id? parseInt(id) : null}/>
+              {isAuthenticated && (
+                <Button variant="contained" color="primary" onClick={handleParticipation}>
+                  Weź udział
+                </Button>
+              )}
             </CardContent>
           </Section>
         </Grid>
