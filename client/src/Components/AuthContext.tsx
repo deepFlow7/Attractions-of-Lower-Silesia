@@ -14,6 +14,14 @@ const AuthContext = createContext({} as Context);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User|null>(null);
+  useEffect(()=>{
+    axios.get('/api/profile').then(response=>{
+            setUser(response.data as User);
+            setIsAuthenticated(true);
+        }).catch(error =>{
+        console.error("Błąd sprawdzania zalogowania:",error);});
+    }
+  ,[])
 
   const updateUser=(new_user:User|null)=>{
     setUser(new_user);
