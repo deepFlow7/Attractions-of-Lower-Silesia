@@ -7,13 +7,17 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Grid,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { possible_type, Attraction, ChallengeAttraction } from "../types"; // Importujemy interfejs Attraction
+import { Link } from "react-router-dom";
 
 interface ListProps {
   attractions: (Attraction | ChallengeAttraction)[];
   type_filter?: possible_type[];
+  onClick?: () => void;
+  showVisitButtons?: boolean;
 }
 
 const StyledList = styled(List)`
@@ -33,25 +37,31 @@ const Title = styled(Typography)`
   font-weight: bold;
 `;
 
-const AddAttractionButton = styled(Button)`
+const Container = styled(Grid)`
+`;
+
+const VisitButton = styled(Button)`
   && {
     background-color: #42a5f5;
     color: white;
     border-radius: 4px;
-    margin-top: 16px;
+    margin-left: 16px;
     &:hover {
       background-color: #1976d2;
     }
   }
 `;
 
-const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter }) => {
+
+const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter, onClick, showVisitButtons }) => {
   return (
     <StyledList>
       <Title variant="h5">Lista Atrakcji</Title>
+      <Container>
       {attractions
-       // .filter((attraction) => true)
+        .filter((attraction) => true)
         .map((attraction) => (
+          <Grid item xs={12} key={attraction.id}>
           <Button
             component={Link}
             to={"/attraction/" + attraction.id}
@@ -62,7 +72,15 @@ const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter }) => {
               <ListItemText primary={attraction.name} />
             </StyledListItem>
           </Button>
+           {showVisitButtons && (
+            <VisitButton
+              onClick={onClick}>
+              Odwiedź
+            </VisitButton>
+          )}
+          </Grid>
         ))}
+    </Container>
     </StyledList>
   );
 };

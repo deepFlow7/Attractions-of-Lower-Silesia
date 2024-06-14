@@ -381,20 +381,20 @@ class db_api {
         }
     }
 
-    async start_challenge(challenge_id,user_id){
+    async start_challenge(challenge_id, user_id){
         try {
-            await pool.query('INSERT INTO challenges_started (challenge_id, user_id, start_date) VALUES ($1, $2, $3)', 
-            [challenge_id, user_id, NOW()]);
+            await pool.query('INSERT INTO challenges_started (challenge_id, user_id, start_date) VALUES ($1, $2, NOW())', 
+            [challenge_id, user_id]);
         } catch (error) {
-            console.error("Error finishing challenge:", error);
+            console.error("Error started challenge:", error);
             throw error;
         }
     }
 
     async finish_challenge(challenge_id,user_id){
         try {
-            await pool.query('UPDATE challenges_started SET finished_date = $1 WHERE \
-            challenge_id = $2 AND user_id = 3', [NOW(), challenge_id, user_id]);
+            await pool.query('UPDATE challenges_started SET finished_date = NOW() WHERE \
+            challenge_id = $1 AND user_id = 2', [challenge_id, user_id]);
         } catch (error) {
             console.error("Error finishing challenge:", error);
             throw error;

@@ -39,10 +39,11 @@ const Description = styled(Typography)`
 const ChallengeView: React.FC = () => {
   const [challenge, setChallenge] = useState<Challenge|null>(null);
   const {isAuthenticated, user} = useAuth();
+  const [takesPart, setTakesPart] = useState<boolean>(false);
 
   const {id} = useParams();
 
-  useEffect(() => {
+  const get_challenge_data = () => {
     axios.get('/api/challenge/'+id)
       .then(response => {
         setChallenge(response.data);
@@ -50,6 +51,10 @@ const ChallengeView: React.FC = () => {
       .catch(error => {
         console.error('There was an error fetching the data!', error);
       });
+  }
+
+  useEffect(() => {
+    get_challenge_data();
   }, []);
 
   
@@ -59,7 +64,8 @@ const ChallengeView: React.FC = () => {
     if (!user) return;
     axios.post('/api/start_challenge/'+ challenge.id + '/' + user.id)
       .then(response => {
-        setChallenge(response.data);
+        setTakesPart(true);
+        get_challenge_data();
       })
       .catch(error => {
         console.error('There was an error starting the challenge:', error);
@@ -85,7 +91,7 @@ const ChallengeView: React.FC = () => {
         <Grid item xs={12} md={4}>
           <Section>
             <CardContent>
-              <AttractionsList attractions={challenge.attractions} />
+              <AttractionsList attractions={challenge.attractions} showVisitButtons={true}/>
             </CardContent>
           </Section>
         </Grid>
@@ -94,7 +100,7 @@ const ChallengeView: React.FC = () => {
             <CardContent>
               <Title variant="h5">Ranking</Title>
               <RankingTable challenge_id={id? parseInt(id) : null}/>
-              {isAuthenticated && (
+              {isAuthenticated && !takesPart && (
                 <Button variant="contained" color="primary" onClick={handleParticipation}>
                   Weź udział
                 </Button>

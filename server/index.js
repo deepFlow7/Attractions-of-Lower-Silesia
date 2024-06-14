@@ -104,9 +104,8 @@ app.get('/challenges', async (req,res)=>{
 })
 
 app.post('/start_challenge/:challenge_id/:user_id', async (req, res) => {
-    const { challenge_id, user_id } = req.body;
     try {
-          await db.start_challenge(challenge_id, user_id);
+          await db.start_challenge(req.params['challenge_id'], req.params['user_id']);
           res.json({ success: true });
     } catch (error) {
           res.json({ success: false, error: error });
