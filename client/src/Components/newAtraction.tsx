@@ -1,4 +1,4 @@
-import { NewAttraction, NewPhoto } from './types';
+import { NewAttraction, NewPhoto } from '../types';
 
 export default async function addAtraction(attraction : NewAttraction){
     try {
