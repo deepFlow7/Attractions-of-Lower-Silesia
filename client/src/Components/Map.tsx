@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import L, { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Attraction } from '../types';
+import { Attraction,possibleSubtypes,subtypes } from '../types';
 
 interface MapProps {
     x: number;
@@ -10,25 +10,30 @@ interface MapProps {
     attractions: Attraction[];
 }
 
-interface IPoints {
-    coordinates: LatLngExpression,
-    name: string
-}
-
-const example_points: IPoints[] = [
-    {
-        coordinates: [51.1106, 17.0601],
-        name: "Location 1"
-    },
-    {
-        coordinates: [51.115, 17.055],
-        name: "Location 2"
-    },
-    {
-        coordinates: [51.108, 17.065],
-        name: "Location 3"
+var CustomIcon = L.Icon.extend({
+    options:{
+        className: 'ikona',
+        iconSize: [50, 50],
     }
-];
+})
+
+type Icons=Record<PropertyKey,typeof CustomIcon>;
+const icons = possibleSubtypes
+                    .reduce((icons:Icons,subtype:subtypes)=>{
+                        icons[subtype] = new CustomIcon({
+                            iconUrl: '../../public/obrazki/'+subtype+'.png',
+                        });
+                        return icons;
+                    },{});
+
+                    console.log(icons);
+
+
+
+
+
+
+
 
 export default function Map({ x, y, attractions} : MapProps) {
 
@@ -45,16 +50,16 @@ export default function Map({ x, y, attractions} : MapProps) {
         setMap(mapInstance);
 
         if (mapInstance) {
-            const customIcon = L.icon({
-                iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
-                iconSize: [50, 50], 
-                iconAnchor: [25, 5], 
-            });
-
+            
             attractions.forEach(attraction => {
-                const marker = L.marker([attraction.coords.x, attraction.coords.y],  { icon: customIcon }).addTo(mapInstance);
+                const marker = L.marker([attraction.coords.x, attraction.coords.y],  { icon: icons[attraction.subtype]   }).addTo(mapInstance);
                 marker.bindPopup(attraction.name).closePopup();
             });
+            /*
+            mapInstance.on('zoomed', function() {
+                var newzoom = '' + (2*(mapInstance.getZoom())) +'px';
+                $('#mapid .YourClassName').css({'width':newzoom,'height':newzoom}); 
+            });*/
         }
 
         return () => {
