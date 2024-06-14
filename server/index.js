@@ -82,9 +82,9 @@ app.get('/users',async (req,res) => {
 
 app.get('/challenge/:id', async (req, res) =>{
     try{
-        var {challenge,attractions} = await db.get_challenge(req.params["id"]);
-        var attr_info = await Promise.all(attractions.map(async id => await db.get_attraction(id)));
-        res.json({...challenge,attractions:attr_info});
+        var challenge = await db.get_challenge(req.params["id"]);
+        var attractions = await db.get_challenge_attractions(req.params["id"]);
+        res.json({...challenge, attractions: attractions});
     }
     catch(error){
         console.log('Error fetching challenge info: '+error);
@@ -106,6 +106,16 @@ app.get('/challenges', async (req,res)=>{
 app.post('/start_challenge/:challenge_id/:user_id', async (req, res) => {
     try {
           await db.start_challenge(req.params['challenge_id'], req.params['user_id']);
+          res.json({ success: true });
+    } catch (error) {
+          res.json({ success: false, error: error });
+    }
+})
+
+app.post('/visit_challenge_attraction/:challenge_id/:attraction_id/:user_id', async (req, res) => {
+    try {
+          await db.visit_challenge_attraction(req.params['user_id'], req.params['challenge_id'], 
+            req.params['attraction_id']);
           res.json({ success: true });
     } catch (error) {
           res.json({ success: false, error: error });

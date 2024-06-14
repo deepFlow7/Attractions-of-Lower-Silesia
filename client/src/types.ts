@@ -8,6 +8,7 @@ export interface Photo {
 export interface Attraction extends NewAttraction {
   id: number;
   rating: number;
+  photos: Photo[];
 }
 
 export interface NewPhoto {
