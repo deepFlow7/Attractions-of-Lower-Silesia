@@ -31,10 +31,33 @@ const Description = styled(Typography)`
   font-size: 1.2rem;
 `;
 
+function haversineDistanceBetweenPoints(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) {
+  const R = 6371e3;
+  const p1 = (lat1 * Math.PI) / 180;
+  const p2 = (lat2 * Math.PI) / 180;
+  const deltaLon = lon2 - lon1;
+  const deltaLambda = (deltaLon * Math.PI) / 180;
+  const d =
+    Math.acos(
+      Math.sin(p1) * Math.sin(p2) +
+        Math.cos(p1) * Math.cos(p2) * Math.cos(deltaLambda)
+    ) * R;
+  return d;
+}
+
 const ChallengeView: React.FC = () => {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const { isAuthenticated, user } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
+  const [visitedAttractions, setVisitedAttractions] = useState<
+    { attraction_id: number }[]
+  >([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const { id } = useParams();
 
@@ -51,6 +74,26 @@ const ChallengeView: React.FC = () => {
 
   useEffect(() => {
     get_challenge_data();
+    if (user) {
+      axios
+        .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
+        .then((response) => {
+          setTakesPart(response.data);
+          if (response.data) {
+            axios
+              .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
+              .then((response) => {
+                setVisitedAttractions(response.data);
+              })
+              .catch((error) => {
+                console.error("There was an error fetching the data:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the data!", error);
+        });
+    } else console.log("nie zalogowoano");
   }, []);
 
   if (!challenge) {
@@ -68,26 +111,47 @@ const ChallengeView: React.FC = () => {
       .catch((error) => {
         console.error("There was an error starting the challenge:", error);
       });
+    axios
+      .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
+      .then((response) => {
+        setVisitedAttractions(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error:", error);
+      });
   };
 
-  const visitAttracion = (attraction: ChallengeAttraction) => {
+  const visitAttraction = (attraction: ChallengeAttraction) => {
     if (!user) return;
 
     if ("geolocation" in navigator) {
+      alert("Sprawdzam lokalizację");
       navigator.geolocation.getCurrentPosition(function (position) {
         const x = position.coords.latitude;
         const y = position.coords.longitude;
-        console.log("Twoja aktualna lokalizacja:", x, y, ' atrakcja: ', attraction.coords);
+        const distance = haversineDistanceBetweenPoints(
+          x,
+          y,
+          attraction.coords.x,
+          attraction.coords.y
+        );
+
+        if (distance > 200000) {
+          alert("Nie jesteś na miejscu");
+          return;
+        }
+
         axios
           .post(
-            "/api/visit_challenge_attraction/" +
-              challenge.id +
-              "/" +
-              attraction.id +
-              "/" +
-              user.id
+            `/api/visit_challenge_attraction/${challenge.id}/${attraction.id}/${user.id}`
           )
-          .then((response) => {})
+          .then(() => {
+            setVisitedAttractions((prev) => [
+              ...prev,
+              { attraction_id: attraction.id },
+            ]);
+            setRefreshKey(key => key + 1);
+          })
           .catch((error) => {
             console.error("There was an error visiting attraction:", error);
           });
@@ -122,7 +186,8 @@ const ChallengeView: React.FC = () => {
               <ChallengeAttractionsList
                 attractions={challenge.attractions}
                 showVisitButtons={isAuthenticated && takesPart}
-                onClick={visitAttracion}
+                onClick={visitAttraction}
+                visitedAttractions={visitedAttractions}
               />
             </CardContent>
           </Section>
@@ -131,8 +196,8 @@ const ChallengeView: React.FC = () => {
           <Section>
             <CardContent>
               <Title variant="h5">Ranking</Title>
-              <RankingTable challenge_id={id ? parseInt(id) : null} />
-              {isAuthenticated && !takesPart && (
+              <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
+              {user && !takesPart && (
                 <Button
                   variant="contained"
                   color="primary"

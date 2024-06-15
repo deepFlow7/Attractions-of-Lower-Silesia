@@ -8,15 +8,16 @@ import {
   ListItemText,
   Typography,
   Grid,
+  Box,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { ChallengeAttraction } from "../types"; // Importujemy interfejs Attraction
 import { Link } from "react-router-dom";
+import { ChallengeAttraction } from "../types";
 
 interface ListProps {
   attractions: ChallengeAttraction[];
-  onClick: (attraction : ChallengeAttraction) => void;
+  onClick: (attraction: ChallengeAttraction) => void;
   showVisitButtons: boolean;
+  visitedAttractions: { attraction_id: number }[];
 }
 
 const StyledList = styled(List)`
@@ -36,51 +37,94 @@ const Title = styled(Typography)`
   font-weight: bold;
 `;
 
-const Container = styled(Grid)`
-`;
-
 const VisitButton = styled(Button)`
   && {
     background-color: #42a5f5;
     color: white;
     border-radius: 4px;
-    margin-left: 16px;
+    margin: 8px auto 0 auto;
+    display: block;
+    width: 90%;
+    padding: 5px 0px;
     &:hover {
       background-color: #1976d2;
     }
   }
 `;
 
+const VisitedText = styled(Typography)`
+  && {
+    background-color: #d0d0d0;
+    color: white;
+    border-radius: 4px;
+    margin: 8px auto 0 auto;
+    display: block;
+    text-align: center;
+    width: 90%;
+    padding: 5px 0px;
+  }
+`;
 
-const ChallangeAttractionsList: React.FC<ListProps> = ({ attractions, onClick, showVisitButtons }) => {
+const ChallengeAttractionsList: React.FC<ListProps> = ({
+  attractions,
+  onClick,
+  showVisitButtons,
+  visitedAttractions,
+}) => {
+  const isAttractionVisited = (attractionId: number) => {
+    return visitedAttractions.some(
+      (attraction) => attraction.attraction_id === attractionId
+    );
+  };
+
   return (
     <StyledList>
       <Title variant="h5">Lista Atrakcji</Title>
-      <Container>
-      {attractions
-        .map((attraction) => (
-          <Grid item xs={12} key={attraction.id}>
-          <Button
-            component={Link}
-            to={"/attraction/" + attraction.id}
-            color="inherit"
-            key={attraction.id}
-          >
-            <StyledListItem key={attraction.id}>
-              <ListItemText primary={attraction.name} />
-            </StyledListItem>
-          </Button>
-           {showVisitButtons && (
-            <VisitButton
-              onClick={() => {onClick(attraction)}}>
-              Odwiedź ({attraction.points} punktów)
-            </VisitButton>
-          )}
-          </Grid>
-        ))}
-    </Container>
+      <Box
+        sx={{
+          maxHeight: 400, 
+          overflowY: "auto",
+        }}
+      >
+        <Grid container spacing={2}>
+          {attractions.map((attraction) => (
+            <Grid item xs={12} key={attraction.id}>
+              <Box
+                border={1}
+                borderColor="grey.400"
+                borderRadius={2}
+                padding={2}
+                marginBottom={2}
+              >
+                <Button
+                  component={Link}
+                  to={"/attraction/" + attraction.id}
+                  color="inherit"
+                  key={attraction.id}
+                  fullWidth
+                  style={{ justifyContent: "flex-start" }}
+                >
+                  <StyledListItem key={attraction.id}>
+                    <ListItemText primary={attraction.name} />
+                  </StyledListItem>
+                </Button>
+                {showVisitButtons &&
+                  (isAttractionVisited(attraction.id) ? (
+                    <VisitedText variant="body1">
+                      Odwiedzone ({attraction.points} punktów)
+                    </VisitedText>
+                  ) : (
+                    <VisitButton onClick={() => onClick(attraction)}>
+                      Odwiedź ({attraction.points} punktów)
+                    </VisitButton>
+                  ))}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     </StyledList>
   );
 };
 
-export default ChallangeAttractionsList;
+export default ChallengeAttractionsList;

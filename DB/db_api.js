@@ -411,10 +411,32 @@ class db_api {
         }
     }
 
+    async takes_part_in_challenge(user_id, challenge_id){
+        try {
+            const {rows} = await pool.query('SELECT * FROM challenges_started WHERE \
+            challenge_id = $1 AND user_id = $2', [challenge_id, user_id]);
+            return rows;
+        } catch (error) {
+            console.error("Error checking participation in challenge:", error);
+            throw error;
+        }
+    }
+
     async visit_challenge_attraction(user_id, challenge_id, attraction_id) {
         try {
             await pool.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)', 
             [challenge_id, attraction_id, user_id]);
+        } catch (error) {
+            console.error('Error completing challenge attraction:', error);
+            throw error;
+        }
+    }
+
+    async get_visited_challenge_attractions(user_id, challenge_id) {
+        try {
+            const {rows} = await pool.query('SELECT attraction_id FROM visited_challenge_attractions \
+                WHERE challenge_id = $1 AND user_id = $2', [challenge_id, user_id]);
+            return rows;
         } catch (error) {
             console.error('Error completing challenge attraction:', error);
             throw error;

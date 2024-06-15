@@ -122,6 +122,25 @@ app.post('/visit_challenge_attraction/:challenge_id/:attraction_id/:user_id', as
     }
 })
 
+app.get('/takes_part_in_challenge/:challenge_id/:user_id', async (req, res) => {
+    try {
+          const rows = await db.takes_part_in_challenge(req.params['user_id'], req.params['challenge_id']);
+          res.json(rows.length > 0);
+    } catch (error) {
+          res.status(500).json({ error: error });
+    }
+})
+
+app.get('/challenge/visited_attractions/:challenge_id/:user_id', async (req, res) => {
+    try {
+          const rows = await db.get_visited_challenge_attractions(req.params['user_id'], req.params['challenge_id']);
+          res.json(rows);
+    } catch (error) {
+          res.status(500).json({ error: error });
+    }
+})
+
+
 app.get('/attraction/:id', async (req,res) =>{
     try{
         var attraction = await db.get_attraction(req.params["id"]);
