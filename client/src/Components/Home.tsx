@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = () => {
   const y = 17.0385;
   const [attractions, setAttractions] = useState<Attraction[] | null>(null);
   const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
-
+  const [searchInput, setSearchInput] = useState<string>("");
   useEffect(() => {
     axios.get('/api/attractions')
       .then(response => {
@@ -43,22 +43,27 @@ const Home: React.FC<HomeProps> = () => {
   function handleFilterChange(selectedTypes: possible_type[], selectedSubtypes: subtypes[]) {
     if (attractions != null) {
       setFilteredAttractions(attractions.filter(a => selectedSubtypes.includes(a.subtype) && selectedTypes.includes(a.type)))
-      alert("" + filteredAttractions[0].name)
     }
   }
 
+  function filterBySearch(attractions: Attraction[], input: string) {
+    return attractions.filter(a => a.name.includes(input));
+  }
+
   return (
+    
     <Container>
+      
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
-          <TileCard>
-            <Map x={x} y={y} attractions={attractions} />
+          <TileCard> 
+            <Map x={x} y={y} attractions={filterBySearch(filteredAttractions, searchInput)} />
           </TileCard>
         </Grid>
 
         <Grid item xs={12} md={4}>
           <TileCard>
-            <AttractionsList attractions={filteredAttractions}  />
+            <AttractionsList attractions={filterBySearch(filteredAttractions, searchInput)}  />
           </TileCard>
         </Grid>
         <Grid item xs={12} md={3}>
