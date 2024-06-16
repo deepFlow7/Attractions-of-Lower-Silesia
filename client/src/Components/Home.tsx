@@ -5,8 +5,10 @@ import axios from 'axios';
 import { Grid, Card } from '@mui/material';
 import Map from './Map';
 import AttractionsList from './AttractionsList';
+
 import { possibleSubtypes, possibleTypes, Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
+
 
 interface HomeProps {
 }
@@ -63,7 +65,9 @@ const Home: React.FC<HomeProps> = () => {
 
         <Grid item xs={12} md={4}>
           <TileCard>
+
             <AttractionsList attractions={filterBySearch(filteredAttractions, searchInput)}  />
+
           </TileCard>
         </Grid>
         <Grid item xs={12} md={3}>

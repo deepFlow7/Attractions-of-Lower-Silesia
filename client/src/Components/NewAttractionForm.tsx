@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/material';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
+import Map from './Map';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -22,6 +23,7 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
   const [description, setDescription] = useState<string>('');
   const [interactivity, setInteractivity] = useState<number>(5);
   const [timeItTakes, setTimeItTakes] = useState<number>(30);
+  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null);
   const [photos, setPhotos] = useState<NewPhoto[]>([]);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
@@ -161,6 +163,13 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
             error={!!errors.timeItTakes}
             helperText={errors.timeItTakes}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
+          <Map x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
+          {coords && (
+            <Typography>Wybrane współrzędne: {coords.x}, {coords.y}</Typography>
+          )}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Zdjęcia</Typography>

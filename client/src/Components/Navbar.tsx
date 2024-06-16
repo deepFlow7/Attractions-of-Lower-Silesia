@@ -7,13 +7,37 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
+
+
 
 const Navbar = () => {
+    const {isAuthenticated,logout, user, updateUser} = useAuth();
+
+    const navigate = useNavigate();
+
+    const onLogout = async () => {
+        try {
+            await axios.get('/api/logout');
+            updateUser(null);
+            logout();
+            navigate('/');
+        } catch (error) {
+            alert('Error logging out');
+        }
+    };
+
+    
+
+    
+
+    
   return (
     <AppBar className='navbar' position="static">
       <Toolbar>
-        <Typography  variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography  variant="h2" component="div" sx={{ flexGrow: 1 }}>
             <Button component={Link} to="/" color="inherit">
                     Atrakcje Dolnego Śląska
             </Button>
@@ -42,9 +66,25 @@ const Navbar = () => {
         <IconButton color="inherit">
           <EmojiObjectsIcon />
         </IconButton>
-        <Button component={Link} to='login' color="inherit">
-          Zaloguj
-        </Button> 
+        {isAuthenticated?
+            (
+                <>
+                    <Typography  variant="h6" component="div">
+                        {user.name}
+                    </Typography>
+
+                    <Button onClick={onLogout} color="inherit">
+                        Wyloguj
+                    </Button> 
+                
+                </>
+        ) : (
+                <>
+                    <Button component={Link} to='login' color="inherit">
+                        Zaloguj
+                    </Button>     
+                </>
+        )}
       </Toolbar>
     </AppBar>
   );

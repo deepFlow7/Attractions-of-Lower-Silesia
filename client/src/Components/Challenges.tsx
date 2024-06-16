@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 interface ChallengesProps {
-  completedChallenges: Challenge[];
+  completedChallenges: Challenge[] ;
 }
 
 const Container = styled.div`
@@ -39,7 +39,6 @@ const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
             console.error('There was an error fetching challenges:', error);
           });
       }, []);
-      console.log(allChallenges);
     if(!allChallenges){
         return <div>Loading...</div>
     }
