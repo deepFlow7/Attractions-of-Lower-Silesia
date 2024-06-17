@@ -9,7 +9,7 @@ import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 
 
 

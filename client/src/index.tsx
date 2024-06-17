@@ -10,10 +10,10 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import Ranking from './Components/Ranking';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
-import onSubmit from './newAtraction';
-import onRegister from './newUser';
+import onSubmit from './Components/newAtraction';
+import onRegister from './Components/newUser';
 import axios from 'axios';
-import { AuthProvider } from './Components/AuthContext';
+import { AuthProvider } from './Providers/AuthContext';
 
 
 

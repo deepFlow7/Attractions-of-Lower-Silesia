@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 import { User } from '../types';
 
 interface LoginProps {
