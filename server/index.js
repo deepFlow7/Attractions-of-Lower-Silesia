@@ -1,11 +1,9 @@
 const express = require('express');
-const db = require('../DB/db_api.js');
+const db = require('./DB/db_api.js');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 app.use(bodyParser.json());
 app.use(cors({
