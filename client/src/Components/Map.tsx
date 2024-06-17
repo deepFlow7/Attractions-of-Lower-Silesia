@@ -13,27 +13,20 @@ interface MapProps {
 var CustomIcon = L.Icon.extend({
     options:{
         className: 'ikona',
-        iconSize: [50, 50],
+        iconSize: [30,30],
     }
 })
 
-type Icons=Record<PropertyKey,typeof CustomIcon>;
+type Icons=Record<PropertyKey,  L.Icon>;
 const icons = possibleSubtypes
                     .reduce((icons:Icons,subtype:subtypes)=>{
                         icons[subtype] = new CustomIcon({
-                            iconUrl: '../../public/obrazki/'+subtype+'.png',
+                            iconUrl: '/obrazki/'+subtype+'.png',
                         });
                         return icons;
                     },{});
 
-                    console.log(icons);
-
-
-
-
-
-
-
+                    //console.log(icons);
 
 export default function Map({ x, y, attractions} : MapProps) {
 
@@ -55,11 +48,12 @@ export default function Map({ x, y, attractions} : MapProps) {
                 const marker = L.marker([attraction.coords.x, attraction.coords.y],  { icon: icons[attraction.subtype]   }).addTo(mapInstance);
                 marker.bindPopup(attraction.name).closePopup();
             });
-            /*
-            mapInstance.on('zoomed', function() {
-                var newzoom = '' + (2*(mapInstance.getZoom())) +'px';
-                $('#mapid .YourClassName').css({'width':newzoom,'height':newzoom}); 
-            });*/
+            
+            mapInstance.on('zoomend', function() {
+                var zoom=mapInstance.getZoom();
+                var newzoom = 5/2*(zoom-1)+'px';
+                $('#'+mapContainer.current!.id+' .ikona').css({'width':newzoom,'height':newzoom}); 
+            });
         }
 
         return () => {
@@ -67,10 +61,10 @@ export default function Map({ x, y, attractions} : MapProps) {
                 mapInstance.remove();
             }
         };
-    }, [x, y]);
+    }, [attractions, icons, x, y]);
 
     return (
-        <div style={{ padding: 0, margin: 0, width: "100%", height: "50vh" }} ref={mapContainer}></div>
+        <div id="MapContainer" style={{ padding: 0, margin: 0, width: "100%", height: "80vh" }} ref={mapContainer}></div>
     );
 
 }
