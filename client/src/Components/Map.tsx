@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Attraction } from '../types';
@@ -6,11 +6,16 @@ import { Attraction } from '../types';
 interface MapProps {
     x: number;
     y: number;
+    zoom?: number;
     attractions: Attraction[];
     onMapClick?: (coords: { x: number; y: number }) => void;
 }
 
-export default function Map({ x, y, attractions, onMapClick }: MapProps) {
+export interface MapRef {
+    getView: () => { center: L.LatLng, zoom: number };
+}
+
+const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick }, ref) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const mapInstance = useRef<L.Map | null>(null);
     const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
@@ -23,14 +28,14 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
 
     useEffect(() => {
         if (mapContainer.current && !mapInstance.current) {
-            mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], 13);
+            mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], zoom ? zoom : 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(mapInstance.current);
 
-            const southWest = L.latLng(50.1, 14.8); 
-            const northEast = L.latLng(51.81, 17.8); 
+            const southWest = L.latLng(50.1, 14.8);
+            const northEast = L.latLng(51.81, 17.8);
             const bounds = L.latLngBounds(southWest, northEast);
             mapInstance.current.setMaxBounds(bounds);
             mapInstance.current.setMinZoom(8);
@@ -71,7 +76,21 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
         }
     }, [attractions, customIcon]);
 
+    useImperativeHandle(ref, () => ({
+        getView: () => {
+            if (mapInstance.current) {
+                return {
+                    center: mapInstance.current.getCenter(),
+                    zoom: mapInstance.current.getZoom(),
+                };
+            }
+            return { center: L.latLng(x, y), zoom: zoom || 13 };
+        }
+    }));
+
     return (
         <div style={{ padding: 0, margin: 0, width: "100%", height: "50vh" }} ref={mapContainer}></div>
     );
-}
+});
+
+export default Map;

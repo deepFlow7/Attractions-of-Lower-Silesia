@@ -49,7 +49,7 @@ const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
           <SectionTitle variant="h5">Wszystkie wyzwania</SectionTitle>
           <List>
             {allChallenges.map(challenge => (
-                <Button component={Link} to={'/challenge/'+challenge.id} color="inherit">
+                <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
                     <ListItem key={challenge.id+1}>
                         <ListItemText primary={challenge.name} />
                     </ListItem>

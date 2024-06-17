@@ -4,7 +4,15 @@ CREATE DATABASE maps;
 
 \c maps
 
-CREATE OR UPDATE USER pg WITH PASSWORD 'pg';
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'pg') THEN
+        CREATE USER pg WITH PASSWORD 'pg';
+    ELSE
+        ALTER USER pg WITH PASSWORD 'pg';
+    END IF;
+END $$;
+
 ALTER ROLE pg SET client_encoding TO 'utf8';
 ALTER ROLE pg SET default_transaction_isolation TO 'read committed';
 ALTER ROLE pg SET timezone TO 'UTC';
@@ -50,7 +58,7 @@ CREATE TABLE attractions (
 CREATE TABLE photos (
     id SERIAL PRIMARY KEY,
     attraction_id INTEGER NOT NULL REFERENCES attractions(id),
-    photo TEXT,
+    photo TEXT NOT NULL,
     caption TEXT 
 );
 
@@ -89,57 +97,83 @@ CREATE TABLE comments (
     parent INTEGER REFERENCES comments(id)
 );
 
-CREATE TABLE rankings (
-    user_id INTEGER REFERENCES users(id),
-    points INTEGER NOT NULL DEFAULT 0
-);
-
 CREATE TABLE challenges (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
-    points INTEGER NOT NULL DEFAULT 0
+    coords POINT NOT NULL,
+    zoom INTEGER NOT NULL,
+    points INTEGER NOT NULL DEFAULT 0 
 );
 
-CREATE TABLE challenges_finished (
+CREATE TABLE challenges_started (
     user_id INTEGER NOT NULL REFERENCES users(id),
-    challenge_id INTEGER NOT NULL REFERENCES challenges(id)
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
+    start_date timestamp NOT NULL,
+    finished_date timestamp,
+    points INTEGER NOT NULL DEFAULT 0,
+    bonus_points INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (user_id, challenge_id)
 );
 
 CREATE TABLE challenge_attractions (
     challenge_id INTEGER NOT NULL REFERENCES challenges(id),
-    attraction_id INTEGER NOT NULL REFERENCES attractions(id)
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id),
+    points INTEGER NOT NULL DEFAULT 10,
+    UNIQUE (challenge_id, attraction_id)
 );
 
-CREATE OR REPLACE FUNCTION update_total_amount()
+CREATE TABLE visited_challenge_attractions (
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    UNIQUE (challenge_id, attraction_id, user_id)
+);
+
+CREATE OR REPLACE FUNCTION update_challenge_points()
 RETURNS TRIGGER AS $$
-DECLARE
-  row RECORD;
 BEGIN
-    FOR row IN SELECT id FROM users LOOP
-      UPDATE rankings
-      SET points = (SELECT SUM(points) FROM challenges_finished JOIN challenges ON challenge_id=id WHERE user_id=row.id)
-      WHERE user_id=row.id;
-    END LOOP;
+    UPDATE challenges
+    SET points = points - COALESCE(OLD.points, 0) + NEW.points
+    WHERE challenges.id = NEW.challenge_id;
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ranking_trigger
-AFTER INSERT OR UPDATE OR DELETE ON challenges_finished
-FOR EACH STATEMENT
-EXECUTE FUNCTION update_total_amount();
+CREATE TRIGGER challenge_points_trigger
+AFTER INSERT OR UPDATE ON challenge_attractions
+FOR EACH ROW
+EXECUTE FUNCTION update_challenge_points();
 
-CREATE OR REPLACE FUNCTION insert_new_user()
+CREATE OR REPLACE FUNCTION update_user_points()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO rankings(user_id) VALUES (NEW.id);
-  RETURN NULL;
+    UPDATE challenges_started
+    SET points = points + (SELECT points FROM challenge_attractions 
+        WHERE challenge_attractions.challenge_id = NEW.challenge_id AND 
+        challenge_attractions.attraction_id = NEW.attraction_id)
+    WHERE user_id = NEW.user_id AND challenge_id = NEW.challenge_id;
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE OR REPLACE TRIGGER users_trigger
-AFTER INSERT ON users
+CREATE TRIGGER user_points_trigger
+AFTER INSERT ON visited_challenge_attractions
 FOR EACH ROW
-EXECUTE FUNCTION insert_new_user();
+EXECUTE FUNCTION update_user_points();
+
+
+CREATE OR REPLACE FUNCTION update_bonus_points()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE challenges_started
+    SET bonus_points = GREATEST((120 - EXTRACT(EPOCH FROM (NEW.finished_date - NEW.start_date)) / 3600) * 5, 0)
+    WHERE user_id = NEW.user_id and challenge_id = NEW.challenge_id;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_bonus_points
+AFTER UPDATE OF finished_date ON challenges_started
+FOR EACH ROW
+EXECUTE FUNCTION update_bonus_points();
