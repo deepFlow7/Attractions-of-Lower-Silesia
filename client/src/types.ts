@@ -91,6 +91,7 @@ export interface ChallengeForm {
   attractions: challengeAttractionInput[];
 }
 
+export type role = 'admin' | 'user';
 
 export type possible_type = "natura" | "urbanistyka";
 export type subtypes = 

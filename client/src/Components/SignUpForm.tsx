@@ -4,6 +4,7 @@ import { NewUser } from '../types';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const FormContainer = styled.div`
   max-width: 400px;
@@ -22,6 +23,10 @@ const Registration = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registerError, setRegisterError] = useState<string>('');
   const navigate = useNavigate();
+  const {isAuthenticated} = useAuth();
+  
+  if(isAuthenticated)
+    navigate("/");
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/;

@@ -106,6 +106,19 @@ class db_api {
         }
     }
 
+    async get_login_by_id(id) {
+        try {
+            const { rows } = await pool.query('SELECT login FROM logins WHERE user_id=$1',[id]);
+            if(rows.length<=0){
+                throw "User not found";
+            }
+            return rows[0].login;
+        } catch (error) {
+            console.error('Error fetching login:', error);
+            throw error;
+        }
+    }
+
     //----FAVOURITES-------
     async change_favourite(user_id,attr_id,fav){
         try {

@@ -27,7 +27,6 @@ root!.render(
         <Route path="/challenges" element={<Challenges />} />
         <Route path="/login" element={<LoginForm  />} />
         <Route path="/new_attraction" element={<NewAttractionForm />} />
-        {/* tylko dla admina */}
         <Route path="/new_challenge" element={<NewChallengeForm />} /> 
         <Route path="/signup" element={<SignUpForm />} />
       </Routes>

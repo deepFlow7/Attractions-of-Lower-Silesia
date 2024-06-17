@@ -63,7 +63,8 @@ app.get('/profile', async (req, res) => {
 
     try {
         const user = await db.get_user(req.session.userId);
-        res.json(user);
+        const login = await db.get_login_by_id(req.session.userId);
+        res.json({user : user, username: login, role: req.session.role});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

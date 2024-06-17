@@ -4,6 +4,8 @@ import { ChallengeForm, Attraction, challengeAttractionInput } from '../types';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import Map, { MapRef } from './Map';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const FormContainer = styled.div`
   max-width: 1200px;
@@ -32,8 +34,13 @@ const NewChallengeForm = () => {
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(
     {center: {x: 51.1079, y: 17.0385}, zoom: 12});
-
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
+  
+  const {isAuthenticated, role} = useAuth();
+  const navigate = useNavigate();
+
+  if(!isAuthenticated || role != 'admin')
+    navigate('/');
 
   useEffect(() => {
     axios.get('/api/attractions')
