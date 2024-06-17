@@ -14,14 +14,16 @@ import onSubmit from './Components/newAtraction';
 import onRegister from './Components/newUser';
 import axios from 'axios';
 import { AuthProvider } from './Providers/AuthContext';
+import {SearchProvider} from './Providers/SearchContext';
 
 
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <AuthProvider>
+    <SearchProvider>
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -35,6 +37,7 @@ root.render(
         <Route path="/signup" element={<SignUpForm onRegister={onRegister} />} />
       </Routes>
     </BrowserRouter>
+    </SearchProvider>
     </AuthProvider>
 
   </React.StrictMode>
