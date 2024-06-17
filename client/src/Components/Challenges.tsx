@@ -1,15 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
-import { Challenge } from '../types'; // Importujemy interfejs Challenge
+import { Challenge } from '../types'; 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-interface ChallengesProps {
-  completedChallenges: Challenge[] ;
-}
+import { useAuth } from './AuthContext';
 
 const Container = styled.div`
   display: flex;
@@ -27,8 +23,11 @@ const SectionTitle = styled(Typography)`
   margin: 1%;
 `;
 
-const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
+const Challenges = () => {
     const [allChallenges,setAllChallenges] = useState<Challenge[]|null>(null);
+    const [completedChallenges,setCompletedChallenges] = useState<Challenge[]>([]);
+    const { isAuthenticated, user } = useAuth();
+
 
     useEffect(() => {
         axios.get('/api/challenges')
@@ -38,7 +37,17 @@ const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
           .catch(error => {
             console.error('There was an error fetching challenges:', error);
           });
-      }, []);
+
+          if(user) {
+            axios.get(`/api/completed_challenges/${user.id}`)
+              .then(response => {
+                setCompletedChallenges(response.data);
+              })
+              .catch(error => {
+                console.error('There was an error fetching challenges:', error);
+            });}
+      }, [user]);
+      
     if(!allChallenges){
         return <div>Loading...</div>
     }
@@ -58,18 +67,21 @@ const Challenges: React.FC<ChallengesProps> = ({ completedChallenges }) => {
           </List>
         </CardContent>
       </Section>
-      <Section>
+      {user && (
+        <Section>
         <CardContent>
           <SectionTitle variant="h5">Ukończone wyzwania</SectionTitle>
           <List>
             {completedChallenges.map(challenge => (
-              <ListItem key={challenge.id}>
-                <ListItemText primary={challenge.name} />
+             <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
+              <ListItem key={challenge.id+1}>
+                  <ListItemText primary={challenge.name} />
               </ListItem>
+            </Button>
             ))}
           </List>
         </CardContent>
-      </Section>
+      </Section>)}
     </Container>
   );
 };

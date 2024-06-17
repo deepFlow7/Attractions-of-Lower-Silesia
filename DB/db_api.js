@@ -401,7 +401,7 @@ class db_api {
     async finish_challenge(challenge_id,user_id){
         try {
             await pool.query('UPDATE challenges_started SET finished_date = NOW() WHERE \
-            challenge_id = $1 AND user_id = 2', [challenge_id, user_id]);
+            challenge_id = $1 AND user_id = $2', [challenge_id, user_id]);
         } catch (error) {
             console.error("Error finishing challenge:", error);
             throw error;
@@ -423,6 +423,13 @@ class db_api {
         try {
             await pool.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)', 
             [challenge_id, attraction_id, user_id]);
+            const user_points = await pool.query('SELECT points FROM challenges_started \
+                 WHERE user_id = $1 AND challenge_id = $2', [user_id, challenge_id]);
+            const challenge_points = await pool.query('SELECT points FROM challenges \
+                WHERE id = $1', [challenge_id]);
+            console.log(user_points, challenge_points);
+            if(user_points >= challenge_points)
+                await this.finish_challenge(challenge_id, user_id);
         } catch (error) {
             console.error('Error completing challenge attraction:', error);
             throw error;
@@ -436,6 +443,18 @@ class db_api {
             return rows;
         } catch (error) {
             console.error('Error completing challenge attraction:', error);
+            throw error;
+        }
+    }
+
+    async get_completed_challenges(user_id) {
+        try {
+            const {rows} = await pool.query('SELECT * FROM challenges, challenges_started \
+                WHERE challenges.id = challenges_started.challenge_id \
+                AND user_id = $1 AND finished_date IS NOT NULL', [user_id]);
+            return rows;
+        } catch (error) {
+            console.error('Error getting completed challenges:', error);
             throw error;
         }
     }
