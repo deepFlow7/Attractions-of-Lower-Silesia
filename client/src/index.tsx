@@ -7,20 +7,15 @@ import Attraction from "./Components/Attraction";
 import ChallengeView from './Components/Challenge';
 import Challenges from './Components/Challenges';
 import NewAttractionForm from './Components/NewAttractionForm';
-import Ranking from './Components/Ranking';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
-import onSubmit from './Components/newAtraction';
-import onRegister from './Components/newUser';
-import axios from 'axios';
+import NewChallengeForm from './Components/NewChallengeForm';
 import { AuthProvider } from './Providers/AuthContext';
 import {SearchProvider} from './Providers/SearchContext';
 
 
-
-
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-root.render(
+root!.render(
   <React.StrictMode>
     <AuthProvider>
     <SearchProvider>
@@ -30,11 +25,11 @@ root.render(
         <Route path="/" element={<Home />} />
         <Route path="/attraction/:id" element={<Attraction />} />
         <Route path="/challenge/:id" element={<ChallengeView />} />
-        <Route path="/challenges" element={<Challenges completedChallenges={[]} />} />
+        <Route path="/challenges" element={<Challenges />} />
         <Route path="/login" element={<LoginForm  />} />
-        <Route path="/new_attraction" element={<NewAttractionForm onSubmit={onSubmit} />} />
-        <Route path="/ranking" element={<Ranking />} />
-        <Route path="/signup" element={<SignUpForm onRegister={onRegister} />} />
+        <Route path="/new_attraction" element={<NewAttractionForm />} />
+        <Route path="/new_challenge" element={<NewChallengeForm />} /> 
+        <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </BrowserRouter>
     </SearchProvider>

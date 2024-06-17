@@ -7,6 +7,8 @@ interface Context{
     login: ()=>void,
     logout: ()=>void,
     user: User|null,
+    username: string,
+    role: role,
     updateUser: (new_user:User|null)=>void
 }
 
@@ -33,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, updateUser } as Context}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, username, role, updateUser } as Context}>
       {children}
     </AuthContext.Provider>
   );

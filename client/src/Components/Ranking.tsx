@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-import { Ranking } from '../types';
+import { ChallengeRanking } from '../types';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import { useAuth } from './AuthContext';
 
 const StyledTableContainer = styled.div`
   max-width: 600px;
@@ -22,19 +23,24 @@ const StyledTable = styled(Table)`
 `;
 
 interface RankingTableProps {
+  challenge_id: number | null;
 }
 
-const RankingTable: React.FC<RankingTableProps> = () => {
-  const [rankings, setRankings] = useState<Ranking[]|null>(null);
+const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) => {
+  const [rankings, setRankings] = useState<ChallengeRanking[]|null>(null);
+  const {isAuthenticated, username} = useAuth();
+
   useEffect(() => {
-      axios.get('/api/rankings')
+      if (props.challenge_id) {
+      axios.get('/api/ranking/' + props.challenge_id)
         .then(response => {
           setRankings(response.data);
         })
         .catch(error => {
           console.error('There was an error fetching the data!', error);
         });
-  }, []);
+  }}, []);
+
   if(!rankings){return <div>Loading...</div>;}
   return (
     <StyledTableContainer>
@@ -43,15 +49,21 @@ const RankingTable: React.FC<RankingTableProps> = () => {
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell>User ID</TableCell>
+                <TableCell>Username</TableCell>
                 <TableCell align="right">Points</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rankings.map((ranking, index) => (
-                <TableRow key={index}>
-                  <TableCell>{ranking.user_id}</TableCell>
-                  <TableCell align="right">{ranking.points}</TableCell>
+                <TableRow 
+                  key={index} 
+                  style={{
+                    backgroundColor: isAuthenticated && ranking.login === username ? 'lightblue' : 'inherit'
+                }}>
+                  <TableCell>
+                    {ranking.login}
+                  </TableCell>
+                  <TableCell align="right">{ranking.score}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

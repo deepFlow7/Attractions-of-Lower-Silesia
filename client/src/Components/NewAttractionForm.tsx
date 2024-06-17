@@ -3,6 +3,7 @@ import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/materia
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
 import Map from './Map';
+import axios from 'axios';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -12,11 +13,7 @@ const FormContainer = styled.div`
   border-radius: 5px;
 `;
 
-interface NewAttractionFormProps {
-  onSubmit: (attraction: NewAttraction) => Promise<any>;
-}
-
-const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
+const NewAttractionForm = () => {
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<possible_type>(possibleTypes[0]);
   const [subtype, setSubtype] = useState<subtypes>(possibleSubtypes[0]);
@@ -28,10 +25,17 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [mapKey, setMapKey] = useState<number>(0);
 
   const handleAddPhoto = () => {
+    const newPhotoUrl = photoUrls[photos.length] || '';
+    if (!newPhotoUrl.trim()) {
+      setErrors({ ...errors, photoUrl: 'Nie podano linku do zdjęcia' });
+      return;
+    }
+    setErrors({ ...errors, photoUrl: '' });
     const newPhotos = [...photos];
-    newPhotos.push({ photo: photoUrls[photos.length], caption: photoCaptions[photos.length] });
+    newPhotos.push({ photo: newPhotoUrl, caption: photoCaptions[photos.length] });
     setPhotos(newPhotos);
     setPhotoUrls([...photoUrls, '']);
     setPhotoCaptions([...photoCaptions, '']);
@@ -54,16 +58,35 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
     if (!Number.isInteger(timeItTakes) || timeItTakes <= 0) {
       newErrors.timeItTakes = 'Czas zwiedzania musi być liczbą całkowitą większą niż 0';
     }
+    if (!coords)
+      newErrors.coords = 'Lokalizacja atrakcji jest wymagana';
+
+    const newPhotoUrl = photoUrls[photos.length] || '';
+    const newPhotoCaption = photoCaptions[photos.length] || '';
+    if (!newPhotoUrl.trim() && newPhotoCaption.trim()) {
+      newErrors.photoUrl ='Nie podano linku do zdjęcia';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const onSubmit = (newAttraction : NewAttraction) => {
+    axios.post('/api/new_attraction', {newAttraction})
+          .then(response => {
+            console.log('Dodano');
+          })
+          .catch(error => {
+          console.error('There was an error sending the data!', error);
+          });
+  }
+
   const handleSubmit = async () => {
-    if (!validate()) return;
+    if (!validate() || coords == null) return;
 
     const newAttraction: NewAttraction = {
       name,
-      coords: { x: 0.0, y: 0.0 }, // todo: wybór punktu na mapie
+      coords,
       type,
       subtype,
       interactivity,
@@ -81,6 +104,8 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
     setPhotos([]);
     setPhotoUrls([]);
     setPhotoCaptions([]);
+    setCoords(null);
+    setMapKey(prevKey => prevKey + 1);
     setErrors({});
   };
 
@@ -166,20 +191,25 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
-          <Map x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
+          <Map key={mapKey} x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
           {coords && (
-            <Typography>Wybrane współrzędne: {coords.x}, {coords.y}</Typography>
+            <Typography >Wybrane współrzędne: {coords.x}, {coords.y}</Typography>
           )}
+          {errors.coords && <Typography variant="body2" color="error" margin={'3px'}>{errors.coords}</Typography>}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Zdjęcia</Typography>
           <Grid container spacing={2}>
             {photos.map((photo, index) => (
-              <Grid item key={index}>
-                <img src={photo.photo} alt={`Photo ${index + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
-                <Typography variant="caption">{photo.caption}</Typography>
-                <Button variant="outlined" onClick={() => handleRemovePhoto(index)}>Usuń</Button>
-              </Grid>
+              <Grid item key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <img src={photo.photo} alt={`Photo ${index + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
+              <Typography variant="caption" style={{ marginTop: '8px', padding: '0 4px' }}>
+                {photo.caption}
+              </Typography>
+              <Button variant="outlined" onClick={() => handleRemovePhoto(index)} style={{ marginTop: '8px' }}>
+                Usuń
+              </Button>
+            </Grid>
             ))}
             <Grid item>
               <TextField 
@@ -187,6 +217,8 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
                 label="URL Zdjęcia" 
                 value={photoUrls[photos.length] || ''} 
                 onChange={(e) => setPhotoUrls([...photoUrls.slice(0, photos.length), e.target.value])} 
+                error={!!errors.photoUrl}
+                helperText={errors.photoUrl}
               />
               <Box mt={2}/>
               <TextField 

@@ -3,6 +3,8 @@ import { Grid, Typography, TextField, Button } from '@mui/material';
 import { NewUser } from '../types';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const FormContainer = styled.div`
   max-width: 400px;
@@ -12,11 +14,7 @@ const FormContainer = styled.div`
   border-radius: 5px;
 `;
 
-interface RegistrationProps {
-  onRegister: (account: NewUser) => Promise<any>;
-}
-
-const Registration: React.FC<RegistrationProps> = ({ onRegister }) => {
+const Registration = () => {
   const [name, setName] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
   const [login, setLogin] = useState<string>('');
@@ -25,6 +23,10 @@ const Registration: React.FC<RegistrationProps> = ({ onRegister }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registerError, setRegisterError] = useState<string>('');
   const navigate = useNavigate();
+  const {isAuthenticated} = useAuth();
+  
+  if(isAuthenticated)
+    navigate("/");
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/;
@@ -34,7 +36,7 @@ const Registration: React.FC<RegistrationProps> = ({ onRegister }) => {
     const newErrors: { [key: string]: string } = {};
 
     if (!name) newErrors.name = 'Imię jest wymagane';
-else if (!nameSurnamePattern.test(name)) newErrors.name = 'Imię może zawierać tylko litery, spacje i myślniki';
+    else if (!nameSurnamePattern.test(name)) newErrors.name = 'Imię może zawierać tylko litery, spacje i myślniki';
 
     if (!surname) newErrors.surname = 'Nazwisko jest wymagane';
     else if (!nameSurnamePattern.test(surname)) newErrors.surname = 'Nazwisko może zawierać tylko litery, spacje i myślniki';
@@ -49,6 +51,18 @@ else if (!nameSurnamePattern.test(name)) newErrors.name = 'Imię może zawierać
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const onRegister = (newUser : NewUser): Promise<boolean> => {
+    return axios.post('/api/signup', {newUser})
+          .then(response => {
+            console.log('Dodano');
+            return response.data.success;
+          })
+          .catch(error => {
+          console.error('There was an error sending the data!', error);
+          return false;
+          });
+  }
 
   const handleSubmit = async () => {
     setRegisterError('');

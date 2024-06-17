@@ -5,16 +5,9 @@ export interface Photo {
     caption?: string;
   }
 
-export interface Attraction {
+export interface Attraction extends NewAttraction {
   id: number;
-  name: string;
-  coords: { x: number; y: number };
-  type: possible_type;
-  subtype: subtypes;
-  interactivity: number;
-  time_it_takes: number;
-  rating?: number;
-  description?: string;
+  rating: number;
   photos: Photo[];
 }
 
@@ -66,8 +59,12 @@ export interface Comment {
 }
 
 
-export interface Ranking {
-  user_id: User['id'];
+export interface ChallengeRanking {
+  login: string;
+  score: number;
+}
+
+export interface ChallengeAttraction extends Attraction {
   points: number;
 }
 
@@ -75,9 +72,26 @@ export interface Challenge {
   id: number;
   name: string;
   description: string;
-  points: number;
-  attractions: Attraction[];
+  coords: { x: number; y: number };
+  zoom: number;
+  attractions: ChallengeAttraction[];
 }
+
+
+export interface challengeAttractionInput {
+  id: number;
+  points: number;
+}
+
+export interface ChallengeForm {
+  name: string;
+  description: string;
+  coords: { x: number; y: number };
+  zoom: number;
+  attractions: challengeAttractionInput[];
+}
+
+export type role = 'admin' | 'user';
 
 export type possible_type = "natura" | "urbanistyka";
 export type subtypes = 
@@ -125,17 +139,3 @@ export const possibleSubtypes: subtypes[] = [
   "zbiorniki wodne",
   "bazylika"
 ];
-export interface ChallengeForm {
-  name: string;
-  description: string;
-  points: number;
-  attractions: String[];
-}
-
-
-export interface ChallengeForm {
-  name: string;
-  description: string;
-  points: number;
-  attractions: String[];
-}
