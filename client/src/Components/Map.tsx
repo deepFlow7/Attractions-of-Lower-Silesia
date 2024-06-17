@@ -17,6 +17,12 @@ var CustomIcon = L.Icon.extend({
     }
 })
 
+const corgiIcon = L.icon({
+    iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
+    iconSize: [50, 50],
+    iconAnchor: [25, 5],
+});
+
 type Icons=Record<PropertyKey,  L.Icon>;
 const icons = possibleSubtypes
                     .reduce((icons:Icons,subtype:subtypes)=>{
@@ -55,7 +61,7 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
                     const newCoords = { x: e.latlng.lat, y: e.latlng.lng };
 
                     if (!markerInstance) {
-                        const newMarker = L.marker([newCoords.x, newCoords.y], { icon: customIcon }).addTo(mapInstance.current!);
+                        const newMarker = L.marker([newCoords.x, newCoords.y], { icon: corgiIcon }).addTo(mapInstance.current!);
                         setMarkerInstance(newMarker);
                     } else {
                         markerInstance.setLatLng(e.latlng);
@@ -65,7 +71,7 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
                 });
             }
         }
-    }, [onMapClick, customIcon, markerInstance]);
+    }, [onMapClick, corgiIcon, markerInstance]);
 
 
     useEffect(() => {
@@ -83,8 +89,8 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
 
             });
             
-            mapInstance.on('zoomend', function() {
-                var zoom=mapInstance.getZoom();
+            mapInstance.current.on('zoomend', function() {
+                var zoom=mapInstance.current!.getZoom();
                 var newzoom = 5/2*(zoom-1)+'px';
                 $('#'+mapContainer.current!.id+' .ikona').css({'width':newzoom,'height':newzoom}); 
             });
