@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
     }
   ,[])
 
+  
+
   const updateUser=(new_user:User|null)=>{
     setUser(new_user);
   }

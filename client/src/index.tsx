@@ -10,7 +10,7 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
 import NewChallengeForm from './Components/NewChallengeForm';
-import { AuthProvider } from './Components/AuthContext';
+import { AuthProvider } from './Providers/AuthContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
