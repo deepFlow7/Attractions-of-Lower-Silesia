@@ -3,6 +3,7 @@ import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper
 import { ChallengeRanking } from '../types';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import { useAuth } from './AuthContext';
 
 const StyledTableContainer = styled.div`
   max-width: 600px;
@@ -27,6 +28,8 @@ interface RankingTableProps {
 
 const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) => {
   const [rankings, setRankings] = useState<ChallengeRanking[]|null>(null);
+  const {isAuthenticated, username} = useAuth();
+
   useEffect(() => {
       if (props.challenge_id) {
       axios.get('/api/ranking/' + props.challenge_id)
@@ -37,6 +40,7 @@ const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) =>
           console.error('There was an error fetching the data!', error);
         });
   }}, []);
+
   if(!rankings){return <div>Loading...</div>;}
   return (
     <StyledTableContainer>
@@ -51,8 +55,14 @@ const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) =>
             </TableHead>
             <TableBody>
               {rankings.map((ranking, index) => (
-                <TableRow key={index}>
-                  <TableCell>{ranking.login}</TableCell>
+                <TableRow 
+                  key={index} 
+                  style={{
+                    backgroundColor: isAuthenticated && ranking.login === username ? 'lightblue' : 'inherit'
+                }}>
+                  <TableCell>
+                    {ranking.login}
+                  </TableCell>
                   <TableCell align="right">{ranking.score}</TableCell>
                 </TableRow>
               ))}

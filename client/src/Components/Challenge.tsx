@@ -94,7 +94,7 @@ const ChallengeView: React.FC = () => {
           console.error("There was an error fetching the data!", error);
         });
     } else console.log("nie zalogowoano");
-  }, [user]);
+  }, [id, user]);
 
   if (!challenge) {
     return <div>Loading...</div>;
