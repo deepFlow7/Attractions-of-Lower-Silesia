@@ -5,7 +5,7 @@ import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } f
 import { Challenge } from '../types'; 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 
 const Container = styled.div`
   display: flex;

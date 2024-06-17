@@ -4,7 +4,7 @@ import { NewUser } from '../types';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 
 const FormContainer = styled.div`
   max-width: 400px;

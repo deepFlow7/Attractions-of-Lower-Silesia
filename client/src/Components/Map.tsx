@@ -47,6 +47,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
     useEffect(() => {
         if (mapContainer.current && !mapInstance.current) {
             mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], zoom ? zoom : 13);
+            console.log(zoom);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

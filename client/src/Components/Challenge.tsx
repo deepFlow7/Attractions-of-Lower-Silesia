@@ -9,7 +9,7 @@ import Map from "./Map";
 import ChallengeAttractionsList from "./ChallengeAttractionsList";
 import RankingTable from "./Ranking";
 import { Challenge, ChallengeAttraction, Attraction } from "../types";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../Providers/AuthContext";
 
 const Container = styled.div`
   padding: 20px;
@@ -176,6 +176,7 @@ const ChallengeView: React.FC = () => {
               <Map
                 x={challenge.coords.x}
                 y={challenge.coords.y}
+                zoom={challenge.zoom}
                 attractions={challenge.attractions}
               />
             </CardContent>

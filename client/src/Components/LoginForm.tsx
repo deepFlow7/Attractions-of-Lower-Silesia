@@ -31,7 +31,7 @@ const Title = styled(Typography)`
 const LoginForm: React.FC<LoginProps> = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { isAuthenticated, login, updateUser } = useAuth();
+  const { isAuthenticated, login, updateUser, updateUsername, setRole} = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) =>  {
@@ -39,11 +39,13 @@ const LoginForm: React.FC<LoginProps> = () => {
     try {
         await axios.post('/api/login', { login:username, password });
         const response = await axios.get('/api/profile');
-        updateUser(response.data as User);
+        updateUser(response.data.user as User);
+        updateUsername(response.data.username);
+        setRole(response.data.role);
         login();
         navigate('/');
     } catch (error) {
-        var status=error.response.status;
+        var status = error.response.status;
         if(status==400){
             alert("błędne hasło lub nieznany użytkownik");
         }else{

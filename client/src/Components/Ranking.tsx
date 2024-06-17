@@ -3,7 +3,7 @@ import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper
 import { ChallengeRanking } from '../types';
 import axios from 'axios';
 import styled from '@emotion/styled';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 
 const StyledTableContainer = styled.div`
   max-width: 600px;

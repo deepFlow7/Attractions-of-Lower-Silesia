@@ -4,7 +4,7 @@ import { ChallengeForm, Attraction, challengeAttractionInput } from '../types';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import Map, { MapRef } from './Map';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../Providers/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const FormContainer = styled.div`
@@ -57,7 +57,6 @@ const NewChallengeForm = () => {
   const onSubmit = (newChallenge : ChallengeForm) => {
     axios.post('/api/new_challenge', {newChallenge})
           .then(response => {
-            console.log('Dodano');
           })
           .catch(error => {
           console.error('There was an error sending the data!', error);
