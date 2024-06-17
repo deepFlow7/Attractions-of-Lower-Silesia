@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { User } from '../types';
+import { useSessionStorage } from '../Hooks/SessionStorage';
 
 interface Context{
     isAuthenticated: boolean,
@@ -11,9 +12,11 @@ interface Context{
 
 const AuthContext = createContext({} as Context);
 
+
+
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User|null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?',false);
+  const [user, setUser] = useSessionStorage('user',null);
 
   
 
