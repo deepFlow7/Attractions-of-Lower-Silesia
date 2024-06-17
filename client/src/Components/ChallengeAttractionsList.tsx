@@ -106,16 +106,17 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                 >
                   <StyledListItem key={attraction.id}>
                     <ListItemText primary={attraction.name} />
+                    <ListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }}/>
                   </StyledListItem>
                 </Button>
                 {showVisitButtons &&
                   (isAttractionVisited(attraction.id) ? (
                     <VisitedText variant="body1">
-                      Odwiedzone ({attraction.points} punktów)
+                      Odwiedzone 
                     </VisitedText>
                   ) : (
                     <VisitButton onClick={() => onClick(attraction)}>
-                      Odwiedź ({attraction.points} punktów)
+                      Odwiedź 
                     </VisitButton>
                   ))}
               </Box>

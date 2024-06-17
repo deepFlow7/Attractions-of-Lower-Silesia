@@ -68,11 +68,6 @@ export interface ChallengeAttraction extends Attraction {
   points: number;
 }
 
-export interface challengeAttractionInput {
-  attraction_id: number;
-  points: number;
-}
-
 export interface Challenge {
   id: number;
   name: string;
@@ -80,6 +75,12 @@ export interface Challenge {
   coords: { x: number; y: number };
   zoom: number;
   attractions: ChallengeAttraction[];
+}
+
+
+export interface challengeAttractionInput {
+  id: number;
+  points: number;
 }
 
 export interface ChallengeForm {

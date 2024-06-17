@@ -3,6 +3,7 @@ import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/materia
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
 import Map from './Map';
+import axios from 'axios';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -12,11 +13,7 @@ const FormContainer = styled.div`
   border-radius: 5px;
 `;
 
-interface NewAttractionFormProps {
-  onSubmit: (attraction: NewAttraction) => Promise<any>;
-}
-
-const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
+const NewAttractionForm = () => {
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<possible_type>(possibleTypes[0]);
   const [subtype, setSubtype] = useState<subtypes>(possibleSubtypes[0]);
@@ -73,6 +70,16 @@ const NewAttractionForm: React.FC<NewAttractionFormProps> = ({ onSubmit }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const onSubmit = (newAttraction : NewAttraction) => {
+    axios.post('/api/new_attraction', {newAttraction})
+          .then(response => {
+            console.log('Dodano');
+          })
+          .catch(error => {
+          console.error('There was an error sending the data!', error);
+          });
+  }
 
   const handleSubmit = async () => {
     if (!validate() || coords == null) return;

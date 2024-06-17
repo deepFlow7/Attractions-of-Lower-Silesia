@@ -318,14 +318,11 @@ class db_api {
     }
 
     //---Challenges----
-    async add_challenge(name, description, coords, zoom, attractions) {
+    async new_challenge(name, description, coords, zoom) {
         try {
-            const id = await pool.query('INSERT INTO challenges (name, description, coords, zoom) \
+            const {rows} = await pool.query('INSERT INTO challenges (name, description, coords, zoom) \
             VALUES ($1, $2, POINT($3, $4), $5) RETURNING id', [name, description, coords.x, coords.y, zoom]);
-            for(attraction in attractions){
-                await pool.query('INSERT INTO challenge_attractions (challenge_id, attraction_id, points) VALUES ($1, $2, $3)',
-                [id, attraction.id, attraction.points]);
-            }
+            return rows[0].id;
         } catch (error) {
             console.error('Error adding challenge:', error);
             throw error;
