@@ -10,11 +10,13 @@ import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../Providers/AuthContext';
+import { useSearch } from '../Providers/SearchContext';
 
 
 
 const Navbar = () => {
     const {isAuthenticated,logout, user, updateUser} = useAuth();
+    const {search, setSearch} = useSearch();
 
     const navigate = useNavigate();
 
@@ -29,6 +31,10 @@ const Navbar = () => {
         }
     };
 
+
+    const onChange = (event:React.ChangeEvent) => {
+        setSearch(event.target.value);
+    }
     
 
     
@@ -45,8 +51,9 @@ const Navbar = () => {
         <InputBase
           placeholder="Wyszukaj..."
           inputProps={{ 'aria-label': 'search' }}
+          onChange={onChange}
           startAdornment={
-            <IconButton sx={{ p: 0 }} disabled aria-label="search">
+            <IconButton sx={{ p: 0 }} disabled aria-label="search" >
               <SearchIcon />
             </IconButton>
           }
@@ -74,7 +81,7 @@ const Navbar = () => {
             (
                 <>
                     <Typography  variant="h6" component="div">
-                        {user.name}
+                        {user!.name}
                     </Typography>
 
                     <Button onClick={onLogout} color="inherit">

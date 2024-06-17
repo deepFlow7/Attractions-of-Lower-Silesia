@@ -11,13 +11,14 @@ import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
 import NewChallengeForm from './Components/NewChallengeForm';
 import { AuthProvider } from './Providers/AuthContext';
+import {SearchProvider} from './Providers/SearchContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-
 root!.render(
   <React.StrictMode>
     <AuthProvider>
+    <SearchProvider>
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -31,6 +32,7 @@ root!.render(
         <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </BrowserRouter>
+    </SearchProvider>
     </AuthProvider>
 
   </React.StrictMode>

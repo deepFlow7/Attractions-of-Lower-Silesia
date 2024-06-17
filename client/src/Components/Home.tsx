@@ -8,6 +8,7 @@ import AttractionsList from './AttractionsList';
 
 import { possibleSubtypes, possibleTypes, Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
+import { useSearch } from '../Providers/SearchContext';
 
 
 interface HomeProps {
@@ -26,7 +27,7 @@ const Home: React.FC<HomeProps> = () => {
   const y = 17.0385;
   const [attractions, setAttractions] = useState<Attraction[] | null>(null);
   const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
-  const [searchInput, setSearchInput] = useState<string>("");
+  const {search} = useSearch();
   useEffect(() => {
     axios.get('/api/attractions')
       .then(response => {
@@ -49,7 +50,7 @@ const Home: React.FC<HomeProps> = () => {
   }
 
   function filterBySearch(attractions: Attraction[], input: string) {
-    return attractions.filter(a => a.name.includes(input));
+    return attractions.filter(a => a.name.toLowerCase().includes(input.toLowerCase()));
   }
 
   return (
@@ -59,14 +60,14 @@ const Home: React.FC<HomeProps> = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
           <TileCard> 
-            <Map x={x} y={y} attractions={filterBySearch(filteredAttractions, searchInput)} />
+            <Map x={x} y={y} attractions={filterBySearch(filteredAttractions, search)} />
           </TileCard>
         </Grid>
 
         <Grid item xs={12} md={4}>
           <TileCard>
 
-            <AttractionsList attractions={filterBySearch(filteredAttractions, searchInput)}  />
+            <AttractionsList attractions={filterBySearch(filteredAttractions, search)}  />
 
           </TileCard>
         </Grid>
