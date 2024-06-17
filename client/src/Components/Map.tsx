@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Attraction } from '../types';
+import { Attraction,possibleSubtypes,subtypes } from '../types';
 
 interface MapProps {
     x: number;
@@ -10,16 +10,34 @@ interface MapProps {
     onMapClick?: (coords: { x: number; y: number }) => void;
 }
 
+var CustomIcon = L.Icon.extend({
+    options:{
+        className: 'ikona',
+        iconSize: [30,30],
+    }
+})
+
+const corgiIcon = L.icon({
+    iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
+    iconSize: [50, 50],
+    iconAnchor: [25, 5],
+});
+
+type Icons=Record<PropertyKey,  L.Icon>;
+const icons = possibleSubtypes
+                    .reduce((icons:Icons,subtype:subtypes)=>{
+                        icons[subtype] = new CustomIcon({
+                            iconUrl: '/obrazki/'+subtype+'.png',
+                        });
+                        return icons;
+                    },{});
+
+                    //console.log(icons);
+
 export default function Map({ x, y, attractions, onMapClick }: MapProps) {
     const mapContainer = useRef<HTMLDivElement>(null);
     const mapInstance = useRef<L.Map | null>(null);
     const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
-
-    const customIcon = L.icon({
-        iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
-        iconSize: [50, 50],
-        iconAnchor: [25, 5],
-    });
 
     useEffect(() => {
         if (mapContainer.current && !mapInstance.current) {
@@ -43,7 +61,7 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
                     const newCoords = { x: e.latlng.lat, y: e.latlng.lng };
 
                     if (!markerInstance) {
-                        const newMarker = L.marker([newCoords.x, newCoords.y], { icon: customIcon }).addTo(mapInstance.current!);
+                        const newMarker = L.marker([newCoords.x, newCoords.y], { icon: corgiIcon }).addTo(mapInstance.current!);
                         setMarkerInstance(newMarker);
                     } else {
                         markerInstance.setLatLng(e.latlng);
@@ -53,7 +71,8 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
                 });
             }
         }
-    }, [onMapClick, customIcon, markerInstance]);
+    }, [onMapClick, corgiIcon, markerInstance]);
+
 
     useEffect(() => {
         if (mapInstance.current) {
@@ -64,14 +83,21 @@ export default function Map({ x, y, attractions, onMapClick }: MapProps) {
             });
 
             attractions.forEach(attraction => {
-                const marker = L.marker([attraction.coords.x, attraction.coords.y], { icon: customIcon }).addTo(mapInstance.current!);
+                const marker = L.marker([attraction.coords.x, attraction.coords.y], { icon: icons[attraction.subtype] }).addTo(mapInstance.current!);
                 const link = `<a href="/attraction/${attraction.id}" target="_blank" style="color: black; text-decoration: underline;">${attraction.name}</a>`;
                 marker.bindPopup(link).closePopup();
+
+            });
+            
+            mapInstance.current.on('zoomend', function() {
+                var zoom=mapInstance.current!.getZoom();
+                var newzoom = 5/2*(zoom-1)+'px';
+                $('#'+mapContainer.current!.id+' .ikona').css({'width':newzoom,'height':newzoom}); 
             });
         }
-    }, [attractions, customIcon]);
+    }, [attractions, icons, x, y]);
 
     return (
-        <div style={{ padding: 0, margin: 0, width: "100%", height: "50vh" }} ref={mapContainer}></div>
+        <div id="MapContainer" style={{ padding: 0, margin: 0, width: "100%", height: "80vh" }} ref={mapContainer}></div>
     );
 }

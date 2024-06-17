@@ -1,4 +1,4 @@
-import { NewUser } from './types';
+import { NewUser } from '../types';
 
 export default async function signUp(userData : NewUser){
     try {

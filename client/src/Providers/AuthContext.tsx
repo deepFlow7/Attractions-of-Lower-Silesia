@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User|null>(null);
 
+  
+
   const updateUser=(new_user:User|null)=>{
     setUser(new_user);
   }

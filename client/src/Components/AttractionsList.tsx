@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../Providers/AuthContext";
 
 interface ListProps {
   attractions: Attraction[];
