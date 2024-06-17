@@ -436,11 +436,13 @@ class db_api {
         try {
             await pool.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)', 
             [challenge_id, attraction_id, user_id]);
-            const user_points = await pool.query('SELECT points FROM challenges_started \
+            const user_res = await pool.query('SELECT points FROM challenges_started \
                  WHERE user_id = $1 AND challenge_id = $2', [user_id, challenge_id]);
-            const challenge_points = await pool.query('SELECT points FROM challenges \
+            const challenge_res = await pool.query('SELECT points FROM challenges \
                 WHERE id = $1', [challenge_id]);
-            console.log(user_points, challenge_points);
+            const user_points = user_res.rows[0].points;
+            const challenge_points = challenge_res.rows[0].points;
+
             if(user_points >= challenge_points)
                 await this.finish_challenge(challenge_id, user_id);
         } catch (error) {
