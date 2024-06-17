@@ -43,7 +43,13 @@ const LoginForm: React.FC<LoginProps> = () => {
         login();
         navigate('/');
     } catch (error) {
-        console.error("error logging in ", error);
+        var status=error.response.status;
+        if(status==400){
+            alert("błędne hasło lub nieznany użytkownik");
+        }else{
+            alert("błąd serwera, odczekaj chwilę i spróbuj ponownie");
+        }
+
     }
   };
 
