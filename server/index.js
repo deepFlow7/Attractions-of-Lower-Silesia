@@ -107,6 +107,17 @@ app.get('/challenges', async (req,res)=>{
   }
 })
 
+app.get('/completed_challenges/:user_id', async (req,res)=>{
+    try{
+        var challenges = await db.get_completed_challenges(req.params["user_id"]);
+        res.json(challenges);
+  }
+  catch(error){
+        console.log('Error fetching completed challenges: '+error);
+        res.status(500).json({error: 'Error fetching completed challenges:'+error});
+  }
+})
+
 app.get('/challenge/:id', async (req, res) =>{
     try{
         var challenge = await db.get_challenge(req.params["id"]);

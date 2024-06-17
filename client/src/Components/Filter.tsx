@@ -1,23 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Typography, FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
+import { possible_type, subtypes } from '../types'; // Importujemy interfejs Attraction
 
 interface FilterProps {
-  options: string[];
+  options?: string[];
+  type_options?: possible_type[];
+  subtype_options?: subtypes[];
   onChange: (selectedOptions: string[]) => void;
 }
 
 const StyledCard = styled(Card)`
-  padding: 16px;
+  padding: 2px;
 `;
 
-const Title = styled(Typography)`
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 16px;
-`;
 
 const StyledFormControlLabel = styled(FormControlLabel)`
   display: block;
@@ -25,6 +22,7 @@ const StyledFormControlLabel = styled(FormControlLabel)`
 
 const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
 
   const handleCheckboxChange = (option: string) => {
     const updatedOptions = selectedOptions.includes(option)
@@ -34,10 +32,11 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
     onChange(updatedOptions);
   };
 
+ 
   return (
     <StyledCard>
       <CardContent>
-        {options.map((option) => (
+        {options?.map((option) => (
           <StyledFormControlLabel
             key={option}
             control={
@@ -50,7 +49,7 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
             }
             label={option}
           />
-        ))}
+        ))} 
       </CardContent>
     </StyledCard>
   );
