@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Grid, Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
 import { Attraction, Comment, Photo } from '../types';
+import Comments from './Comments';
+import Photos from './Photos';
+import AttractionInfo from './AttractionInfo';
 
 interface AttractionViewProps {
   attraction: Attraction;
@@ -27,17 +30,9 @@ const Container = styled.div`
 
 const AttractionView: React.FC = () => {
   const [attr_info, setAttractionInfo] = useState<AttractionViewProps | null>(null);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const { id } = useParams();
 
-  const handleNextPhoto = (photos: Photo[]) => {
-    setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
-  };
-
-  const handlePreviousPhoto = (photos: Photo[]) => {
-    setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
-  };
 
   useEffect(() => {
     axios.get('/api/attraction/' + id)
@@ -64,78 +59,21 @@ const AttractionView: React.FC = () => {
       <Grid container spacing={2}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8}>
-            <TileCard>
-              <CardContent>
-                <Grid item xs={12}>
-                  <Title variant="h4" gutterBottom>{name}</Title>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={photos[currentPhotoIndex].photo} alt={`Photo ${currentPhotoIndex + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
-                    <Typography variant="caption">{photos[currentPhotoIndex].caption}</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button onClick={() => handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button onClick={() => handleNextPhoto(photos)} variant="contained" color="primary" fullWidth>Następne</Button>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </TileCard>
+          <Photos 
+            photos={photos} title={name}>
+          </Photos>
           </Grid>
-
-      
-
           <Grid item xs={12} md={4}>
-          <TileCard>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>Opis</Typography>
-                <Typography variant="body1">{description}</Typography>
-              </CardContent>
-            </TileCard>
-            <TileCard>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>Typy i Podtypy</Typography>
-                <Typography variant="body1">Typ: {type}</Typography>
-                <Typography variant="body1">Podtyp: {subtype}</Typography>
-              </CardContent>
-            </TileCard>
-            <TileCard>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>Statystyki</Typography>
-                <List>
-                  <ListItem>
-                    <ListItemText primary={`Interaktywność: ${interactivity}/10`} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText primary={`Czas zwiedzania: ${time_it_takes} minut`} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText primary={`Ocena: ${rating ? rating.toFixed(1) : 'Brak oceny'}`} />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </TileCard>
+            <AttractionInfo
+            attraction={attraction}>
+            </AttractionInfo>
             <Grid item xs={12}>
-              <TileCard>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>Komentarze</Typography>
-                  <List>
-                    {comments.map(comment => (
-                      <ListItem key={comment.id}>
-                        <ListItemText primary={comment.content} secondary={`Autor: ${comment.author}`} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </CardContent>
-              </TileCard>
+              <Comments 
+              comments={comments}>
+              </Comments>
             </Grid>
           </Grid>
         </Grid>
-
-        {/* Komentarze */}
-
       </Grid>
     </Container>
   );
