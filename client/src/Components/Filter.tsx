@@ -5,9 +5,7 @@ import { Typography, FormControlLabel, Checkbox, Card, CardContent } from '@mui/
 import { possible_type, subtypes } from '../types'; // Importujemy interfejs Attraction
 
 interface FilterProps {
-  options?: string[];
-  type_options?: possible_type[];
-  subtype_options?: subtypes[];
+  options: string[];
   onChange: (selectedOptions: string[]) => void;
 }
 
@@ -21,7 +19,8 @@ const StyledFormControlLabel = styled(FormControlLabel)`
 `;
 
 const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(options);
+  const [selectAll, setSelectAll] = useState(true);
 
 
   const handleCheckboxChange = (option: string) => {
@@ -30,12 +29,35 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
       : [...selectedOptions, option];
     setSelectedOptions(updatedOptions);
     onChange(updatedOptions);
+    if (updatedOptions.length == options.length)
+      setSelectAll(true);
+    else if (selectAll)
+      setSelectAll(false);
+  };
+
+  const handleSelectAllChange = () => {
+    const updatedOptions = selectAll? [] : options;
+    setSelectedOptions(updatedOptions);
+    onChange(updatedOptions);
+    setSelectAll(prev => !prev);
   };
 
  
   return (
     <StyledCard>
       <CardContent>
+      <StyledFormControlLabel
+            key={"all"}
+            control={
+              <Checkbox
+                checked={selectAll}
+                onChange={() => handleSelectAllChange()}
+                name={"all"}
+                color="primary"
+              />
+            }
+            label={"Wybierz wszystkie"}
+          />
         {options?.map((option) => (
           <StyledFormControlLabel
             key={option}

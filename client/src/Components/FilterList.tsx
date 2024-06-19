@@ -18,7 +18,7 @@ const TitleTypography = styled(Typography)`
 
 const FilterList: React.FC<FilterListProps> = ({ onChange }) => {
   const [selectedTypes, setSelectedTypes] = React.useState<possible_type[]>(possibleTypes);
-  const [selectedSubtypes, setSelectedSubtypes] = React.useState<subtypes[]>([]);
+  const [selectedSubtypes, setSelectedSubtypes] = React.useState<subtypes[]>(possibleSubtypes);
 
   const handleCheckboxChange = (selected: string[], isType: boolean) => {
     if (isType) {
