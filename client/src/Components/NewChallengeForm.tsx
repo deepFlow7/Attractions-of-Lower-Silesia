@@ -4,8 +4,6 @@ import { ChallengeForm, Attraction, challengeAttractionInput } from '../types';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import Map, { MapRef } from './Map';
-import { useAuth } from '../Providers/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const FormContainer = styled.div`
   max-width: 1200px;
@@ -35,13 +33,8 @@ const NewChallengeForm = () => {
   const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(
     {center: {x: 51.1079, y: 17.0385}, zoom: 12});
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
+  const [refreshKey, setRefreshKey] = useState(0);
   
-  const {isAuthenticated, role} = useAuth();
-  const navigate = useNavigate();
-
-  if(!isAuthenticated || role != 'admin')
-    navigate('/');
-
   useEffect(() => {
     axios.get('/api/attractions')
         .then(response => {
@@ -63,6 +56,20 @@ const NewChallengeForm = () => {
           });
   }
 
+  const handleGetView = () => {
+    if (mapRef.current) {
+      const view = mapRef.current.getView();
+      const current_view = {
+        center: { x: view.center.lat, y: view.center.lng },
+        zoom: view.zoom
+      }
+      setMapView(current_view);
+      return current_view;
+    }
+    else 
+      return mapView;
+  };
+  
   const handleSubmit = () => {
     const newErrors: { name?: string; description?: string; attractions?: string } = {};
 
@@ -83,30 +90,23 @@ const NewChallengeForm = () => {
       return;
     }
 
-    handleGetView();
+    const view = handleGetView();
+
     const newChallenge: ChallengeForm = {
       name,
       description,
-      coords: mapView.center,
-      zoom: mapView.zoom,
+      coords: view.center,
+      zoom: view.zoom,
       attractions: selectedAttractions
     };
+
     onSubmit(newChallenge);
     setName('');
     setDescription('');
     setSelectedAttractions([]);
     setMapView({center: {x: 51.1079, y: 17.0385}, zoom: 12});
     setErrors({});
-  };
-
-  const handleGetView = () => {
-    if (mapRef.current) {
-      const view = mapRef.current.getView();
-      setMapView({
-        center: { x: view.center.lat, y: view.center.lng },
-        zoom: view.zoom
-      });
-    }
+    setRefreshKey(prev => prev + 1);
   };
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, attraction: Attraction) => {
@@ -179,7 +179,7 @@ const NewChallengeForm = () => {
           <TypographyStyled variant="body1">
               Dostosuj położenie i zoom mapki
           </TypographyStyled>
-          <Map ref={mapRef} x={51.1079} y={17.0385} zoom={12} attractions={selectedAttractionsDetails}/>
+          <Map key={refreshKey} ref={mapRef} x={51.1079} y={17.0385} zoom={12} attractions={selectedAttractionsDetails}/>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="h6">Atrakcje (przeciągnij wybrane na mapkę)</Typography>

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes} from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import Home from './Components/Home';
 import Attraction from "./Components/Attraction";
@@ -10,9 +10,14 @@ import NewAttractionForm from './Components/NewAttractionForm';
 import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
 import NewChallengeForm from './Components/NewChallengeForm';
-import { AuthProvider } from './Providers/AuthContext';
+import { AuthProvider, useAuth } from './Providers/AuthContext';
 import {SearchProvider} from './Providers/SearchContext';
 
+
+const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
+  const { isAuthenticated, role } = useAuth();
+  return isAuthenticated && role == "admin" ? element : <Navigate to="/" replace />;
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root!.render(
@@ -28,7 +33,7 @@ root!.render(
         <Route path="/challenges" element={<Challenges />} />
         <Route path="/login" element={<LoginForm  />} />
         <Route path="/new_attraction" element={<NewAttractionForm />} />
-        <Route path="/new_challenge" element={<NewChallengeForm />} /> 
+        <Route path="/new_challenge" element={<ProtectedRoute element={<NewChallengeForm />} />} />
         <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </BrowserRouter>

@@ -11,12 +11,13 @@ interface MapProps {
     onMapClick?: (coords: { x: number; y: number }) => void;
 }
 
-var CustomIcon = L.Icon.extend({
-    options:{
+const createCustomIcon = ({iconUrl} : {iconUrl: string}): L.Icon => {
+    return L.icon({
+        iconUrl,
+        iconSize: [30, 30],
         className: 'ikona',
-        iconSize: [30,30],
-    }
-})
+    });
+};
 
 const corgiIcon = L.icon({
     iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
@@ -27,13 +28,11 @@ const corgiIcon = L.icon({
 type Icons=Record<PropertyKey,  L.Icon>;
 const icons = possibleSubtypes
                     .reduce((icons:Icons,subtype:subtypes)=>{
-                        icons[subtype] = new CustomIcon({
+                        icons[subtype] = createCustomIcon({
                             iconUrl: '/obrazki/'+subtype+'.png',
                         });
                         return icons;
                     },{});
-
-                    //console.log(icons);
 
 export interface MapRef {
     getView: () => { center: L.LatLng, zoom: number };
@@ -47,7 +46,6 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
     useEffect(() => {
         if (mapContainer.current && !mapInstance.current) {
             mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], zoom ? zoom : 13);
-            console.log(zoom);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
