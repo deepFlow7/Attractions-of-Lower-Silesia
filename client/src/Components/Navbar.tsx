@@ -32,7 +32,7 @@ const Navbar = () => {
     };
 
 
-    const onChange = (event:React.ChangeEvent) => {
+    const onChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
     }
     

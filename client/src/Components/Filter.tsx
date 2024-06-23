@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { Typography, FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
-import { possible_type, subtypes } from '../types'; // Importujemy interfejs Attraction
+import { FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
 
 interface FilterProps {
   options: string[];
@@ -45,7 +44,7 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
  
   return (
     <StyledCard>
-      <CardContent>
+      <CardContent style={{maxHeight: "45vh", overflow: "auto"}}>
       <StyledFormControlLabel
             key={"all"}
             control={
