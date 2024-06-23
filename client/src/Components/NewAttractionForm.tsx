@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/material';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
-import Map from './Map';
+import Map, {MapRef} from './Map';
 import axios from 'axios';
 
 const FormContainer = styled.div`
@@ -15,8 +15,8 @@ const FormContainer = styled.div`
 
 const NewAttractionForm = () => {
   const [name, setName] = useState<string>('');
-  const [type, setType] = useState<possible_type>(possibleTypes[0]);
-  const [subtype, setSubtype] = useState<subtypes>(possibleSubtypes[0]);
+  const [type, setType] = useState<possible_type | null>(null);
+  const [subtype, setSubtype] = useState<subtypes | null>(null);
   const [description, setDescription] = useState<string>('');
   const [interactivity, setInteractivity] = useState<number>(5);
   const [timeItTakes, setTimeItTakes] = useState<number>(30);
@@ -26,6 +26,7 @@ const NewAttractionForm = () => {
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [mapKey, setMapKey] = useState<number>(0);
+  const mapRef = useRef<MapRef>(null);
 
   const handleAddPhoto = () => {
     const newPhotoUrl = photoUrls[photos.length] || '';
@@ -52,6 +53,9 @@ const NewAttractionForm = () => {
     const newErrors: { [key: string]: string } = {};
     if (!name) newErrors.name = 'Nazwa jest wymagana';
     if (!description) newErrors.description = 'Opis jest wymagany';
+    if (!type) newErrors.type = 'Typ jest wymagany';
+    if (!subtype) newErrors.subtype = 'Podtyp jest wymagany';
+
     if (!Number.isInteger(interactivity) || interactivity < 1 || interactivity > 10) {
       newErrors.interactivity = 'Interaktywność musi być liczbą całkowitą od 1 do 10';
     }
@@ -82,7 +86,8 @@ const NewAttractionForm = () => {
   }
 
   const handleSubmit = async () => {
-    if (!validate() || coords == null) return;
+    if (!validate() || coords == null || type == null || subtype == null) 
+      return;
 
     const newAttraction: NewAttraction = {
       name,
@@ -94,10 +99,12 @@ const NewAttractionForm = () => {
       description,
       photos
     };
+
     await onSubmit(newAttraction);
+
     setName('');
-    setType(possibleTypes[0]);
-    setSubtype(possibleSubtypes[0]);
+    setType(null);
+    setSubtype(null);
     setDescription('');
     setInteractivity(5);
     setTimeItTakes(30);
@@ -107,6 +114,21 @@ const NewAttractionForm = () => {
     setCoords(null);
     setMapKey(prevKey => prevKey + 1);
     setErrors({});
+  };
+
+  const handleUseMyLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const newCoords = { x: position.coords.latitude, y: position.coords.longitude };
+        setCoords(newCoords);
+        mapRef.current?.setUserLocation(newCoords);
+      }, (error) => {
+        console.error('Błąd podczas pobierania geolokacji', error);
+      }
+    );
+    } else {
+      console.error('Twoja przeglądarka nie wspiera geolokalizacji');
+    }
   };
 
   return (
@@ -130,7 +152,7 @@ const NewAttractionForm = () => {
             select 
             fullWidth 
             label="Typ" 
-            value={type} 
+            value={type || ''} 
             onChange={(e) => setType(e.target.value as possible_type)}>
             {possibleTypes.map((t) => (
               <MenuItem key={t} value={t}>
@@ -138,13 +160,14 @@ const NewAttractionForm = () => {
               </MenuItem>
             ))}
           </TextField>
+          {errors.type && <Typography variant="body2" color="error">{errors.type}</Typography>}
         </Grid>
         <Grid item xs={12}>
           <TextField 
             select 
             fullWidth 
             label="Podtyp" 
-            value={subtype} 
+            value={subtype || ''} 
             onChange={(e) => setSubtype(e.target.value as subtypes)}>
             {possibleSubtypes.map((t) => (
               <MenuItem key={t} value={t}>
@@ -152,6 +175,7 @@ const NewAttractionForm = () => {
               </MenuItem>
             ))}
           </TextField>
+          {errors.subtype && <Typography variant="body2" color="error">{errors.subtype}</Typography>}
         </Grid>
         <Grid item xs={12}>
           <TextField 
@@ -191,10 +215,18 @@ const NewAttractionForm = () => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
-          <Map key={mapKey} x={51.1079} y={17.0385} attractions={[]} onMapClick={(newCoords) => setCoords(newCoords)}/>
-          {coords && (
-            <Typography >Wybrane współrzędne: {coords.x}, {coords.y}</Typography>
-          )}
+          <Button variant="contained" onClick={handleUseMyLocation} color="primary">
+            Użyj mojej lokalizacji
+          </Button>
+          <Map 
+            key={mapKey} 
+            ref={mapRef}
+            x={51.1079} 
+            y={17.0385} 
+            zoom={8} 
+            attractions={[]} 
+            onMapClick={(newCoords) => setCoords(newCoords)}
+          />
           {errors.coords && <Typography variant="body2" color="error" margin={'3px'}>{errors.coords}</Typography>}
         </Grid>
         <Grid item xs={12}>

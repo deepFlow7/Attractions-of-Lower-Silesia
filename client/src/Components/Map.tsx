@@ -36,6 +36,7 @@ const icons = possibleSubtypes
 
 export interface MapRef {
     getView: () => { center: L.LatLng, zoom: number };
+    setUserLocation: (coords: { x: number; y: number }) => void;
 }
 
 const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick }, ref) => {
@@ -110,6 +111,18 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
                 };
             }
             return { center: L.latLng(x, y), zoom: zoom || 13 };
+        },
+        setUserLocation: (coords) => {
+            if (mapInstance.current) {
+                const newMarkerCoords = L.latLng(coords.x, coords.y);
+
+                if (!markerInstance) {
+                    const newMarker = L.marker([newMarkerCoords.lat, newMarkerCoords.lng], { icon: corgiIcon }).addTo(mapInstance.current!);
+                    setMarkerInstance(newMarker);
+                } else {
+                    markerInstance.setLatLng(newMarkerCoords);
+                }
+            }
         }
     }));
 
