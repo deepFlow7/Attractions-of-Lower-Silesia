@@ -43,8 +43,12 @@ const Photos: React.FC<PhotoProps> = ({ photos, title}) => {
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <img src={photos[currentPhotoIndex].photo} alt={`Photo ${currentPhotoIndex + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
-          <Typography variant="caption">{photos[currentPhotoIndex].caption}</Typography>
+          {photos.length > 0 && (
+            <>
+            <img src={photos[currentPhotoIndex].photo} alt={`Photo ${currentPhotoIndex + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
+            <Typography variant="caption">{photos[currentPhotoIndex].caption}</Typography>
+            </>
+          )}
         </Grid>
         <Grid item xs={6}>
           <Button onClick={() => handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
