@@ -96,7 +96,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
             
             mapInstance.current.on('zoomend', function() {
                 var zoom=mapInstance.current!.getZoom();
-                var newzoom = 5/2*(zoom-1)+'px';
+                var newzoom = 7/2*(zoom-1)+'px';
                 $('#'+mapContainer.current!.id+' .ikona').css({'width':newzoom,'height':newzoom}); 
             });
         }
