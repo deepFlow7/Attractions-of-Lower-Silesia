@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
@@ -44,7 +43,7 @@ const LoginForm: React.FC<LoginProps> = () => {
         setRole(response.data.role);
         login();
         navigate('/');
-    } catch (error) {
+    } catch (error : any) {
         var status = error.response.status;
         if(status==400){
             alert("błędne hasło lub nieznany użytkownik");
