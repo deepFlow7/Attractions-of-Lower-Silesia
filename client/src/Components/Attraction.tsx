@@ -7,6 +7,7 @@ import Comments from './Comments';
 import Photos from './Photos';
 import AttractionInfo from './AttractionInfo';
 import styled from '@emotion/styled';
+import { useAuth } from '../Providers/AuthContext';
 
 interface AttractionViewProps {
   attraction: Attraction;
@@ -28,7 +29,6 @@ const Container = styled.div`
   margin: 1.5% 1.5%;
 `;
 
-// Definicja kolorów
 const primaryColor = '#757575';
 const defaultColor = '#1976d2';
 
@@ -36,7 +36,7 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
   const [attr_info, setAttractionInfo] = useState<AttractionViewProps | null>(null);
   const [visited, setVisited] = useState(is_visited);
   const [favourite, setFavourite] = useState(is_favourite);
-
+  const { user } = useAuth();
   const { id } = useParams();
 
   useEffect(() => {
@@ -49,14 +49,22 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
       });
   }, [id]);
 
-  const handleFavouriteToggle = () => {
-    setFavourite(!favourite);
-    // Optionally send the update to the server
+  const handleFavouriteToggle = async () => {
+    try {
+      await axios.post(`/api/changeFavourites`, { userId: user?.id, attractionId: id });
+      setFavourite(!favourite);
+    } catch (error) {
+      console.error('Error updating favourite status:', error);
+    }
   };
 
-  const handleVisitedToggle = () => {
-    setVisited(!visited);
-    // Optionally send the update to the server
+  const handleVisitedToggle = async () => {
+    try {
+      await axios.post(`/api/changeWantsToVisit`, { userId: user?.id, attractionId: id });
+      setVisited(!visited);
+    } catch (error) {
+      console.error('Error updating visited status:', error);
+    }
   };
 
   if (!attr_info) {
@@ -78,8 +86,8 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
               variant="contained"
               sx={{
                 bgcolor: favourite ? primaryColor : defaultColor,
-                marginTop: '10px', // Adjusted margin top for the button
-                marginBottom: '10px', // Adjusted margin bottom for the button
+                marginTop: '10px',
+                marginBottom: '10px',
               }}
               onClick={handleFavouriteToggle}
             >
@@ -89,8 +97,8 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
               variant="contained"
               sx={{
                 bgcolor: visited ? primaryColor : defaultColor,
-                marginTop: '10px', // Adjusted margin top for the button
-                marginBottom: '10px', // Adjusted margin bottom for the button
+                marginTop: '10px',
+                marginBottom: '10px',
               }}
               onClick={handleVisitedToggle}
             >

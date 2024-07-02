@@ -243,7 +243,26 @@ app.post('/new_attraction', async (req, res) => {
       }
 });
 
-
+app.post('/changeFavourites', async (req, res) => {
+    console.log("dsfsfdsfsdfdsf")
+    const { userId, attractionId } = req.body;
+    try {
+      await db.changeFavourites(userId, attractionId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+app.post('/changeWantsToVisit', async (req, res) => {
+    const { userId, attractionId } = req.body;
+    try {
+        await db.changeWantsToVisit(userId, attractionId);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.listen(8080, () => {
       console.log('server listening on port 8080')

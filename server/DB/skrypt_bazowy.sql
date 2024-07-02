@@ -70,14 +70,14 @@ CREATE TABLE users (
     mail TEXT UNIQUE NOT NULL
 );
 
-CREATE TYPE thoughts AS ENUM ('been there', 'want to visit', 'indifferent', 'not interested');
-
 CREATE TABLE favourites (
-  user_id INTEGER REFERENCES users(id),
-  attraction_id INTEGER REFERENCES attractions(id),
-  favourite BOOLEAN NOT NULL DEFAULT false,
-  interest thoughts NOT NULL DEFAULT 'indifferent',
-  UNIQUE (user_id,attraction_id)
+    user_id INTEGER REFERENCES users(id),
+    attraction_id INTEGER REFERENCES attractions(id)
+);
+
+CREATE TABLE wants_to_visit (
+    user_id INTEGER REFERENCES users(id),
+    attraction_id INTEGER REFERENCES attractions(id)
 );
 
 CREATE TYPE role AS ENUM ('admin','user');

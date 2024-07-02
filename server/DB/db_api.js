@@ -120,37 +120,30 @@ class db_api {
     }
 
     //----FAVOURITES-------
-    async change_favourite(user_id,attr_id,fav){
+    async changeFavourites(userId, attractionId) {
         try {
-            await pool.query('INSERT INTO favourites (user_id, attraction_id, favourite) VALUES ($1,$2,$3) \
-                                ON CONFLICT UPDATE favourites SET favourite = $3 WHERE user_id=$1 attraction_id=$2'[user_id,attr_id,fav]);
-        } catch (error){
-            console.error('Error setting favourite: ', error);
+            const existingEntry = await pool.query('SELECT * FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            if (existingEntry.rowCount > 0) {
+                await pool.query('DELETE FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            } else {
+                await pool.query('INSERT INTO favourites (user_id, attraction_id) VALUES ($1, $2)', [userId, attractionId]);
+            }
+        } catch (error) {
+            console.error('Error changing favourites:', error);
             throw error;
         }
     }
-    async add_to_favourites(user_id, attr_id) {
-        try { 
-            await this.change_favourite(user_id,attr_id,true);
-        } catch (error){
-            throw error;
-        }
-    }
-
-    async remove_from_favourites(user_id,attr_id){
-        try{
-            await this.change_favourite(user_id,attr_id,false);
-        } catch(error){
-            throw error;
-        }
-    }
-
-    async set_thoughts(user_id, attr_id, thought){
+    //---- WANTS TO VISIT -----------
+    async changeWantsToVisit(userId, attractionId) {
         try {
-            await pool.query('INSERT INTO favourites (user_id, attraction_id, interest) VALUES ($1,$2,$3) \
-                                ON CONFLICT UPDATE favourites SET interest = $3 WHERE user_id=$1 attraction_id=$2'[user_id,attr_id,thought]);
-        } catch (error){
-            console.error('Error setting thought: ', error);
+            const existingEntry = await pool.query('SELECT * FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            if (existingEntry.rowCount > 0) {
+                await pool.query('DELETE FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            } else {
+                await pool.query('INSERT INTO wants_to_visit (user_id, attraction_id) VALUES ($1, $2)', [userId, attractionId]);
+            }
+        } catch (error) {
+            console.error('Error changing wants_to_visit:', error);
             throw error;
         }
     }
