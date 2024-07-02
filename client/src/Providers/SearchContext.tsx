@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface Context{
     search: string,
@@ -7,7 +7,7 @@ interface Context{
 
 const SearchContext = createContext({} as Context);
 
-export const SearchProvider = ({ children }) => {
+export const SearchProvider = ({ children } : {children : ReactNode}) => {
   const [search, setSearch] = useState("");
 
   return (

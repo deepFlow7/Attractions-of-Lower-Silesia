@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { User, role } from '../types';
 import { useSessionStorage } from '../Hooks/SessionStorage';
 
@@ -19,7 +19,7 @@ const AuthContext = createContext({} as Context);
 
 
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children } : {children : ReactNode}) => {
   const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?',false);
   const [user, setUser] = useSessionStorage('user',null);
   const [role, setRole] = useSessionStorage('role',null);
