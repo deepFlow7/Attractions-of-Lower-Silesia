@@ -12,7 +12,8 @@ import LoginForm from './Components/LoginForm';
 import NewChallengeForm from './Components/NewChallengeForm';
 import { AuthProvider, useAuth } from './Providers/AuthContext';
 import {SearchProvider} from './Providers/SearchContext';
-
+import RoutePlanner from './Components/RoutePlanner';
+import AdminView from './Components/AdminView';
 
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated, role } = useAuth();
@@ -35,6 +36,9 @@ root!.render(
         <Route path="/new_attraction" element={<NewAttractionForm />} />
         <Route path="/new_challenge" element={<ProtectedRoute element={<NewChallengeForm />} />} />
         <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/route_planner" element={<RoutePlanner />} />
+        <Route path="/admin" element={<AdminView />} />
+
       </Routes>
     </BrowserRouter>
     </SearchProvider>
