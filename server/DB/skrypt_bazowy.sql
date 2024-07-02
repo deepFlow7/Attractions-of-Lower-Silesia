@@ -40,7 +40,8 @@ CREATE TYPE subtypes AS ENUM (
     'centrum edukacyjne',
     'ogród zoologiczny',
     'zbiorniki wodne',
-    'bazylika'
+    'bazylika',
+    'krasnal'
 );
 
 CREATE TABLE attractions (

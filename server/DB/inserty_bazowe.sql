@@ -43,6 +43,28 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
     ('Zamek w Ścinawce Średniej', POINT(50.6167, 16.5167), 'urbanistyka', 'zamek', 6, 60, 2, 'Zamek w Ścinawce Średniej to malownicza warownia położona wśród górskich krajobrazów. Jest to miejsce o bogatej historii, idealne na spokojny spacer i poznanie lokalnej kultury.');
 
 
+INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) VALUES
+    ('Papa Krasnal', POINT(51.1139, 17.0334), 'urbanistyka', 'krasnal', 2, 5, 3, 'Najstarszy i największy krasnal, znajduje się przy placu Dominikańskim. Upamiętnia ruch Pomarańczowej Alternatywy.'),
+    ('Fechmistrz', POINT(51.1142, 17.0326), 'urbanistyka', 'krasnal', 2, 5, 3, 'Stoi obok Uniwersytetu Wrocławskiego.'),
+    ('Rzeźnik', POINT(51.1097, 17.0375), 'urbanistyka', 'krasnal', 2, 5, 3, 'Znajduje się w Starych Jatkach.'),
+    ('Syzyfki', POINT(51.1087, 17.0305), 'urbanistyka', 'krasnal', 2, 5, 3, 'Dwie figurki na ulicy Świdnickiej.'),
+    ('Krasnal Pracz', POINT(51.1071, 17.0422), 'urbanistyka', 'krasnal', 2, 5, 3, 'Blisko Mostu Piaskowego.'),
+    ('Niemowa i Niewidoma', POINT(51.1081, 17.0319), 'urbanistyka', 'krasnal', 2, 5, 3, 'Reprezentują osoby niepełnosprawne i są częścią kampanii “Wrocław bez barier”.'),
+    ('Marzenka', POINT(51.1100, 17.0322), 'urbanistyka', 'krasnal', 2, 5, 3, 'Trzecia żeńska figurka, inspirowana logo fundacji Mam Marzenie.'),
+    ('Automator', POINT(51.1108, 17.0337), 'urbanistyka', 'krasnal', 2, 5, 3, 'Automatyzuje różne zadania.'),
+    ('ATMers', POINT(51.1095, 17.0321), 'urbanistyka', 'krasnal', 2, 5, 3, 'Krasnal przy bankomacie.'),
+    ('Chrapacz', POINT(51.1055, 17.0414), 'urbanistyka', 'krasnal', 2, 5, 3, 'Znajduje się w okolicach Hematologii i Onkologii Dziecięcej.'),
+    ('Programista', POINT(51.1074, 17.0339), 'urbanistyka', 'krasnal', 2, 5, 3, 'Związany z technologią.'),
+    ('Capgeminiusz', POINT(51.1089, 17.0344), 'urbanistyka', 'krasnal', 2, 5, 3, 'Przy siedzibie firmy Capgemini.'),
+    ('Długi', POINT(51.1065, 17.0327), 'urbanistyka', 'krasnal', 2, 5, 3, 'Wydłużony krasnal.'),
+    ('Printer', POINT(51.1072, 17.0335), 'urbanistyka', 'krasnal', 2, 5, 3, 'Związany z drukowaniem.'),
+    ('Kacper Florianek', POINT(51.1092, 17.0323), 'urbanistyka', 'krasnal', 2, 5, 3, 'Postać z legendy o Kacperku.'),
+    ('Gazuś', POINT(51.1083, 17.0367), 'urbanistyka', 'krasnal', 2, 5, 3, 'Przy stacji benzynowej.'),
+    ('Wymieniacz', POINT(51.1080, 17.0314), 'urbanistyka', 'krasnal', 2, 5, 3, 'Związany z wymianą walut.'),
+    ('Gołąbek', POINT(51.1068, 17.0340), 'urbanistyka', 'krasnal', 2, 5, 3, 'Krasnal z gołębiem na ramieniu.'),
+    ('Meloman', POINT(51.1077, 17.0348), 'urbanistyka', 'krasnal', 2, 5, 3, 'Krasnal z gitarą.'),
+    ('Janinek', POINT(51.1103, 17.0325), 'urbanistyka', 'krasnal', 2, 5, 3, 'Przy stacji pocztowej.');
+
 INSERT INTO users (name, surname, mail) 
 VALUES 
   ('John', 'Doe', 'john.doe@example.com'),
@@ -158,3 +180,25 @@ INSERT INTO photos (attraction_id, photo, caption) VALUES
 (39, 'https://www.zamki.pl/xz/r_rogow1.jpg', ''),
 (40, 'https://sway.to/download//1505/srebrnagora.jpeg', ''),
 (41, 'https://kukushka.eu/_gallery/albums/userpics/10001/2013_07_21_601_Polska_Poland_Scinawka_Srednia_Zamek_Kapitanowo.jpg', '');
+
+INSERT INTO photos (attraction_id, photo, caption) VALUES
+(42, 'https://www.wroclaw.pl/cdn-cgi/image/,f=avif/https://go.wroclaw.pl/api/download/img-563d0df60a18003d2018c15eb00f6711/Papa-Krasnal2-Siem-jpg.jpg', ''),
+(43, 'https://www.wroclaw.pl/cdn-cgi/image/,f=avif/https://go.wroclaw.pl/api/download/img-7b10ced60a18003d6160a601b57bbcca/szermierz-jpg.jpg', ''),
+(44, 'https://kresy.org.pl/photo/file.action?thumbCover300x180=&id=846762', ''),
+(45, 'https://polska-org.pl/foto/6937/Krasnale_Syzyfki_Wroclaw_6937385.jpg', ''),
+(46, 'https://www.tuwroclaw.com/pliki/duze_zdjecia/wiadomosci/pracz_duze.jpg', ''),
+(47, 'https://rampa.net.pl/wp-content/uploads/2017/09/tk058005-c5b765a2.jpg', ''),
+(48, 'https://polska-org.pl/foto/6150/Krasnal_Marzenka_Wroclaw_6150038.jpg', ''),
+(49, 'https://wroclaw.gum.gov.pl/dokumenty/zalaczniki/6/6-5859.jpg', ''),
+(50, 'https://bi.im-g.pl/im/0f/96/14/z21589007AMP,Krasnal-Budowniczy-pod-Atal-Towers.jpg', ''),
+(51, 'https://go.wroclaw.pl/api/download/img-29dac3202df7bd08605731370d58e903/krasnal-chrapek-wroclaw-panorama.jpg', ''),
+(52, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVFHWaU17LnaGggWWVQiaslsnQVBZHtAKuGA&s', ''),
+(53, 'https://go.wroclaw.pl/api/download/img-bfd404be2df7bd084e16842939e9416c/panorama-jpg.jpg', ''),
+(54, 'https://www.wroclaw.pl/cdn-cgi/image/,f=avif/https://go.wroclaw.pl/api/download/img-a0d43b4c2df7bd086057313711b88715/dlugi-krasnal-wroclaw.jpg', ''),
+(55, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Drukarz_%28Printer%29_Wroclaw_dwarf_01.JPG/1200px-Drukarz_%28Printer%29_Wroclaw_dwarf_01.JPG', ''),
+(56, 'https://photos.wikimapia.org/p/00/04/22/75/72_full.jpg', ''),
+(57, 'https://a.allegroimg.com/original/11a089/d2a59bfc46f085bd0d71fc3d0ea2/Obrazy-50x70-Krasnal-Gazus-Wroclaw', ''),
+(58, 'https://wroclawskiefakty.pl/wp-content/uploads/2023/08/Krasnal_zdjecie-1-scaled.jpg', ''),
+(59, 'https://go.wroclaw.pl/api/download/img-cd99f83b2df7bd0860573137117374ab/golebnik-krasnal-wroclaw-awatar.jpg', ''),
+(60, 'https://polska-org.pl/foto/4029/Krasnale_Meloman_i_Grajek_ul_Olawska_Wroclaw_4029792.jpg', ''),
+(61, 'https://polska-org.pl/foto/6684/Krasnal_Janinek_Wroclaw_6684645.jpg', '');
