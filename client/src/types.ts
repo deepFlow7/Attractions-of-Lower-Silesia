@@ -91,6 +91,12 @@ export interface ChallengeForm {
   attractions: challengeAttractionInput[];
 }
 
+export interface Route {
+  coords: { x: number; y: number };
+  zoom: number;
+  attractions: number[];
+}
+
 export type role = 'admin' | 'user';
 
 export type possible_type = "natura" | "urbanistyka";
