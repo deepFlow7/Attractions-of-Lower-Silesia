@@ -114,6 +114,7 @@ export type subtypes =
   | "centrum edukacyjne"
   | "ogród zoologiczny"
   | "zbiorniki wodne"
+  | "krasnal"
   | "bazylika";
 
 export const possibleTypes: possible_type[] = ["natura", "urbanistyka"];
@@ -137,5 +138,6 @@ export const possibleSubtypes: subtypes[] = [
   "centrum edukacyjne",
   "ogród zoologiczny",
   "zbiorniki wodne",
-  "bazylika"
+  "krasnal",
+  "bazylika",
 ];
