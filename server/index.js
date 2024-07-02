@@ -264,6 +264,19 @@ app.post('/changeWantsToVisit', async (req, res) => {
     }
 });
 
+app.post('/addComment', async (req, res) => {
+    const { author, content, votes, attraction, parent } = req.body;
+    try {   
+      await db.new_comment(author, content, votes, attraction, parent);
+      res.json({ success: true });
+
+    } catch (error) {
+      console.error('Error adding new comment:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+
 app.listen(8080, () => {
       console.log('server listening on port 8080')
 })

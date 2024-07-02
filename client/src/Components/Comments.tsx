@@ -4,9 +4,12 @@ import { Grid, Card, Typography, CardContent, List, ListItem, ListItemText, Text
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Comment } from '../types';
+import axios from 'axios';
+import { useAuth } from '../Providers/AuthContext';
 
 interface CommentsProps {
   comments: Comment[];
+  attraction_id: Number;
 }
 
 const TileCard = styled(Card)`
@@ -22,16 +25,34 @@ const Container = styled.div`
   margin: 1.5% 1.5%;
 `;
 
-const Comments: React.FC<CommentsProps> = ({ comments }) => {
+const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
+  const { user } = useAuth();
   const [newComment, setNewComment] = useState('');
 
   const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setNewComment(event.target.value);
   };
 
-  const handleAddComment = () => {
-    console.log('New comment:', newComment);
-    setNewComment('');
+  const handleAddComment = async () => {
+    if (newComment.trim() === '') return;
+
+    const commentData = {
+      author: user?.name || 'Anonymous',
+      content: newComment,
+      votes: 0,
+      attraction: attraction_id, 
+      parent: null
+    };
+
+    try {
+      const response = await axios.post('/api/addComment', commentData);
+      if (response.data.success) {
+        console.log('New comment added successfully:', response.data);
+        setNewComment('');
+      }
+    } catch (error) {
+      console.error('Error adding new comment:', error);
+    }
   };
 
   return (

@@ -61,6 +61,21 @@ class db_api {
             throw error;
         }
     }
+    static async findUserIdByUsername(username) {
+        try {
+            const result = await pool.query('SELECT id FROM users WHERE name = $1', [username]);
+            if (result.rows.length > 0) {
+                return result.rows[0].id;
+            } else {
+                return null; 
+            }
+        } catch (error) {
+            console.error('Error finding user by username:', error);
+            throw error;
+        }
+    }
+    
+
     //------LOGINS---------
     async new_login(user_id, login, password, role) {
         try {
@@ -203,12 +218,19 @@ class db_api {
     //------COMMENTS--------
     async new_comment(author, content, votes, attraction, parent) {
         try {
-            await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) VALUES ($1, $2, $3, $4, $5)', [author, content, votes, attraction, parent]);
+            const userId = await db_api.findUserIdByUsername(author);
+    
+            if (userId) {
+                await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) VALUES ($1, $2, $3, $4, $5)', [userId, content, votes, attraction, parent]);
+            } else {
+                throw new Error('User with the provided username does not exist.');
+            }
         } catch (error) {
             console.error('Error creating new comment:', error);
             throw error;
         }
     }
+    
 
     async get_comment(id) {
         try {

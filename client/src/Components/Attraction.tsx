@@ -106,7 +106,7 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
             </Button>
             <AttractionInfo attraction={attraction} />
             <Grid item xs={12}>
-              <Comments comments={comments} />
+              <Comments comments={comments} attraction_id={attraction.id} />
             </Grid>
           </Grid>
         </Grid>
