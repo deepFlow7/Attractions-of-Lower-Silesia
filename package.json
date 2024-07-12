@@ -5,8 +5,7 @@
     "scripts":
     {
         "dev": "(gnome-terminal -e 'bash -c \"node server/index.js\"') &\n cd client \n (gnome-terminal -e 'bash -c \"npm run dev\"')",
-        "install": "cd client && npm install && cd ../server && npm install"
-    },
-    "dependencies":{"react-router-dom":"^6.23.0"},
-    "devDependencies":{"@types/react-dom":"^18.3.0"}
+        "install": "cd client && npm install && cd ../server && npm install",
+        "build": ""
+    }
 }
