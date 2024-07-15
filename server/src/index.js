@@ -1,9 +1,20 @@
 const express = require('express');
 const db = require('./DB/db_api.js');
 const bodyParser = require('body-parser');
-const app = express();
 const cors = require('cors');
 const session = require('express-session');
+const app = express();
+const normalizePort = val => {
+    const port = parseInt(val, 10);
+    if (isNaN(port)) {
+        return val;
+    }
+    if (port >= 0) {
+        return port;
+    }
+    return false;
+};
+var port = normalizePort(process.env.PORT || 8080);
 
 app.use(bodyParser.json());
 app.use(cors({
@@ -277,7 +288,7 @@ app.post('/addComment', async (req, res) => {
   });
   
 
-app.listen(8080, () => {
+app.listen(port, () => {
       console.log('server listening on port 8080')
 })
 

@@ -2,12 +2,13 @@ const { error } = require('console');
 var pg = require('pg');
 var bcrypt = require('bcrypt');
 
-var pool = new pg.Pool({
-    host: 'localhost',
-    database: 'maps',
-    user: 'pg',
-    password: 'pg'
-});
+const pool = new pg.Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASS,
+    port: 5432,
+  });
 
 class db_api {
     //------USERS---------
