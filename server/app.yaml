@@ -13,3 +13,6 @@ env_variables:
   DB_PASS: '6/SKkhmas:9m\09o'
   DB_NAME: 'maps'
   DB_HOST: '/cloudsql/boxwood-builder-429215-k7:us-central1:atrakcje-dolnego-slaska-maps'
+
+service_account: boxwood-builder-429215-k7@appspot.gserviceaccount.com
+service: server
