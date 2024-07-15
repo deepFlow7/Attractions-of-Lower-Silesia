@@ -449,6 +449,15 @@ class db_api {
 
     async visit_challenge_attraction(user_id, challenge_id, attraction_id) {
         try {
+            const result = await pool.query('SELECT * FROM visited_challenge_attractions \
+                WHERE user_id = $1 AND challenge_id = $2 AND attraction_id = $3', 
+            [user_id, challenge_id, attraction_id]);
+            
+            console.log(result);
+            if (result.rowCount > 0)
+                return;
+    
+            
             await pool.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)', 
             [challenge_id, attraction_id, user_id]);
             const user_res = await pool.query('SELECT points FROM challenges_started \
@@ -479,7 +488,9 @@ class db_api {
 
     async get_completed_challenges(user_id) {
         try {
-            const {rows} = await pool.query('SELECT * FROM challenges, challenges_started \
+            const {rows} = await pool.query('SELECT challenges.id, challenges.name, \
+                (challenges_started.points + challenges_started.bonus_points) AS points  \
+                FROM challenges, challenges_started \
                 WHERE challenges.id = challenges_started.challenge_id \
                 AND user_id = $1 AND finished_date IS NOT NULL', [user_id]);
             return rows;

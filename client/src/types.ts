@@ -77,6 +77,11 @@ export interface Challenge {
   attractions: ChallengeAttraction[];
 }
 
+export interface completedChallenge {
+  id: number;
+  name: string;
+  points: number;
+}
 
 export interface challengeAttractionInput {
   id: number;

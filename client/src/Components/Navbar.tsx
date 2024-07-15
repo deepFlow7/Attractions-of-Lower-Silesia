@@ -1,23 +1,20 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import { Button, InputBase } from '@mui/material';
-import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
-import {Link, useNavigate} from 'react-router-dom';
+import { Button } from '@mui/material';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
 import axios from 'axios';
+import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
-import { useSearch } from '../Providers/SearchContext';
-
-
 
 const Navbar = () => {
-    const {isAuthenticated,logout, user, updateUser} = useAuth();
-    const {search, setSearch} = useSearch();
+    const {isAuthenticated,logout, user, updateUser, username} = useAuth();
+    const location = useLocation();
+    const currentUrl = location.pathname + location.search; 
 
+    const handleLoginClick = () => {
+      navigate('/login', { state: { returnUrl: currentUrl } });
+    };
     const navigate = useNavigate();
 
     const onLogout = async () => {
@@ -30,15 +27,7 @@ const Navbar = () => {
             alert('Error logging out');
         }
     };
-
-
-    const onChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value);
-    }
     
-
-    
-
     
   return (
     <AppBar className='navbar' position="static">
@@ -48,17 +37,13 @@ const Navbar = () => {
                     Atrakcje Dolnego Śląska
             </Button>
         </Typography>
-        <InputBase
-          placeholder="Wyszukaj..."
-          inputProps={{ 'aria-label': 'search' }}
-          onChange={onChange}
-          startAdornment={
-            <IconButton sx={{ p: 0 }} disabled aria-label="search" >
-              <SearchIcon />
-            </IconButton>
-          }
-          sx={{ mr: 2, flexGrow: 1 }}
-        />
+
+        {isAuthenticated && (
+          <Typography variant="h6" component="div" sx={{ mr: 2, flexGrow: 1 }}>
+            Witaj {username}!
+          </Typography>
+        )}
+
 
       {isAuthenticated && (
         <Button component={Link} to="/new_attraction" color="inherit">
@@ -66,35 +51,22 @@ const Navbar = () => {
         </Button>
       )}
         <Button component={Link} to="/challenges" color="inherit">
-            Wyzwanie
+            Wyzwania
         </Button>
-        <IconButton color="inherit">
-          <SettingsIcon />
-        </IconButton>
-        <IconButton color="inherit">
-          <ThumbUpAltIcon />
-        </IconButton>
-        <IconButton color="inherit">
-          <EmojiObjectsIcon />
-        </IconButton>
+
+        <Button component={Link} to="/route_planner" color="inherit">
+            Trasy
+        </Button>
+        
         {isAuthenticated && user?
             (
-                <>
-                    <Typography  variant="h6" component="div">
-                        {user!.name}
-                    </Typography>
-
-                    <Button onClick={onLogout} color="inherit">
-                        Wyloguj
-                    </Button> 
-                
-                </>
+              <Button onClick={onLogout} color="inherit">
+                  Wyloguj
+              </Button>  
         ) : (
-                <>
-                    <Button component={Link} to='login' color="inherit">
-                        Zaloguj
-                    </Button>     
-                </>
+              <Button color="inherit" onClick={handleLoginClick}>
+                Zaloguj
+              </Button>
         )}
       </Toolbar>
     </AppBar>
