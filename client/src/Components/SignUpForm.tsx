@@ -3,7 +3,7 @@ import { Grid, Typography, TextField, Button } from '@mui/material';
 import { NewUser } from '../types';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 
 const FormContainer = styled.div`
@@ -53,7 +53,7 @@ const Registration = () => {
   };
 
   const onRegister = (newUser : NewUser): Promise<boolean> => {
-    return axios.post('/api/signup', {newUser})
+    return api.post('/api/signup', {newUser})
           .then(response => {
             console.log('Dodano');
             return response.data.success;

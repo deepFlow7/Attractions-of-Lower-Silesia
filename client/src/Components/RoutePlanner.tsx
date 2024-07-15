@@ -3,7 +3,7 @@ import { Grid, Typography, TextField, Button, InputBase } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import axios from 'axios';
+import api from '../API/api';
 import Map, { MapRef } from './Map';
 import { Attraction, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
 import FilterList from './FilterList';
@@ -53,7 +53,7 @@ const RoutePlanner = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   
   useEffect(() => {
-    axios.get('/api/attractions')
+    api.get('/api/attractions')
         .then(response => {
         setAttractions(response.data);
         })

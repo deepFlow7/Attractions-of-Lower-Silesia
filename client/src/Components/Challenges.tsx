@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
 import { Challenge } from '../types'; 
-import axios from 'axios';
+import api from '../API/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
 
@@ -30,7 +30,7 @@ const Challenges = () => {
 
 
     useEffect(() => {
-        axios.get('/api/challenges')
+        api.get('/api/challenges')
           .then(response => {
             setAllChallenges(response.data);
           })
@@ -39,7 +39,7 @@ const Challenges = () => {
           });
 
           if(user) {
-            axios.get(`/api/completed_challenges/${user.id}`)
+            api.get(`/api/completed_challenges/${user.id}`)
               .then(response => {
                 setCompletedChallenges(response.data);
               })

@@ -8,7 +8,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Button, InputBase } from '@mui/material';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import {Link, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { useSearch } from '../Providers/SearchContext';
 
@@ -22,7 +22,7 @@ const Navbar = () => {
 
     const onLogout = async () => {
         try {
-            await axios.get('/api/logout');
+            await api.get('/api/logout');
             updateUser(null);
             logout();
             navigate('/');

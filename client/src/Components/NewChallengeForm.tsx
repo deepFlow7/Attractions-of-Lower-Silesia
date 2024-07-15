@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ChallengeForm, Attraction, challengeAttractionInput, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
 import FilterList from './FilterList';
 import styled from '@emotion/styled';
-import axios from 'axios';
+import api from '../API/api';
 import Map, { MapRef } from './Map';
 
 const FormContainer = styled.div`
@@ -56,7 +56,7 @@ const NewChallengeForm = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   
   useEffect(() => {
-    axios.get('/api/attractions')
+    api.get('/api/attractions')
         .then(response => {
         setAttractions(response.data);
         })
@@ -68,7 +68,7 @@ const NewChallengeForm = () => {
   const mapRef = useRef<MapRef>(null);
 
   const onSubmit = (newChallenge : ChallengeForm) => {
-    axios.post('/api/new_challenge', {newChallenge})
+    api.post('/api/new_challenge', {newChallenge})
           .then(response => {
           })
           .catch(error => {

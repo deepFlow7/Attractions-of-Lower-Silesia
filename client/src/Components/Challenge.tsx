@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from '../API/api';
 import { useParams } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -62,7 +62,7 @@ const ChallengeView: React.FC = () => {
   const { id } = useParams();
 
   const get_challenge_data = () => {
-    axios
+    api
       .get("/api/challenge/" + id)
       .then((response) => {
         setChallenge(response.data);
@@ -75,12 +75,12 @@ const ChallengeView: React.FC = () => {
   useEffect(() => {
     get_challenge_data();
     if (user) {
-      axios
+      api
         .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
         .then((response) => {
           setTakesPart(response.data);
           if (response.data) {
-            axios
+            api
               .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
               .then((response) => {
                 setVisitedAttractions(response.data);
@@ -102,7 +102,7 @@ const ChallengeView: React.FC = () => {
 
   const handleParticipation = () => {
     if (!user) return;
-    axios
+    api
       .post("/api/start_challenge/" + challenge.id + "/" + user.id)
       .then((response) => {
         setTakesPart(true);
@@ -112,7 +112,7 @@ const ChallengeView: React.FC = () => {
       .catch((error) => {
         console.error("There was an error starting the challenge:", error);
       });
-    axios
+    api
       .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
       .then((response) => {
         setVisitedAttractions(response.data);
@@ -142,7 +142,7 @@ const ChallengeView: React.FC = () => {
           return;
         }
 
-        axios
+        api
           .post(
             `/api/visit_challenge_attraction/${challenge.id}/${attraction.id}/${user.id}`
           )

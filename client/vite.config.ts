@@ -5,13 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
+    /*proxy: {
         '/api': {
-            target:'http://localhost:8080',
+            target:"https://boxwood-builder-429215-k7.ue.r.appspot.com",
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, '')
         }  
-    },
+    },*/
   },
   build: {
     outDir: 'dist',

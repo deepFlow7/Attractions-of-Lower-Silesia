@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../API/api';
 import { Grid, Card } from '@mui/material';
 import Map from './Map';
 import AttractionsList from './AttractionsList';
@@ -29,7 +29,7 @@ const Home: React.FC<HomeProps> = () => {
   const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
   const {search} = useSearch();
   useEffect(() => {
-    axios.get('/api/attractions')
+    api.get('/api/attractions')
       .then(response => {
         setAttractions(response.data);
         setFilteredAttractions(response.data);
