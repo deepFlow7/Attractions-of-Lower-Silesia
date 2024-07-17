@@ -3,11 +3,12 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
 import api from '../API/api';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
 import { User } from '../types';
 
 interface LoginProps {
+  returnUrl? : string
 }
 
 const FormContainer = styled.div`
@@ -27,11 +28,14 @@ const Title = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-const LoginForm: React.FC<LoginProps> = () => {
+const LoginForm: React.FC<LoginProps> = (props) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { isAuthenticated, login, updateUser, updateUsername, setRole} = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
 
   const handleSubmit = async (e: React.FormEvent) =>  {
     e.preventDefault();
@@ -41,7 +45,10 @@ const LoginForm: React.FC<LoginProps> = () => {
         updateUsername(response.data.username);
         setRole(response.data.role);
         login();
-        navigate('/');
+        if(returnUrl)
+          navigate(returnUrl);
+        else
+          navigate('/');
     } catch (error : any) {
         var status = error.response.status;
         if(status==400){

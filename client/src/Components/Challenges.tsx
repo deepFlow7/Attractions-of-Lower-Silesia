@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
-import { Challenge } from '../types'; 
+import { Challenge, completedChallenge } from '../types'; 
 import api from '../API/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
@@ -25,7 +25,7 @@ const SectionTitle = styled(Typography)`
 
 const Challenges = () => {
     const [allChallenges,setAllChallenges] = useState<Challenge[]|null>(null);
-    const [completedChallenges,setCompletedChallenges] = useState<Challenge[]>([]);
+    const [completedChallenges,setCompletedChallenges] = useState<completedChallenge[]>([]);
     const { isAuthenticated, user } = useAuth();
 
 
@@ -76,6 +76,7 @@ const Challenges = () => {
              <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
               <ListItem key={challenge.id+1}>
                   <ListItemText primary={challenge.name} />
+                  <ListItemText primary={challenge.points} sx={{ marginLeft: 2 }}/>
               </ListItem>
             </Button>
             ))}
