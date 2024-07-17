@@ -11,9 +11,5 @@ handlers:
     static_files: build/index.html
     upload: build/index.html
 
-
-env_variables:
-  API_URL: 'https://server-dot-boxwood-builder-429215-k7.ue.r.appspot.com'
-
 service_account: 967246323895-compute@developer.gserviceaccount.com
 service: client

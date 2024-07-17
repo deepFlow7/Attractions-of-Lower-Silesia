@@ -36,8 +36,7 @@ const LoginForm: React.FC<LoginProps> = () => {
   const handleSubmit = async (e: React.FormEvent) =>  {
     e.preventDefault();
     try {
-        await api.post('/api/login', { login:username, password });
-        const response = await api.get('/api/profile');
+        const response = await api.post('/api/login', { login:username, password });
         updateUser(response.data.user as User);
         updateUsername(response.data.username);
         setRole(response.data.role);

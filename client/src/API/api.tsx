@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+
+
 const api = axios.create({
-  baseURL:  process.env.API_URL || "https://server-dot-boxwood-builder-429215-k7.ue.r.appspot.com", //Here change to localhost:8080 if needed
+  baseURL:  import.meta.env.VITE_API_URL
 });
 
 // Add a request interceptor to strip "/api" from the URL
