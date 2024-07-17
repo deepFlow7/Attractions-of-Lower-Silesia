@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Grid, Typography, Card, Button } from '@mui/material';
 import { Attraction, Comment } from '../types';
 import Comments from './Comments';
@@ -8,6 +7,7 @@ import Photos from './Photos';
 import AttractionInfo from './AttractionInfo';
 import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
+import api from '../API/api';
 
 interface AttractionViewProps {
   attraction: Attraction;
@@ -40,7 +40,7 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
   const { id } = useParams();
 
   useEffect(() => {
-    axios.get('/api/attraction/' + id)
+    api.get('/api/attraction/' + id)
       .then(response => {
         setAttractionInfo(response.data);
       })
@@ -51,7 +51,7 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
 
   const handleFavouriteToggle = async () => {
     try {
-      await axios.post(`/api/changeFavourites`, { userId: user?.id, attractionId: id });
+      await api.post(`/api/changeFavourites`, { userId: user?.id, attractionId: id });
       setFavourite(!favourite);
     } catch (error) {
       console.error('Error updating favourite status:', error);
@@ -60,7 +60,7 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
 
   const handleVisitedToggle = async () => {
     try {
-      await axios.post(`/api/changeWantsToVisit`, { userId: user?.id, attractionId: id });
+      await api.post(`/api/changeWantsToVisit`, { userId: user?.id, attractionId: id });
       setVisited(!visited);
     } catch (error) {
       console.error('Error updating visited status:', error);

@@ -4,7 +4,7 @@ import { Grid, Card, Typography, CardContent, List, ListItem, ListItemText, Text
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Comment } from '../types';
-import axios from 'axios';
+import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 
 interface CommentsProps {
@@ -45,7 +45,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
     };
 
     try {
-      const response = await axios.post('/api/addComment', commentData);
+      const response = await api.post('/api/addComment', commentData);
       if (response.data.success) {
         console.log('New comment added successfully:', response.data);
         setNewComment('');

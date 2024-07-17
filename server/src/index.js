@@ -1,9 +1,20 @@
 const express = require('express');
 const db = require('./DB/db_api.js');
 const bodyParser = require('body-parser');
-const app = express();
 const cors = require('cors');
 const session = require('express-session');
+const app = express();
+const normalizePort = val => {
+    const port = parseInt(val, 10);
+    if (isNaN(port)) {
+        return val;
+    }
+    if (port >= 0) {
+        return port;
+    }
+    return false;
+};
+var port = normalizePort(process.env.PORT || 8080);
 
 app.use(bodyParser.json());
 app.use(cors({
@@ -38,7 +49,8 @@ app.post('/login', async (req, res) => {
 
         req.session.userId = user.user_id;
         req.session.role = user.role
-        res.json({ message: 'Logged in successfully' });
+        const user_data = await db.get_user(user.user_id);
+        res.json({user : user_data, username: login, role: user.role});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -277,7 +289,7 @@ app.post('/addComment', async (req, res) => {
   });
   
 
-app.listen(8080, () => {
-      console.log('server listening on port 8080')
+app.listen(port, () => {
+      console.log('server listening on port', port)
 })
 

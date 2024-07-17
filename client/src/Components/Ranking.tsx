@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import { ChallengeRanking } from '../types';
-import axios from 'axios';
+import api from '../API/api';
 import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
 
@@ -32,7 +32,7 @@ const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) =>
 
   useEffect(() => {
       if (props.challenge_id) {
-      axios.get('/api/ranking/' + props.challenge_id)
+      api.get('/api/ranking/' + props.challenge_id)
         .then(response => {
           setRankings(response.data);
         })

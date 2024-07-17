@@ -3,7 +3,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import {Link, useNavigate, useLocation} from 'react-router-dom';
-import axios from 'axios';
+import api from '../API/api';
 import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
 
@@ -19,7 +19,7 @@ const Navbar = () => {
 
     const onLogout = async () => {
         try {
-            await axios.get('/api/logout');
+            await api.get('/api/logout');
             updateUser(null);
             logout();
             navigate('/');

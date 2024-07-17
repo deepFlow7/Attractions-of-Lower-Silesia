@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
-import axios from 'axios';
+import api from '../API/api';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
 import { User } from '../types';
@@ -40,8 +40,7 @@ const LoginForm: React.FC<LoginProps> = (props) => {
   const handleSubmit = async (e: React.FormEvent) =>  {
     e.preventDefault();
     try {
-        await axios.post('/api/login', { login:username, password });
-        const response = await axios.get('/api/profile');
+        const response = await api.post('/api/login', { login:username, password });
         updateUser(response.data.user as User);
         updateUsername(response.data.username);
         setRole(response.data.role);

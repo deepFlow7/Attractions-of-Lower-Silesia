@@ -3,7 +3,7 @@ import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/materia
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
 import Map, {MapRef} from './Map';
-import axios from 'axios';
+import api from '../API/api';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -76,7 +76,7 @@ const NewAttractionForm = () => {
   };
 
   const onSubmit = (newAttraction : NewAttraction) => {
-    axios.post('/api/new_attraction', {newAttraction})
+    api.post('/api/new_attraction', {newAttraction})
           .then(response => {
             console.log('Dodano');
           })
