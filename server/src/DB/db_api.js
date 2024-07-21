@@ -136,6 +136,16 @@ class db_api {
     }
 
     //----FAVOURITES-------
+    async isFavourite(attractionId, userId) {
+        try {
+            const result = await pool.query('SELECT * FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Error fetching favourites:', error);
+            throw error;
+        }
+    }
+
     async changeFavourites(userId, attractionId) {
         try {
             const existingEntry = await pool.query('SELECT * FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
@@ -150,6 +160,16 @@ class db_api {
         }
     }
     //---- WANTS TO VISIT -----------
+    async isToVisit(attractionId, userId) {
+        try {
+            const result = await pool.query('SELECT * FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Error fetching attraction to visit :', error);
+            throw error;
+        }
+    }
+
     async changeWantsToVisit(userId, attractionId) {
         try {
             const existingEntry = await pool.query('SELECT * FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);

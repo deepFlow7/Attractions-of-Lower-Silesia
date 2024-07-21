@@ -32,19 +32,37 @@ const defaultColor = '#1976d2';
 
 const AttractionView = () => {
   const [attr_info, setAttractionInfo] = useState<AttractionWithComments | null>(null);
-  const [visited, setVisited] = useState(false);
+  const [to_visit, setToVisit] = useState(false);
   const [favourite, setFavourite] = useState(false);
   const { user } = useAuth();
   const { id } = useParams();
 
   useEffect(() => {
-    api.get('/api/attraction/' + id)
+    if (user){
+      api.get('/api/attraction/is_favourite/' + id + '/' + user.id)
       .then(response => {
-        setAttractionInfo(response.data);
+        setFavourite(response.data.favourite);
       })
       .catch(error => {
         console.error('There was an error fetching the data!', error);
       });
+
+      api.get('/api/attraction/is_to_visit/' + id + '/' + user.id)
+      .then(response => {
+        setToVisit(response.data.to_visit);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+    }
+
+    api.get('/api/attraction/' + id)
+    .then(response => {
+      setAttractionInfo(response.data);
+    })
+    .catch(error => {
+      console.error('There was an error fetching the data!', error);
+    });
   }, [id]);
 
   const handleFavouriteToggle = async () => {
@@ -56,12 +74,12 @@ const AttractionView = () => {
     }
   };
 
-  const handleVisitedToggle = async () => {
+  const handleToVisitToggle = async () => {
     try {
       await api.post(`/api/changeWantsToVisit`, { userId: user?.id, attractionId: id });
-      setVisited(!visited);
+      setToVisit(!to_visit);
     } catch (error) {
-      console.error('Error updating visited status:', error);
+      console.error('Error updating to_visit status:', error);
     }
   };
 
@@ -104,13 +122,13 @@ const AttractionView = () => {
             <Button
               variant="contained"
               sx={{
-                bgcolor: visited ? primaryColor : defaultColor,
+                bgcolor: to_visit ? primaryColor : defaultColor,
                 marginTop: '10px',
                 marginBottom: '10px',
               }}
-              onClick={handleVisitedToggle}
+              onClick={handleToVisitToggle}
             >
-              {visited ? 'Odwiedzone' : 'Dodaj do odwiedzonych'}
+              {to_visit ? 'Do odwiedzenia' : 'Dodaj na listę do odwiedzenia'}
             </Button>
             <AttractionInfo attraction={attraction} />
             <Grid item xs={12} >
