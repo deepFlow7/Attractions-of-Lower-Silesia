@@ -4,7 +4,7 @@
     "private":true,
     "scripts":
     {
-        "dev": "(gnome-terminal -e 'bash -c \"npm run dev\"') &\n cd client \n (gnome-terminal -e 'bash -c \"npm run dev\"')",
+        "dev": "(gnome-terminal -e 'bash -c \"node ./server/src/index.js\"') &\n cd client \n (gnome-terminal -e 'bash -c \"npm run dev\"')",
         "install": "cd client && npm install && cd ../server && npm install",
         "build": ""
     }
