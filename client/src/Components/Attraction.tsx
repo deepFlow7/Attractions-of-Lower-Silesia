@@ -9,11 +9,9 @@ import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
 import api from '../API/api';
 
-interface AttractionViewProps {
+interface AttractionWithComments {
   attraction: Attraction;
   comments: Comment[];
-  is_visited: boolean;
-  is_favourite: boolean;
 }
 
 const TileCard = styled(Card)`
@@ -32,10 +30,10 @@ const Container = styled.div`
 const primaryColor = '#757575';
 const defaultColor = '#1976d2';
 
-const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourite }) => {
-  const [attr_info, setAttractionInfo] = useState<AttractionViewProps | null>(null);
-  const [visited, setVisited] = useState(is_visited);
-  const [favourite, setFavourite] = useState(is_favourite);
+const AttractionView = () => {
+  const [attr_info, setAttractionInfo] = useState<AttractionWithComments | null>(null);
+  const [visited, setVisited] = useState(false);
+  const [favourite, setFavourite] = useState(false);
   const { user } = useAuth();
   const { id } = useParams();
 
@@ -66,6 +64,16 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
       console.error('Error updating visited status:', error);
     }
   };
+
+  const addComment = (new_comment : Comment) => {
+    setAttractionInfo((prevState) => {
+      if (!prevState) return null;
+  
+      return {
+        attraction: prevState.attraction,
+        comments: [...prevState.comments, new_comment]
+      };
+  })};
 
   if (!attr_info) {
     return <div>Loading...</div>;
@@ -105,8 +113,8 @@ const AttractionView: React.FC<AttractionViewProps> = ({ is_visited, is_favourit
               {visited ? 'Odwiedzone' : 'Dodaj do odwiedzonych'}
             </Button>
             <AttractionInfo attraction={attraction} />
-            <Grid item xs={12}>
-              <Comments comments={comments} attraction_id={attraction.id} />
+            <Grid item xs={12} >
+              <Comments comments={comments} attraction_id={attraction.id} addComment={addComment}/>
             </Grid>
           </Grid>
         </Grid>

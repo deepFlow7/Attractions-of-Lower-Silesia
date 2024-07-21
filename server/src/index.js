@@ -279,8 +279,8 @@ app.post('/changeWantsToVisit', async (req, res) => {
 app.post('/addComment', async (req, res) => {
     const { author, content, votes, attraction, parent } = req.body;
     try {   
-      await db.new_comment(author, content, votes, attraction, parent);
-      res.json({ success: true });
+      const id = await db.new_comment(author, content, votes, attraction, parent);
+      res.json({ success: true, id: id });
 
     } catch (error) {
       console.error('Error adding new comment:', error);

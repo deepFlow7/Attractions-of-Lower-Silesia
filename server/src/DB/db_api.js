@@ -219,13 +219,12 @@ class db_api {
     //------COMMENTS--------
     async new_comment(author, content, votes, attraction, parent) {
         try {
-            const userId = await db_api.findUserIdByUsername(author);
-    
-            if (userId) {
-                await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) VALUES ($1, $2, $3, $4, $5)', [userId, content, votes, attraction, parent]);
-            } else {
-                throw new Error('User with the provided username does not exist.');
-            }
+
+            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
+                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+                [author, content, votes, attraction, parent]);
+            return rows[0].id;
+           
         } catch (error) {
             console.error('Error creating new comment:', error);
             throw error;

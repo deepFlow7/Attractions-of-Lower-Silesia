@@ -9,7 +9,8 @@ import { useAuth } from '../Providers/AuthContext';
 
 interface CommentsProps {
   comments: Comment[];
-  attraction_id: Number;
+  attraction_id: number;
+  addComment: (new_comment: Comment ) => void;
 }
 
 const TileCard = styled(Card)`
@@ -25,7 +26,7 @@ const Container = styled.div`
   margin: 1.5% 1.5%;
 `;
 
-const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
+const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
   const { user } = useAuth();
   const [newComment, setNewComment] = useState('');
 
@@ -37,7 +38,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
     if (newComment.trim() === '') return;
 
     const commentData = {
-      author: user?.name || 'Anonymous',
+      author: user!.id,
       content: newComment,
       votes: 0,
       attraction: attraction_id, 
@@ -47,6 +48,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
     try {
       const response = await api.post('/api/addComment', commentData);
       if (response.data.success) {
+        addComment({...commentData, id:response.data.id});
         console.log('New comment added successfully:', response.data);
         setNewComment('');
       }
@@ -63,7 +65,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
           <List>
             {comments.map(comment => (
                <ListItem key={comment.id}>
-               <ListItemText
+               <ListItemText 
                  primary={comment.content}
                  secondary={
                     comment.parent ? (
