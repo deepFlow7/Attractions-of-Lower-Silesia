@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Grid, Typography, TextField, Button, MenuItem } from '@mui/material';
+import { Box, Grid, Typography, TextField, Button, MenuItem, CircularProgress } from '@mui/material';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
 import Map, {MapRef} from './Map';
@@ -25,6 +25,7 @@ const NewAttractionForm = () => {
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loadingLocalization, setLoadingLocalization] = useState<boolean>(false);
   const [mapKey, setMapKey] = useState<number>(0);
   const mapRef = useRef<MapRef>(null);
 
@@ -117,17 +118,30 @@ const NewAttractionForm = () => {
   };
 
   const handleUseMyLocation = () => {
+    setLoadingLocalization(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const newCoords = { x: position.coords.latitude, y: position.coords.longitude };
+        const accuracy = position.coords.accuracy;
+
+        setLoadingLocalization(false);
+
+        if (accuracy > 100) {
+          alert("Nie możemy pobrać twojej dokładnej lokalizacji.");
+          return;
+        }
+
         setCoords(newCoords);
         mapRef.current?.setUserLocation(newCoords);
       }, (error) => {
+        setLoadingLocalization(false);
         console.error('Błąd podczas pobierania geolokacji', error);
       }
     );
     } else {
-      console.error('Twoja przeglądarka nie wspiera geolokalizacji');
+      setLoadingLocalization(false);
+      alert("Lokalizacja jest wyłączona lub nieobsługiwana przez tę przeglądarkę.");
+      console.log("Nie udało się pobrać lokalizacji.");
     }
   };
 
@@ -216,7 +230,11 @@ const NewAttractionForm = () => {
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
           <Button variant="contained" onClick={handleUseMyLocation} color="primary">
-            Użyj mojej lokalizacji
+            {loadingLocalization? (
+                <> Pobieram lokalizację <CircularProgress size={20}/> </>
+              ) : (
+                <> Użyj mojej lokalizacji </>
+              )}
           </Button>
           <Map 
             key={mapKey} 
