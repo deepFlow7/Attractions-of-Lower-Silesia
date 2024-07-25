@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Typography, Card, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import { Attraction, Comment } from '../types';
 import Comments from './Comments';
 import Photos from './Photos';
@@ -14,15 +14,6 @@ interface AttractionWithComments {
   comments: Comment[];
 }
 
-const TileCard = styled(Card)`
-  margin: 1%;
-  margin-top: 5%;
-`;
-
-const Title = styled(Typography)`
-  text-align: center;
-`;
-
 const Container = styled.div`
   margin: 1.5% 1.5%;
 `;
@@ -34,12 +25,12 @@ const AttractionView = () => {
   const [attr_info, setAttractionInfo] = useState<AttractionWithComments | null>(null);
   const [to_visit, setToVisit] = useState(false);
   const [favourite, setFavourite] = useState(false);
-  const { user } = useAuth();
+  const { user, role, isAuthenticated } = useAuth();
   const { id } = useParams();
 
   useEffect(() => {
-    if (user){
-      api.get('/api/attraction/is_favourite/' + id + '/' + user.id)
+    if (isAuthenticated && role == "user"){
+      api.get('/api/attraction/is_favourite/' + id + '/' + user!.id)
       .then(response => {
         setFavourite(response.data.favourite);
       })
@@ -47,7 +38,7 @@ const AttractionView = () => {
         console.error('There was an error fetching the data!', error);
       });
 
-      api.get('/api/attraction/is_to_visit/' + id + '/' + user.id)
+      api.get('/api/attraction/is_to_visit/' + id + '/' + user!.id)
       .then(response => {
         setToVisit(response.data.to_visit);
       })
@@ -108,6 +99,8 @@ const AttractionView = () => {
             <Photos photos={photos} title={name} />
           </Grid>
           <Grid item xs={12} md={4}>
+            {isAuthenticated && role == "user" && (
+              <>
             <Button
               variant="contained"
               sx={{
@@ -130,6 +123,7 @@ const AttractionView = () => {
             >
               {to_visit ? 'Do odwiedzenia' : 'Dodaj na listę do odwiedzenia'}
             </Button>
+            </>)}
             <AttractionInfo attraction={attraction} />
             <Grid item xs={12} >
               <Comments comments={comments} attraction_id={attraction.id} addComment={addComment}/>

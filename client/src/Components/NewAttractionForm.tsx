@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Box, Grid, Typography, TextField, Button, MenuItem, CircularProgress } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
 import Map, {MapRef} from './Map';
@@ -26,8 +27,11 @@ const NewAttractionForm = () => {
   const [photoCaptions, setPhotoCaptions] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loadingLocalization, setLoadingLocalization] = useState<boolean>(false);
-  const [mapKey, setMapKey] = useState<number>(0);
   const mapRef = useRef<MapRef>(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
 
   const handleAddPhoto = () => {
     const newPhotoUrl = photoUrls[photos.length] || '';
@@ -103,18 +107,11 @@ const NewAttractionForm = () => {
 
     await onSubmit(newAttraction);
 
-    setName('');
-    setType(null);
-    setSubtype(null);
-    setDescription('');
-    setInteractivity(5);
-    setTimeItTakes(30);
-    setPhotos([]);
-    setPhotoUrls([]);
-    setPhotoCaptions([]);
-    setCoords(null);
-    setMapKey(prevKey => prevKey + 1);
-    setErrors({});
+    alert("Dodano atrakcję.");
+    if(returnUrl)
+      navigate(returnUrl);
+    else
+      navigate('/');
   };
 
   const handleUseMyLocation = () => {
@@ -237,7 +234,6 @@ const NewAttractionForm = () => {
               )}
           </Button>
           <Map 
-            key={mapKey} 
             ref={mapRef}
             x={51.1079} 
             y={17.0385} 

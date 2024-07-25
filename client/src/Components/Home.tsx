@@ -12,10 +12,6 @@ import { Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
 import { useSearch } from '../Providers/SearchContext';
 
-
-interface HomeProps {
-}
-
 const TileCard = styled(Card)`
   margin: 1%;
 `;
@@ -37,7 +33,7 @@ const StyledInputBase = styled(InputBase)`
 `;
 
 
-const Home: React.FC<HomeProps> = () => {
+const Home = () => {
   const x = 51.1079;
   const y = 17.0385;
   const [attractions, setAttractions] = useState<Attraction[] | null>(null);

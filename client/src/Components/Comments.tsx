@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Card, Typography, CardContent, List, ListItem, ListItemText, TextField, Button } from '@mui/material';
+import { Card, Typography, CardContent, List, ListItem, ListItemText, TextField, Button } from '@mui/material';
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Comment } from '../types';
 import api from '../API/api';
@@ -22,12 +21,8 @@ const Title = styled(Typography)`
   text-align: center;
 `;
 
-const Container = styled.div`
-  margin: 1.5% 1.5%;
-`;
-
 const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
   const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -88,22 +83,24 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
         </CardContent>
       </TileCard>
 
-      <TileCard>
-        <CardContent>
-          <Title variant="h5" gutterBottom>Dodaj komentarz</Title>
-          <TextField
-            label="Treść komentarza"
-            multiline
-            rows={4}
-            value={newComment}
-            onChange={handleCommentChange}
-            fullWidth
-          />
-          <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
-            Dodaj
-          </Button>
-        </CardContent>
-      </TileCard>
+      {isAuthenticated && role == "user" && (
+        <TileCard>
+          <CardContent>
+            <Title variant="h5" gutterBottom>Dodaj komentarz</Title>
+            <TextField
+              label="Treść komentarza"
+              multiline
+              rows={4}
+              value={newComment}
+              onChange={handleCommentChange}
+              fullWidth
+            />
+            <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
+              Dodaj
+            </Button>
+          </CardContent>
+        </TileCard>
+      )}
     </div>
   );
 };

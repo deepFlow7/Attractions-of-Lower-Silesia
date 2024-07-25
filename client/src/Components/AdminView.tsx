@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Button } from "@mui/material";
-import UsersList from "./UserList";
+import { Typography, Button,  Grid, Card, CardContent, CardActions } from "@mui/material";
+import api from '../API/api';
+import UsersList from "./UsersList";
+import ChallengesList from "./ChallengesList";
 import AttractionsList from "./AttractionsList";
 import styled from "@emotion/styled";
+import Home from "./Home";
+import { UserWithLogin, Attraction, Challenge} from "../types";
 
 const Container = styled.div`
   max-width: 800px;
@@ -22,74 +26,102 @@ const StyledButton = styled(Button)`
 `;
 
 const AdminView: React.FC = () => {
-  const [attractions, setAttractions] = useState<any[]>([]); // State to store attractions
+  const [attractions, setAttractions] = useState<Attraction[]>([]); 
+  const [challenges, setChallenges] = useState<Challenge[]>([]); 
+  const [users, setUsers] = useState<UserWithLogin[]>([]); 
+  const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true); 
 
   useEffect(() => {
-    // Function to fetch attractions from an API
     const fetchAttractions = async () => {
-      try {
-        const response = await fetch("/api/attractions"); // Replace with your API endpoint
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json(); // Parse JSON data
-        setAttractions(data); // Set attractions in state
-      } catch (error) {
-        console.error("Error fetching attractions:", error);
-      }
+      api.get('/api/attractions')
+      .then(response => {
+        setAttractions(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
     };
 
-    fetchAttractions(); // Call fetch function when component mounts
-  }, []); // Empty dependency array ensures useEffect runs once
+    const fetchChallenges = async () => {
+      api.get('/api/challenges')
+      .then(response => {
+        setChallenges(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+    };
 
-  // Example users data
-  const users: string[] = [
-    "Jan Kowalski",
-    "Anna Nowak",
-    "Adam Nowakowski",
-    "Ewa Wiśniewska"
-  ];
+    const fetchUsers = async () => {
+      api.get('/api/users')
+      .then(response => {
+        setUsers(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+    };
 
-  // Function to handle adding an attraction
-  const handleAddAttraction = () => {
-    // Implement logic to add attraction
-    console.log("Adding attraction...");
-  };
+    fetchAttractions(); 
+    fetchChallenges(); 
+    fetchUsers(); 
+  }, []); 
 
-  // Function to handle adding a challenge
-  const handleAddChallenge = () => {
-    // Implement logic to add challenge
-    console.log("Adding challenge...");
+  const toggleView = () => {
+    setIsAdminPanel(!isAdminPanel);
   };
 
   return (
     <Container>
       <StyledTypography variant="h4" gutterBottom>
-        Panel administratora
+        {isAdminPanel ? "Panel administratora" : "Widok główny"}
       </StyledTypography>
-
-      {/* Add Attraction Button */}
-      <StyledButton
-        variant="contained"
-        color="primary"
-        onClick={handleAddAttraction}
-      >
-        Dodaj atrakcję
+      
+      <StyledButton variant="contained" color="secondary" onClick={toggleView}>
+        {isAdminPanel ? "Przełącz na widok główny" : "Przełącz na panel administratora"}
       </StyledButton>
 
-      {/* Add Challenge Button */}
-      <StyledButton
-        variant="contained"
-        color="primary"
-        onClick={handleAddChallenge}
-      >
-        Dodaj wyzwanie
-      </StyledButton>
-
-      <UsersList users={users} />
-
-      {/* Render AttractionsList with fetched data */}
-      <AttractionsList attractions={attractions} />
+    {isAdminPanel ? (
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <UsersList users={users} />
+            </CardContent>
+            <CardActions>
+              <Button size="small" color="primary">
+                Manage Users
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              
+              <AttractionsList attractions={attractions} />
+            </CardContent>
+            <CardActions>
+              <Button size="small" color="primary">
+                Manage Attractions
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+              <ChallengesList challenges={challenges} />
+            <CardActions>
+              <Button size="small" color="primary">
+                Manage Challenges
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid>
+    ) : (
+      <Home/>
+    )};
     </Container>
   );
 };

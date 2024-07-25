@@ -1,8 +1,7 @@
 import React from 'react';
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Grid, Typography, Card, CardContent, List, ListItemText, ListItem } from '@mui/material';
+import { Typography, Card, CardContent, List, ListItemText, ListItem } from '@mui/material';
 import { Attraction } from '../types';
 
 interface AttractionInfoProps {
@@ -15,16 +14,8 @@ const TileCard = styled(Card)`
   margin-top: 5%;
 `;
 
-const Title = styled(Typography)`
-  text-align: center;
-`;
-
-const Container = styled.div`
-  margin: 1.5% 1.5%;
-`;
-
 const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
-const { name, photos, type, subtype, description, interactivity, time_it_takes, rating } = attraction;
+const { type, subtype, description, interactivity, time_it_takes, rating } = attraction;
 
 
   return ( <>

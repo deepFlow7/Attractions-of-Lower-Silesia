@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Grid, Typography, TextField, Button, InputBase } from '@mui/material';
+import { Grid, Typography, Button, InputBase } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import Map, { MapRef } from './Map';
 import { Attraction, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
 import FilterList from './FilterList';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material'; 
+
 const FormContainer = styled.div`
   max-width: 1200px;
   margin: 4% auto; 
@@ -21,11 +22,6 @@ const ScrollableBox = styled.div`
   overflow-y: auto;
   border: 1px solid #ccc; 
   padding: 8px; 
-`;
-
-const TypographyStyled = styled(Typography)`
-  font-size: 1.2rem; 
-  font-weight: bold; 
 `;
 
 const StyledInputBase = styled(InputBase)`
@@ -47,9 +43,7 @@ const RoutePlanner = () => {
   const [selectedTypes, setSelectedTypes] = useState<possible_type[]>(possibleTypes);
   const [selectedSubtypes, setSelectedSubtypes] = useState<subtypes[]>(possibleSubtypes);
   const initialMapView = { center: { x: 51.1079, y: 17.0385 }, zoom: 8 };
-  const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(initialMapView);
   const [search, setSearch] = useState<string>('');
-  const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
   const [refreshKey, setRefreshKey] = useState(0);
   
   useEffect(() => {
@@ -64,39 +58,10 @@ const RoutePlanner = () => {
  
   const mapRef = useRef<MapRef>(null);
 
-  const handleGetView = () => {
-    if (mapRef.current) {
-      const view = mapRef.current.getView();
-      const current_view = {
-        center: { x: view.center.lat, y: view.center.lng },
-        zoom: view.zoom
-      }
-      setMapView(current_view);
-      return current_view;
-    }
-    else 
-      return mapView;
-  };
-  
-  const handleSubmit = () => {
-    const newErrors: { name?: string; description?: string; attractions?: string } = {};
-
-    if (selectedAttractions.length === 0) {
-      newErrors.attractions = 'Musisz wybrać co najmniej jedną atrakcję';
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
+  const reset = () => {
     setSelectedAttractions([]);
-    setSelectedTypes(possibleTypes);
-    setSelectedSubtypes(possibleSubtypes);
-    setMapView(initialMapView);
-    setErrors({});
     setRefreshKey(prev => prev + 1);
-  };
+  }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, attraction: Attraction) => {
     event.dataTransfer.setData('attraction', JSON.stringify(attraction.id));
@@ -192,12 +157,9 @@ const RoutePlanner = () => {
     <FormContainer>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>Nowe Wyzwanie</Typography>
+          <Typography variant="h4" gutterBottom>Zaplanuj trasę</Typography>
         </Grid>
         <Grid item xs={6} onDrop={handleDrop} onDragOver={handleDragOver} style={{ minHeight: '400px', border: '1px solid black', marginTop:"1rem" }}>
-          <TypographyStyled variant="body1">
-              Dostosuj położenie i zoom mapki
-          </TypographyStyled>
           <Map 
             key={refreshKey} 
             ref={mapRef} 
@@ -244,7 +206,7 @@ const RoutePlanner = () => {
           <FilterList key={refreshKey} onChange={handleFilterChange}></FilterList>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Wybrane atrakcje (zakres 1 - 100)</Typography>
+          <Typography variant="h6">Wybrane atrakcje (dostosuj kolejność)</Typography>
           <ScrollableBox>
           {selectedAttractions.map((selected, index) => {
   const attraction = attractions.find(attr => attr.id === selected);
@@ -268,16 +230,13 @@ const RoutePlanner = () => {
 })}
 
           </ScrollableBox>
-          {!!errors.attractions && (
-            <Typography color="error" variant="body2">{errors.attractions}</Typography>
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>Zapisz Wyzwanie</Button>
         </Grid>
       </Grid>
       <Grid item xs={12}>
       <Typography variant="h6">Długość trasy: {calculateTotalDistance()} km</Typography>
+      <Button onClick={reset}>
+        Zresetuj trasę
+      </Button>
     </Grid>
     </FormContainer>
   );

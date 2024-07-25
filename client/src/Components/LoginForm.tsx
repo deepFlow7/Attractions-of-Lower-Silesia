@@ -7,10 +7,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
 import { User } from '../types';
 
-interface LoginProps {
-  returnUrl? : string
-}
-
 const FormContainer = styled.div`
   max-width: 400px;
   border: 1px solid #ccc;
@@ -28,10 +24,10 @@ const Title = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-const LoginForm: React.FC<LoginProps> = (props) => {
+const LoginForm = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { isAuthenticated, login, updateUser, updateUsername, setRole} = useAuth();
+  const { login, updateUser, updateUsername, setRole} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 

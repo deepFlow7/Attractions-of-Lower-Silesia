@@ -1,4 +1,3 @@
-const { error } = require('console');
 var pg = require('pg');
 var bcrypt = require('bcrypt');
 
@@ -24,7 +23,8 @@ class db_api {
 
     async get_users() {
         try {
-            const { rows } = await pool.query('SELECT * FROM users');
+            const { rows } = await pool.query(`SELECT name, surname, mail, login \
+                FROM users, logins WHERE users.id=logins.user_id AND role='user'`);
             return rows;
         } catch (error) {
             console.error('Error fetching users:', error);

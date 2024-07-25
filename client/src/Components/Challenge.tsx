@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import api from '../API/api';
 import { useParams } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Card, CardContent, Grid, Typography, Button } from "@mui/material";
 import Map from "./Map";
 import ChallengeAttractionsList from "./ChallengeAttractionsList";
 import RankingTable from "./Ranking";
-import { Challenge, ChallengeAttraction, Attraction } from "../types";
+import { Challenge, ChallengeAttraction } from "../types";
 import { useAuth } from "../Providers/AuthContext";
 
 const Container = styled.div`
@@ -52,7 +51,7 @@ function haversineDistanceBetweenPoints(
 
 const ChallengeView: React.FC = () => {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, role } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
   const [visitedAttractions, setVisitedAttractions] = useState<
     { attraction_id: number }[]
@@ -77,7 +76,7 @@ const ChallengeView: React.FC = () => {
 
   useEffect(() => {
     get_challenge_data();
-    if (user) {
+    if (user && role == "user") {
       api
         .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
         .then((response) => {
@@ -104,7 +103,7 @@ const ChallengeView: React.FC = () => {
   }
 
   const handleParticipation = () => {
-    if (!user) return;
+    if (!user || role != "user") return;
     api
       .post("/api/start_challenge/" + challenge.id + "/" + user.id)
       .then((response) => {
@@ -225,7 +224,7 @@ const ChallengeView: React.FC = () => {
             <CardContent>
               <Title variant="h5">Ranking</Title>
               <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
-              {user && !takesPart && (
+              {user && role == "user" && !takesPart && (
                 <Button
                   variant="contained"
                   color="primary"
