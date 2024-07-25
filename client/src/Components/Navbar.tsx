@@ -4,17 +4,17 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import {Link, useNavigate, useLocation} from 'react-router-dom';
 import api from '../API/api';
-import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
 
 const Navbar = () => {
-    const {isAuthenticated,logout, user, updateUser, username} = useAuth();
+    const {isAuthenticated,logout, user, role, updateUser, username} = useAuth();
     const location = useLocation();
     const currentUrl = location.pathname + location.search; 
 
-    const handleLoginClick = () => {
-      navigate('/login', { state: { returnUrl: currentUrl } });
+    const handleRedirectWithReturnUrl = (route : string) => {
+      navigate(route, { state: { returnUrl: currentUrl } });
     };
+
     const navigate = useNavigate();
 
     const onLogout = async () => {
@@ -26,8 +26,7 @@ const Navbar = () => {
         } catch (error) {
             alert('Error logging out');
         }
-    };
-    
+    };   
     
   return (
     <AppBar className='navbar' position="static">
@@ -46,13 +45,20 @@ const Navbar = () => {
 
 
       {isAuthenticated && (
-        <Button component={Link} to="/new_attraction" color="inherit">
+        <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
           Dodaj atrakcję
+        </Button> 
+      )}
+
+      {isAuthenticated && role == "admin" ? (
+        <Button onClick={() => handleRedirectWithReturnUrl('/new_challenge')} color="inherit">
+            Dodaj wyzwanie
+        </Button>  
+      ) : (
+        <Button component={Link} to="/challenges" color="inherit">
+          Wyzwania
         </Button>
       )}
-        <Button component={Link} to="/challenges" color="inherit">
-            Wyzwania
-        </Button>
 
         <Button component={Link} to="/route_planner" color="inherit">
             Trasy
@@ -64,7 +70,7 @@ const Navbar = () => {
                   Wyloguj
               </Button>  
         ) : (
-              <Button color="inherit" onClick={handleLoginClick}>
+              <Button color="inherit" onClick={() => handleRedirectWithReturnUrl('/login')}>
                 Zaloguj
               </Button>
         )}

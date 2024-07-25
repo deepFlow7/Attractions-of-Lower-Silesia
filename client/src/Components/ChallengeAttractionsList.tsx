@@ -9,6 +9,7 @@ import {
   Typography,
   Grid,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ChallengeAttraction } from "../types";
@@ -18,6 +19,7 @@ interface ListProps {
   onClick: (attraction: ChallengeAttraction) => void;
   showVisitButtons: boolean;
   visitedAttractions: { attraction_id: number }[];
+  loadingAttractions: { attraction_id: number }[];
 }
 
 const StyledList = styled(List)`
@@ -70,9 +72,16 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
   onClick,
   showVisitButtons,
   visitedAttractions,
+  loadingAttractions
 }) => {
   const isAttractionVisited = (attractionId: number) => {
     return visitedAttractions.some(
+      (attraction) => attraction.attraction_id === attractionId
+    );
+  };
+
+  const isAttractionLoading = (attractionId: number) => {
+    return loadingAttractions.some(
       (attraction) => attraction.attraction_id === attractionId
     );
   };
@@ -115,10 +124,15 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                       Odwiedzone 
                     </VisitedText>
                   ) : (
+                    isAttractionLoading(attraction.id) ? (
+                      <VisitedText style={{background: "#126cb5"}}>
+                         Sprawdzam lokalizację <CircularProgress size={15}/>
+                      </VisitedText>
+                    ) : (
                     <VisitButton onClick={() => onClick(attraction)}>
                       Odwiedź 
                     </VisitButton>
-                  ))}
+                  )))}
               </Box>
             </Grid>
           ))}

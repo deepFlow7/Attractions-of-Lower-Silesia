@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState, useEffect } from 'react';
 import { Photo } from '../types';
-import { Grid, Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
+import { Grid, Typography, Card, CardContent, Button } from '@mui/material';
 
 
 interface PhotoProps {
@@ -18,10 +17,6 @@ const TileCard = styled(Card)`
 
 const Title = styled(Typography)`
   text-align: center;
-`;
-
-const Container = styled.div`
-  margin: 1.5% 1.5%;
 `;
 
 const Photos: React.FC<PhotoProps> = ({ photos, title}) => {

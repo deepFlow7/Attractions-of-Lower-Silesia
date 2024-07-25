@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, Grid, Typography, TextField, Button, InputBase } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import { ChallengeForm, Attraction, challengeAttractionInput, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
@@ -53,8 +54,11 @@ const NewChallengeForm = () => {
     initialMapView);
   const [search, setSearch] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
-  const [refreshKey, setRefreshKey] = useState(0);
   
+  const navigate = useNavigate();
+  const location = useLocation();
+  const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
+
   useEffect(() => {
     api.get('/api/attractions')
         .then(response => {
@@ -121,14 +125,12 @@ const NewChallengeForm = () => {
     };
 
     onSubmit(newChallenge);
-    setName('');
-    setDescription('');
-    setSelectedAttractions([]);
-    setSelectedTypes(possibleTypes);
-    setSelectedSubtypes(possibleSubtypes);
-    setMapView(initialMapView);
-    setErrors({});
-    setRefreshKey(prev => prev + 1);
+
+    alert("Dodano wyzwanie.");
+    if(returnUrl)
+      navigate(returnUrl);
+    else
+      navigate('/');
   };
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, attraction: Attraction) => {
@@ -203,7 +205,6 @@ const NewChallengeForm = () => {
               Dostosuj położenie i zoom mapki
           </TypographyStyled>
           <Map 
-            key={refreshKey} 
             ref={mapRef} 
             x={initialMapView.center.x} 
             y={initialMapView.center.y} 
@@ -240,7 +241,7 @@ const NewChallengeForm = () => {
           </ScrollableBox>
           </Grid>
         <Grid item xs={3}>
-          <FilterList key={refreshKey} onChange={handleFilterChange}></FilterList>
+          <FilterList onChange={handleFilterChange}></FilterList>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Typography>

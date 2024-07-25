@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
 import { Challenge, completedChallenge } from '../types'; 
+import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
@@ -26,7 +27,7 @@ const SectionTitle = styled(Typography)`
 const Challenges = () => {
     const [allChallenges,setAllChallenges] = useState<Challenge[]|null>(null);
     const [completedChallenges,setCompletedChallenges] = useState<completedChallenge[]>([]);
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, role } = useAuth();
 
 
     useEffect(() => {
@@ -55,19 +56,10 @@ const Challenges = () => {
     <Container>
       <Section>
         <CardContent>
-          <SectionTitle variant="h5">Wszystkie wyzwania</SectionTitle>
-          <List>
-            {allChallenges.map(challenge => (
-                <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
-                    <ListItem key={challenge.id+1}>
-                        <ListItemText primary={challenge.name} />
-                    </ListItem>
-                </Button>
-            ))}
-          </List>
+          <ChallengesList challenges={allChallenges}/>
         </CardContent>
       </Section>
-      {user && (
+      {isAuthenticated && role=="user" && (
         <Section>
         <CardContent>
           <SectionTitle variant="h5">Ukończone wyzwania</SectionTitle>

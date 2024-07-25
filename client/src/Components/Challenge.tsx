@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import api from '../API/api';
 import { useParams } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Card, CardContent, Grid, Typography, Button } from "@mui/material";
 import Map from "./Map";
 import ChallengeAttractionsList from "./ChallengeAttractionsList";
 import RankingTable from "./Ranking";
-import { Challenge, ChallengeAttraction, Attraction } from "../types";
+import { Challenge, ChallengeAttraction } from "../types";
 import { useAuth } from "../Providers/AuthContext";
 
 const Container = styled.div`
@@ -52,9 +51,12 @@ function haversineDistanceBetweenPoints(
 
 const ChallengeView: React.FC = () => {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, role } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
   const [visitedAttractions, setVisitedAttractions] = useState<
+    { attraction_id: number }[]
+  >([]);
+  const [loadingAttractions, setLoadingAttractions] = useState<
     { attraction_id: number }[]
   >([]);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -74,7 +76,7 @@ const ChallengeView: React.FC = () => {
 
   useEffect(() => {
     get_challenge_data();
-    if (user) {
+    if (user && role == "user") {
       api
         .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
         .then((response) => {
@@ -101,7 +103,7 @@ const ChallengeView: React.FC = () => {
   }
 
   const handleParticipation = () => {
-    if (!user) return;
+    if (!user || role != "user") return;
     api
       .post("/api/start_challenge/" + challenge.id + "/" + user.id)
       .then((response) => {
@@ -125,20 +127,38 @@ const ChallengeView: React.FC = () => {
   const visitAttraction = (attraction: ChallengeAttraction) => {
     if (!user) return;
 
+    setLoadingAttractions((prev) => [
+      ...prev,
+      { attraction_id: attraction.id },
+    ]);
+
     if ("geolocation" in navigator) {
-      alert("Sprawdzam lokalizację");
       navigator.geolocation.getCurrentPosition(function (position) {
+
         const x = position.coords.latitude;
         const y = position.coords.longitude;
-        const distance = haversineDistanceBetweenPoints(
+        const accuracy = position.coords.accuracy;
+
+        setLoadingAttractions((prev) =>
+          prev.filter((a) => a.attraction_id !== attraction.id)
+        );
+
+        if (accuracy > 50) {
+          alert("Nie możemy pobrać twojej dokładnej lokalizacji.");
+          return;
+        }
+
+        var distance = haversineDistanceBetweenPoints(
           x,
           y,
           attraction.coords.x,
           attraction.coords.y
         );
 
-        if (distance > 200000) {
-          alert("Nie jesteś na miejscu");
+        distance = Math.round(distance / 10) * 10;
+
+        if (distance > 80) {
+          alert("Nie jesteś na miejscu, obiekt znajduje się " + distance + "m od twojej obecnej lokalizacji.");
           return;
         }
 
@@ -158,7 +178,11 @@ const ChallengeView: React.FC = () => {
           });
       });
     } else {
-      console.log("Geolokalizacja nie jest obsługiwana przez tę przeglądarkę.");
+      setLoadingAttractions((prev) =>
+        prev.filter((a) => a.attraction_id !== attraction.id)
+      );
+      alert("Lokalizacja jest wyłączona lub nieobsługiwana przez tę przeglądarkę.");
+      console.log("Nie udało się pobrać lokalizacji.");
       return;
     }
   };
@@ -190,6 +214,7 @@ const ChallengeView: React.FC = () => {
                 showVisitButtons={isAuthenticated && takesPart}
                 onClick={visitAttraction}
                 visitedAttractions={visitedAttractions}
+                loadingAttractions={loadingAttractions}
               />
             </CardContent>
           </Section>
@@ -199,7 +224,7 @@ const ChallengeView: React.FC = () => {
             <CardContent>
               <Title variant="h5">Ranking</Title>
               <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
-              {user && !takesPart && (
+              {user && role == "user" && !takesPart && (
                 <Button
                   variant="contained"
                   color="primary"

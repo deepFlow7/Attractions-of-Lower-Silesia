@@ -255,6 +255,28 @@ app.post('/new_attraction', async (req, res) => {
       }
 });
 
+app.get('/attraction/is_favourite/:attr_id/:user_id', async (req,res) =>{
+    try{
+        const favourite = await db.isFavourite(req.params["attr_id"], req.params["user_id"]);
+        res.json({ favourite: favourite });
+    }
+    catch(error){
+        console.error('Error fetching attraction data'+error);
+        res.status(500).json({error:'Error fetching attraction data'+error});
+    }
+})
+
+app.get('/attraction/is_to_visit/:attr_id/:user_id', async (req,res) =>{
+    try{
+        const to_visit = await db.isToVisit(req.params["attr_id"], req.params["user_id"]);
+        res.json({ to_visit: to_visit });
+    }
+    catch(error){
+        console.error('Error fetching attraction data'+error);
+        res.status(500).json({error:'Error fetching attraction data'+error});
+    }
+})
+
 app.post('/changeFavourites', async (req, res) => {
     console.log("dsfsfdsfsdfdsf")
     const { userId, attractionId } = req.body;
@@ -279,8 +301,8 @@ app.post('/changeWantsToVisit', async (req, res) => {
 app.post('/addComment', async (req, res) => {
     const { author, content, votes, attraction, parent } = req.body;
     try {   
-      await db.new_comment(author, content, votes, attraction, parent);
-      res.json({ success: true });
+      const id = await db.new_comment(author, content, votes, attraction, parent);
+      res.json({ success: true, id: id });
 
     } catch (error) {
       console.error('Error adding new comment:', error);

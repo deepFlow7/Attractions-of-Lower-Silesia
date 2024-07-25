@@ -33,24 +33,11 @@ const Title = styled(Typography)`
   font-weight: bold;
 `;
 
-const AddAttractionButton = styled(Button)`
-  && {
-    background-color: #42a5f5;
-    color: white;
-    border-radius: 4px;
-    margin-top: 16px;
-    &:hover {
-      background-color: #1976d2;
-    }
-  }
-`;
-
-const AttractionsList: React.FC<ListProps> = ({ attractions, type_filter }) => {
+const AttractionsList: React.FC<ListProps> = ({ attractions }) => {
   return (
     <StyledList>
-      <Title variant="h5">Lista Atrakcji</Title>
+      <Title variant="h5">Atrakcje</Title>
       {attractions
-        .filter((attraction) => true)
         .map((attraction) => (
           <Button
             component={Link}

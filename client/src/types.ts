@@ -27,11 +27,18 @@ export interface NewAttraction {
   photos: NewPhoto[];
 }
 
-export interface User {
-  id: number;
+interface UserData {
   name: string;
   surname: string;
   mail: string;
+}
+
+export interface User extends UserData{
+  id: number;
+}
+
+export interface UserWithLogin extends UserData{
+  login: string;
 }
 
 export interface Login {

@@ -1,4 +1,3 @@
-const { error } = require('console');
 var pg = require('pg');
 var bcrypt = require('bcrypt');
 
@@ -24,7 +23,8 @@ class db_api {
 
     async get_users() {
         try {
-            const { rows } = await pool.query('SELECT * FROM users');
+            const { rows } = await pool.query(`SELECT name, surname, mail, login \
+                FROM users, logins WHERE users.id=logins.user_id AND role='user'`);
             return rows;
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -136,6 +136,16 @@ class db_api {
     }
 
     //----FAVOURITES-------
+    async isFavourite(attractionId, userId) {
+        try {
+            const result = await pool.query('SELECT * FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Error fetching favourites:', error);
+            throw error;
+        }
+    }
+
     async changeFavourites(userId, attractionId) {
         try {
             const existingEntry = await pool.query('SELECT * FROM favourites WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
@@ -150,6 +160,16 @@ class db_api {
         }
     }
     //---- WANTS TO VISIT -----------
+    async isToVisit(attractionId, userId) {
+        try {
+            const result = await pool.query('SELECT * FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Error fetching attraction to visit :', error);
+            throw error;
+        }
+    }
+
     async changeWantsToVisit(userId, attractionId) {
         try {
             const existingEntry = await pool.query('SELECT * FROM wants_to_visit WHERE user_id = $1 AND attraction_id = $2', [userId, attractionId]);
@@ -219,13 +239,12 @@ class db_api {
     //------COMMENTS--------
     async new_comment(author, content, votes, attraction, parent) {
         try {
-            const userId = await db_api.findUserIdByUsername(author);
-    
-            if (userId) {
-                await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) VALUES ($1, $2, $3, $4, $5)', [userId, content, votes, attraction, parent]);
-            } else {
-                throw new Error('User with the provided username does not exist.');
-            }
+
+            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
+                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+                [author, content, votes, attraction, parent]);
+            return rows[0].id;
+           
         } catch (error) {
             console.error('Error creating new comment:', error);
             throw error;

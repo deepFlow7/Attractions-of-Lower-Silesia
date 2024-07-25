@@ -20,6 +20,11 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   return isAuthenticated && role == "admin" ? element : <Navigate to="/" replace />;
 };
 
+const RootRedirect = () => {
+  const { isAuthenticated, role } = useAuth();
+  return isAuthenticated && role === "admin" ? <AdminView /> : <Home />;
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root!.render(
   <React.StrictMode>
@@ -28,7 +33,7 @@ root!.render(
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<RootRedirect />} />
         <Route path="/attraction/:id" element={<Attraction />} />
         <Route path="/challenge/:id" element={<ChallengeView />} />
         <Route path="/challenges" element={<Challenges />} />
@@ -37,8 +42,6 @@ root!.render(
         <Route path="/new_challenge" element={<ProtectedRoute element={<NewChallengeForm />} />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/route_planner" element={<RoutePlanner />} />
-        <Route path="/admin" element={<AdminView />} />
-
       </Routes>
     </BrowserRouter>
     </SearchProvider>

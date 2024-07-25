@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Card, Typography, CardContent, List, ListItem, ListItemText, TextField, Button } from '@mui/material';
+import { Card, Typography, CardContent, List, ListItem, ListItemText, TextField, Button } from '@mui/material';
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Comment } from '../types';
 import api from '../API/api';
@@ -9,7 +8,8 @@ import { useAuth } from '../Providers/AuthContext';
 
 interface CommentsProps {
   comments: Comment[];
-  attraction_id: Number;
+  attraction_id: number;
+  addComment: (new_comment: Comment ) => void;
 }
 
 const TileCard = styled(Card)`
@@ -21,12 +21,8 @@ const Title = styled(Typography)`
   text-align: center;
 `;
 
-const Container = styled.div`
-  margin: 1.5% 1.5%;
-`;
-
-const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
-  const { user } = useAuth();
+const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
+  const { user, isAuthenticated, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
   const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -37,7 +33,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
     if (newComment.trim() === '') return;
 
     const commentData = {
-      author: user?.name || 'Anonymous',
+      author: user!.id,
       content: newComment,
       votes: 0,
       attraction: attraction_id, 
@@ -47,6 +43,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
     try {
       const response = await api.post('/api/addComment', commentData);
       if (response.data.success) {
+        addComment({...commentData, id:response.data.id});
         console.log('New comment added successfully:', response.data);
         setNewComment('');
       }
@@ -63,7 +60,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
           <List>
             {comments.map(comment => (
                <ListItem key={comment.id}>
-               <ListItemText
+               <ListItemText 
                  primary={comment.content}
                  secondary={
                     comment.parent ? (
@@ -86,22 +83,24 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id }) => {
         </CardContent>
       </TileCard>
 
-      <TileCard>
-        <CardContent>
-          <Title variant="h5" gutterBottom>Dodaj komentarz</Title>
-          <TextField
-            label="Treść komentarza"
-            multiline
-            rows={4}
-            value={newComment}
-            onChange={handleCommentChange}
-            fullWidth
-          />
-          <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
-            Dodaj
-          </Button>
-        </CardContent>
-      </TileCard>
+      {isAuthenticated && role == "user" && (
+        <TileCard>
+          <CardContent>
+            <Title variant="h5" gutterBottom>Dodaj komentarz</Title>
+            <TextField
+              label="Treść komentarza"
+              multiline
+              rows={4}
+              value={newComment}
+              onChange={handleCommentChange}
+              fullWidth
+            />
+            <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
+              Dodaj
+            </Button>
+          </CardContent>
+        </TileCard>
+      )}
     </div>
   );
 };
