@@ -7,14 +7,17 @@ export const HomeContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   padding: 15px;
-  max-height: 70vh;
-
+  @media (max-width: 1200px) {
+    max-height: 70vh;
+  }
 `;
 
 export const MapContainer = styled.div`
-  max-height: 70vh;
+  max-height: 100vh;
   width: 60%;
   @media (max-width: 1200px) {
+    max-height: 70vh;
+
     width: 70%;
   }
   @media (max-width: 760px) {
@@ -24,26 +27,29 @@ export const MapContainer = styled.div`
 `;
 
 export const FilterContainer = styled.div`
-  overflow: auto;
   width: 20%;
+  max-height: 85vh;
+  overflow: auto;
   @media (max-width: 1200px) {
     width: 30%;
+    max-height: 70vh;
   }
+
   @media (max-width: 760px) {
     width: 50%;
   }
   @media (max-width: 500px) {
     width: 100%;
   }
-
 `;
 
 export const ListContainer = styled.div`
   width: 20%;
-  max-height: 70vh;
+  max-height: 85vh;
   overflow: auto;
   @media (max-width: 1200px) {
     width: 100%;
+    max-height: 70vh;
   }
   @media (max-width: 760px) {
     width: 50%;
