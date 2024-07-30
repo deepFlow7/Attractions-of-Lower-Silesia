@@ -7,44 +7,51 @@ export const HomeContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   padding: 15px;
+  max-height: 70vh;
+
 `;
 
 export const MapContainer = styled.div`
-    max-height: 70vh;
-    min-width: 300px;
-    width: 50vw;
+  max-height: 70vh;
+  width: 60%;
   @media (max-width: 1200px) {
-    width: 60vw;
-    overflow: hidden;
-  } 
-  @media (max-width: 640px) {
-    width: 100vh;
+    width: 70%;
+  }
+  @media (max-width: 760px) {
+    width: 100%;
     overflow: hidden;
   }
 `;
 
 export const FilterContainer = styled.div`
-  max-height: 70vh;
   overflow: auto;
-  width:20vw;
+  width: 20%;
   @media (max-width: 1200px) {
-    width: 30vw;
-  } 
-  @media (max-width: 640px) {
-    width: 100vw;
-  } 
+    width: 30%;
+  }
+  @media (max-width: 760px) {
+    width: 50%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
+
 `;
 
 export const ListContainer = styled.div`
-  width: 20vw;
+  width: 20%;
   max-height: 70vh;
   overflow: auto;
   @media (max-width: 1200px) {
-    width: 100vw;
-  } 
+    width: 100%;
+  }
+  @media (max-width: 760px) {
+    width: 50%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
-
-
 
 export const TileCard = styled(Card)`
   margin: 1%;
