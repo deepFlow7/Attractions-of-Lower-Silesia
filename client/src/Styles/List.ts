@@ -38,3 +38,17 @@ export const ChallengesContainer = styled.div`
     width: 100%
   }
 `;
+
+export const AdminContainer = styled.div`
+  width: 32%;
+  height: 100vh;
+  overflow: auto;
+  @media (max-width: 900px) {
+    width: 48%;
+    height: 70vh;
+  }
+  @media (max-width: 650px) {
+    width: 100%
+  }
+`;
+

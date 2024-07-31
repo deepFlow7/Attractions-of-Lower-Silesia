@@ -7,12 +7,9 @@ import AttractionsList from "./AttractionsList";
 import styled from "@emotion/styled";
 import Home from "./Home";
 import { UserWithLogin, Attraction, Challenge} from "../types";
+import { ViewContainer } from "../Styles/View";
+import { AdminContainer } from "../Styles/List";
 
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-`;
 
 const StyledTypography = styled(Typography)`
   margin-bottom: 20px;
@@ -72,7 +69,8 @@ const AdminView: React.FC = () => {
   };
 
   return (
-    <Container>
+    <ViewContainer>
+
       <StyledTypography variant="h4" gutterBottom>
         {isAdminPanel ? "Panel administratora" : "Widok główny"}
       </StyledTypography>
@@ -82,8 +80,8 @@ const AdminView: React.FC = () => {
       </StyledButton>
 
     {isAdminPanel ? (
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
+          <ViewContainer>
+<AdminContainer>
           <Card>
             <CardContent>
               <UsersList users={users} />
@@ -94,8 +92,8 @@ const AdminView: React.FC = () => {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
+          </AdminContainer>
+          <AdminContainer>
           <Card>
             <CardContent>
               
@@ -107,8 +105,8 @@ const AdminView: React.FC = () => {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
+          </AdminContainer>
+          <AdminContainer>
           <Card>
               <ChallengesList challenges={challenges} />
             <CardActions>
@@ -117,12 +115,13 @@ const AdminView: React.FC = () => {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
-      </Grid>
+          </AdminContainer>
+        </ViewContainer>
+
     ) : (
       <Home/>
     )};
-    </Container>
+    </ViewContainer>
   );
 };
 
