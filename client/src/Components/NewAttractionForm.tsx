@@ -5,14 +5,10 @@ import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possib
 import styled from '@emotion/styled';
 import Map, {MapRef} from './Map';
 import api from '../API/api';
+import { ChallengesContainer } from '../Styles/List';
+import { ViewContainer } from '../Styles/View';
 
-const FormContainer = styled.div`
-  max-width: 600px;
-  margin: 4% auto; 
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
+
 
 const NewAttractionForm = () => {
   const [name, setName] = useState<string>('');
@@ -143,12 +139,10 @@ const NewAttractionForm = () => {
   };
 
   return (
-    <FormContainer>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+    <ViewContainer>
+       <ChallengesContainer>
           <Typography variant="h4" gutterBottom>Nowa Atrakcja</Typography>
-        </Grid>
-        <Grid item xs={12}>
+    
           <TextField 
             fullWidth 
             label="Nazwa" 
@@ -157,8 +151,7 @@ const NewAttractionForm = () => {
             error={!!errors.name}
             helperText={errors.name}
           />
-        </Grid>
-        <Grid item xs={12}>
+     
           <TextField 
             select 
             fullWidth 
@@ -172,8 +165,7 @@ const NewAttractionForm = () => {
             ))}
           </TextField>
           {errors.type && <Typography variant="body2" color="error">{errors.type}</Typography>}
-        </Grid>
-        <Grid item xs={12}>
+     
           <TextField 
             select 
             fullWidth 
@@ -187,8 +179,7 @@ const NewAttractionForm = () => {
             ))}
           </TextField>
           {errors.subtype && <Typography variant="body2" color="error">{errors.subtype}</Typography>}
-        </Grid>
-        <Grid item xs={12}>
+   
           <TextField 
             fullWidth 
             multiline 
@@ -199,8 +190,7 @@ const NewAttractionForm = () => {
             error={!!errors.description}
             helperText={errors.description}
           />
-        </Grid>
-        <Grid item xs={12}>
+      
           <TextField 
             type="number" 
             fullWidth 
@@ -211,8 +201,7 @@ const NewAttractionForm = () => {
             error={!!errors.interactivity}
             helperText={errors.interactivity}
           />
-        </Grid>
-        <Grid item xs={12}>
+    
           <TextField 
             type="number" 
             fullWidth 
@@ -223,8 +212,7 @@ const NewAttractionForm = () => {
             error={!!errors.timeItTakes}
             helperText={errors.timeItTakes}
           />
-        </Grid>
-        <Grid item xs={12}>
+   
           <Typography variant="h5" gutterBottom>Wybierz lokalizację</Typography>
           <Button variant="contained" onClick={handleUseMyLocation} color="primary">
             {loadingLocalization? (
@@ -233,6 +221,9 @@ const NewAttractionForm = () => {
                 <> Użyj mojej lokalizacji </>
               )}
           </Button>
+          </ChallengesContainer>
+          <ChallengesContainer>
+
           <Map 
             ref={mapRef}
             x={51.1079} 
@@ -242,8 +233,8 @@ const NewAttractionForm = () => {
             onMapClick={(newCoords) => setCoords(newCoords)}
           />
           {errors.coords && <Typography variant="body2" color="error" margin={'3px'}>{errors.coords}</Typography>}
-        </Grid>
-        <Grid item xs={12}>
+ 
+ 
           <Typography variant="h5" gutterBottom>Zdjęcia</Typography>
           <Grid container spacing={2}>
             {photos.map((photo, index) => (
@@ -277,12 +268,10 @@ const NewAttractionForm = () => {
               <Button variant="contained" onClick={handleAddPhoto}>Dodaj Zdjęcie</Button>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>Zapisz Atrakcję</Button>
-        </Grid>
-      </Grid>
-    </FormContainer>
+          </ChallengesContainer>
+
+    </ViewContainer>
   );
 };
 

@@ -9,26 +9,10 @@ import ChallengeAttractionsList from "./ChallengeAttractionsList";
 import RankingTable from "./Ranking";
 import { Challenge, ChallengeAttraction } from "../types";
 import { useAuth } from "../Providers/AuthContext";
-
-const Container = styled.div`
-  padding: 20px;
-`;
-
-const Section = styled(Card)`
-  margin-bottom: 20px;
-`;
-const Title = styled(Typography)`
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 16px;
-  margin-top: 16px;
-`;
-
-const Description = styled(Typography)`
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.2rem;
-`;
+import { ViewContainer } from '../Styles/View';
+import { MapContainer } from '../Styles/Map';
+import { DictionaryContainer } from '../Styles/Dictionary';
+import {Title, Description} from '../Styles/Typhography';
 
 function haversineDistanceBetweenPoints(
   lat1: number,
@@ -188,56 +172,46 @@ const ChallengeView: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Section>
-        <Title variant="h4">{challenge.name}</Title>
-        <Description variant="h6">{challenge.description}</Description>
-      </Section>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={5}>
-          <Section>
-            <CardContent>
-              <Map
-                x={challenge.coords.x}
-                y={challenge.coords.y}
-                zoom={challenge.zoom}
-                attractions={challenge.attractions}
-              />
-            </CardContent>
-          </Section>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Section>
-            <CardContent>
-              <ChallengeAttractionsList
-                attractions={challenge.attractions}
-                showVisitButtons={isAuthenticated && takesPart}
-                onClick={visitAttraction}
-                visitedAttractions={visitedAttractions}
-                loadingAttractions={loadingAttractions}
-              />
-            </CardContent>
-          </Section>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Section>
-            <CardContent>
-              <Title variant="h5">Ranking</Title>
-              <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
-              {user && role == "user" && !takesPart && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleParticipation}
-                >
-                  Weź udział
-                </Button>
-              )}
-            </CardContent>
-          </Section>
-        </Grid>
-      </Grid>
-    </Container>
+    <ViewContainer>
+    <MapContainer four challenge>
+      <Title>{challenge.name}</Title>
+      <Description>{challenge.description}</Description>
+        <CardContent>
+          <Map
+            x={challenge.coords.x}
+            y={challenge.coords.y}
+            zoom={challenge.zoom}
+            attractions={challenge.attractions}
+          />
+        </CardContent>
+    </MapContainer>
+    <DictionaryContainer>
+        <CardContent>
+          <ChallengeAttractionsList
+            attractions={challenge.attractions}
+            showVisitButtons={isAuthenticated && takesPart}
+            onClick={visitAttraction}
+            visitedAttractions={visitedAttractions}
+            loadingAttractions={loadingAttractions}
+          />
+        </CardContent>
+    </DictionaryContainer>
+    <DictionaryContainer second>
+        <CardContent>
+          <Title>Ranking</Title>
+          <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
+          {user && role == "user" && !takesPart && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleParticipation}
+            >
+              Weź udział
+            </Button>
+          )}
+        </CardContent>
+    </DictionaryContainer>
+  </ViewContainer>
   );
 };
 

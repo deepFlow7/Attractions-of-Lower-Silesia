@@ -7,22 +7,9 @@ import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
-
-const Container = styled.div`
-  display: flex;
-  justify-content: space-around;
-  padding: 1%;
-`;
-
-const Section = styled(Card)`
-  width: 45%;
-  padding: 16px;
-`;
-
-const SectionTitle = styled(Typography)`
-  font-weight: bold;
-  margin: 1%;
-`;
+import { ViewContainer } from '../Styles/View';
+import {Title} from '../Styles/Typhography';
+import { ChallengesContainer } from '../Styles/List';
 
 const Challenges = () => {
     const [allChallenges,setAllChallenges] = useState<Challenge[]|null>(null);
@@ -53,16 +40,13 @@ const Challenges = () => {
         return <div>Loading...</div>
     }
   return (
-    <Container>
-      <Section>
-        <CardContent>
-          <ChallengesList challenges={allChallenges}/>
-        </CardContent>
-      </Section>
+    <ViewContainer>
+      <ChallengesContainer>
+        <ChallengesList challenges={allChallenges}/>
+      </ChallengesContainer>
       {isAuthenticated && role=="user" && (
-        <Section>
-        <CardContent>
-          <SectionTitle variant="h5">Ukończone wyzwania</SectionTitle>
+        <ChallengesContainer>
+          <Title>Ukończone wyzwania</Title>
           <List>
             {completedChallenges.map(challenge => (
              <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
@@ -73,9 +57,9 @@ const Challenges = () => {
             </Button>
             ))}
           </List>
-        </CardContent>
-      </Section>)}
-    </Container>
+        </ChallengesContainer>
+     )}
+    </ViewContainer>
   );
 };
 

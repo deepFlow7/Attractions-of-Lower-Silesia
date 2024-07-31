@@ -8,6 +8,11 @@ import FilterList from './FilterList';
 import styled from '@emotion/styled';
 import api from '../API/api';
 import Map, { MapRef } from './Map';
+import { ViewContainer } from '../Styles/View';
+import { MapContainer, DropListContainer } from '../Styles/Map';
+import { ListContainer } from '../Styles/List';
+import { FilterContainer } from '../Styles/Filter';
+import { Input } from '../Styles/Input';
 
 const FormContainer = styled.div`
   max-width: 1200px;
@@ -173,7 +178,7 @@ const NewChallengeForm = () => {
   }
 
   return (
-    <FormContainer>
+    <ViewContainer>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4" gutterBottom>Nowe Wyzwanie</Typography>
@@ -200,50 +205,55 @@ const NewChallengeForm = () => {
             helperText={errors.description}
           />
         </Grid>
-        <Grid item xs={6} onDrop={handleDrop} onDragOver={handleDragOver} style={{ minHeight: '400px', border: '1px solid black', marginTop:"1rem" }}>
-          <TypographyStyled variant="body1">
-              Dostosuj położenie i zoom mapki
-          </TypographyStyled>
-          <Map 
-            ref={mapRef} 
-            x={initialMapView.center.x} 
-            y={initialMapView.center.y} 
-            zoom={initialMapView.zoom} 
-            attractions={selectedAttractionsDetails}/>
         </Grid>
-        <Grid item xs={3}>
-          <Typography variant="h6" style={{marginBottom: "5px"}}>
-            Atrakcje 
-            <br />
-            (przeciągnij wybrane na mapkę)
-          </Typography>
-          <StyledInputBase
-            placeholder="Wyszukaj..."
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={onSearchChange}
-            startAdornment={
-              <IconButton sx={{ p: 0 }} disabled aria-label="search" >
-                <SearchIcon />
-              </IconButton>
-            }
-          />
-          <ScrollableBox style={{minHeight: '50px'}}>
-            {attractions.map((attraction, index) => (
-              !selectedAttractions.some(selected => selected.id === attraction.id) && 
-              attraction.name.toLowerCase().includes(search.toLowerCase()) &&
-              selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
-              <div key={index} draggable onDragStart={(event) => handleDragStart(event, attraction)} style={{ padding: '8px', border: '1px solid black', marginBottom: '4px' }}>
-                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
-                  {attraction.name}
-                </a>
-              </div>
-            )))}
-          </ScrollableBox>
-          </Grid>
-        <Grid item xs={3}>
-          <FilterList onChange={handleFilterChange}></FilterList>
-        </Grid>
-        <Grid item xs={12}>
+        <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
+     
+      <Map 
+        ref={mapRef} 
+        x={initialMapView.center.x} 
+        y={initialMapView.center.y} 
+        zoom={initialMapView.zoom} 
+        attractions={selectedAttractionsDetails} 
+      />
+    </MapContainer>
+
+    <DropListContainer four>
+      <Typography variant="h6" style={{marginBottom: "5px"}}>
+        Atrakcje (przeciągnij wybrane na mapkę)
+      </Typography>
+      <Input
+        placeholder="Wyszukaj..."
+        inputProps={{ 'aria-label': 'search' }}
+        onChange={onSearchChange}
+        startAdornment={
+          <IconButton sx={{ p: 0 }} disabled aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        }
+      />
+      <ScrollableBox>
+        {attractions.map((attraction, index) => (
+          
+          attraction.name.toLowerCase().includes(search.toLowerCase()) &&
+          selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
+          <div 
+            key={index} 
+            draggable 
+            onDragStart={(event) => handleDragStart(event, attraction)} 
+            style={{ padding: '8px', border: '1px solid black', marginBottom: '4px', cursor: 'move' }}
+          >
+            <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
+              {attraction.name}
+            </a>
+          </div>
+        )))}
+      </ScrollableBox>
+    </DropListContainer>
+
+    <FilterContainer four>
+      <FilterList  onChange={handleFilterChange}></FilterList>
+    </FilterContainer>
+        <ListContainer four>
           <Typography variant="h6">Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Typography>
           <ScrollableBox style={{minHeight: '50px'}}>
             {selectedAttractions.map((selected, index) => {
@@ -280,12 +290,9 @@ const NewChallengeForm = () => {
           {!!errors.attractions && (
             <Typography color="error" variant="body2">{errors.attractions}</Typography>
           )}
-        </Grid>
-        <Grid item xs={12}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>Zapisz Wyzwanie</Button>
-        </Grid>
-      </Grid>
-    </FormContainer>
+      </ListContainer>
+    </ViewContainer>
   );
 };
 

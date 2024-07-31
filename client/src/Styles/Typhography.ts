@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { colors, sizes, transitions, shadows, animations, gradients } from './Themes';
+import styled from "@emotion/styled";
 
 const typographyStyles = {
   body: {
@@ -45,5 +46,29 @@ const typographyStyles = {
     },
   },
 };
+
+export const Title = styled.div`{
+  color: 'transparent',
+  textTransform: 'uppercase',
+  backfaceVisibility: 'hidden',
+  fontSize: '3.5rem',
+  backgroundImage: gradients.primaryToSecondary,
+  display: 'inline-block',
+  WebkitBackgroundClip: 'text',
+  backgroundClip: 'text',
+  transitionProperty: 'all',
+  transitionDuration: transitions.default,
+  '&:hover': {
+    transform: 'skewY(2deg) skewX(15deg) scale(1.1)',
+    textShadow: shadows.default,
+  },
+}`;
+
+export const Description = styled.div`{
+  fontSize: sizes.fontSize,
+    '&:not(:last-child)': {
+      marginBottom: sizes.paddingVertical,
+    },
+}`;
 
 export default typographyStyles;

@@ -9,7 +9,7 @@ import { Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
 import { useSearch } from '../Providers/SearchContext';
 import { ViewContainer } from '../Styles/View';
-import { MapContainer } from '../Styles/Map';
+import { MapContainer, MapContainerProps } from '../Styles/Map';
 import { ListContainer } from '../Styles/List';
 import { FilterContainer } from '../Styles/Filter';
 import { Input } from '../Styles/Input';
@@ -52,7 +52,7 @@ const Home = () => {
 
   return (
     <ViewContainer>
-      <MapContainer>
+      <MapContainer three>
           <Map x={x} y={y} attractions={filterBySearch(filteredAttractions, search)} />
       </MapContainer>
       <FilterContainer>
