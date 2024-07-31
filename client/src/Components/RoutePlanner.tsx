@@ -8,33 +8,15 @@ import Map, { MapRef } from './Map';
 import { Attraction, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
 import FilterList from './FilterList';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material'; 
+import { ViewContainer } from '../Styles/View';
+import { MapContainer, DropListContainer } from '../Styles/Map';
+import { ListContainer } from '../Styles/List';
+import { FilterContainer } from '../Styles/Filter';
+import { Input } from '../Styles/Input';
 
-const FormContainer = styled.div`
-  max-width: 1200px;
-  margin: 4% auto; 
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
 
 const ScrollableBox = styled.div`
-  max-height: 400px;
   overflow-y: auto;
-  border: 1px solid #ccc; 
-  padding: 8px; 
-`;
-
-const StyledInputBase = styled(InputBase)`
-  flex-grow: 1;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  padding: 4px 8px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-  }
 `;
 
 const RoutePlanner = () => {
@@ -154,91 +136,88 @@ const RoutePlanner = () => {
   };
 
   return (
-    <FormContainer>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>Zaplanuj trasę</Typography>
-        </Grid>
-        <Grid item xs={6} onDrop={handleDrop} onDragOver={handleDragOver} style={{ minHeight: '400px', border: '1px solid black', marginTop:"1rem" }}>
-          <Map 
-            key={refreshKey} 
-            ref={mapRef} 
-            x={initialMapView.center.x} 
-            y={initialMapView.center.y} 
-            zoom={initialMapView.zoom} 
-            attractions={selectedAttractionsDetails}/>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="h6" style={{marginBottom: "5px"}}>
-            Atrakcje 
-            <br />
-            (przeciągnij wybrane na mapkę)
-          </Typography>
-          <StyledInputBase
-            placeholder="Wyszukaj..."
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={onSearchChange}
-            startAdornment={
-              <IconButton sx={{ p: 0 }} disabled aria-label="search" >
-                <SearchIcon />
-              </IconButton>
-            }
-          />
-          <ScrollableBox>
-            {attractions.map((attraction, index) => (
-              !selectedAttractions.includes(attraction.id) && 
-              attraction.name.toLowerCase().includes(search.toLowerCase()) &&
-              selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
-              <div 
-                key={index} 
-                draggable 
-                onDragStart={(event) => handleDragStart(event, attraction)} 
-                style={{ padding: '8px', border: '1px solid black', marginBottom: '4px', cursor: 'move' }}
-              >
-                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
-                  {attraction.name}
-                </a>
-              </div>
-            )))}
-          </ScrollableBox>
-        </Grid>
-        <Grid item xs={3}>
-          <FilterList key={refreshKey} onChange={handleFilterChange}></FilterList>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6">Wybrane atrakcje (dostosuj kolejność)</Typography>
-          <ScrollableBox>
-          {selectedAttractions.map((selected, index) => {
-  const attraction = attractions.find(attr => attr.id === selected);
-  return (
-    <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '8px', border: '1px solid black', marginBottom: '4px' }}>
-      <IconButton onClick={() => handleMoveUp(index)} disabled={index === 0}>
-        <ArrowUpward />
-      </IconButton>
-      <IconButton onClick={() => handleMoveDown(index)} disabled={index === selectedAttractions.length - 1}>
-        <ArrowDownward />
-      </IconButton>
-      <Typography variant="body1" style={{ flex: 1 }}>
-        {attraction && 
-        <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
-          {attraction.name}
-        </a>}
-      </Typography>
-      <Button variant="contained" color="secondary" onClick={() => handleRemoveAttraction(selected)}>Usuń</Button>
-    </div>
-  );
-})}
+    <ViewContainer>
 
-          </ScrollableBox>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-      <Typography variant="h6">Długość trasy: {calculateTotalDistance()} km</Typography>
+    <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
+    <Typography variant="h4" gutterBottom>Zaplanuj trasę</Typography>
+     
+      <Map 
+        key={refreshKey} 
+        ref={mapRef} 
+        x={initialMapView.center.x} 
+        y={initialMapView.center.y} 
+        zoom={initialMapView.zoom} 
+        attractions={selectedAttractionsDetails} 
+      />
+    </MapContainer>
+
+    <DropListContainer four>
+      <Typography variant="h6" style={{marginBottom: "5px"}}>
+        Atrakcje (przeciągnij wybrane na mapkę)
+      </Typography>
+      <Input
+        placeholder="Wyszukaj..."
+        inputProps={{ 'aria-label': 'search' }}
+        onChange={onSearchChange}
+        startAdornment={
+          <IconButton sx={{ p: 0 }} disabled aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        }
+      />
+      <ScrollableBox>
+        {attractions.map((attraction, index) => (
+          !selectedAttractions.includes(attraction.id) && 
+          attraction.name.toLowerCase().includes(search.toLowerCase()) &&
+          selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
+          <div 
+            key={index} 
+            draggable 
+            onDragStart={(event) => handleDragStart(event, attraction)} 
+            style={{ padding: '8px', border: '1px solid black', marginBottom: '4px', cursor: 'move' }}
+          >
+            <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
+              {attraction.name}
+            </a>
+          </div>
+        )))}
+      </ScrollableBox>
+    </DropListContainer>
+
+    <FilterContainer four>
+      <FilterList key={refreshKey} onChange={handleFilterChange}></FilterList>
+    </FilterContainer>
+
+    <ListContainer four>
+    <Typography variant="h6">Długość trasy: {calculateTotalDistance()} km</Typography>
       <Button onClick={reset}>
         Zresetuj trasę
       </Button>
-    </Grid>
-    </FormContainer>
+      <Typography variant="h6">Wybrane atrakcje (dostosuj kolejność)</Typography>
+      <ScrollableBox>
+        {selectedAttractions.map((selected, index) => {
+          const attraction = attractions.find(attr => attr.id === selected);
+          return (
+            <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '8px', border: '1px solid black', marginBottom: '4px' }}>
+              <IconButton onClick={() => handleMoveUp(index)} disabled={index === 0}>
+                <ArrowUpward />
+              </IconButton>
+              <IconButton onClick={() => handleMoveDown(index)} disabled={index === selectedAttractions.length - 1}>
+                <ArrowDownward />
+              </IconButton>
+              <Typography variant="body1" style={{ flex: 1 }}>
+                {attraction && 
+                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
+                  {attraction.name}
+                </a>}
+              </Typography>
+              <Button variant="contained" color="secondary" onClick={() => handleRemoveAttraction(selected)}>Usuń</Button>
+            </div>
+          );
+        })}
+      </ScrollableBox>
+    </ListContainer>
+  </ViewContainer>
   );
 };
 
