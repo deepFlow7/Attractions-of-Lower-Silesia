@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 export interface MapContainerProps {
   three?: boolean;
   four?: boolean;
+  challenge?: boolean;
 }
 
 export interface DropListContainerProps {
@@ -19,7 +20,6 @@ export const DropListContainer = styled.div<DropListContainerProps>`
     width: 30%;
     max-height: 70vh;
   }
-
   @media (max-width: 660px) {
     width:30%;
   }
@@ -34,7 +34,7 @@ export const DropListContainer = styled.div<DropListContainerProps>`
 
 
 export const MapContainer = styled.div<MapContainerProps>`
-  max-height: 100vh;
+  height: 100%;
   width: ${props => (props.four ? '52%' : '58%')};
   overflow: hidden;
   @media (max-width: 1650px) {
@@ -46,9 +46,12 @@ export const MapContainer = styled.div<MapContainerProps>`
     max-height: 70vh;
     width: 68%;
   }
+  @media (max-width: 1000px) {
+    width: ${props => (props.challenge ? '100%' : '68%')};
+  }
 
   @media (max-width: 850px) {
-    width: ${props => (props.four ? '67%' : '68%')};
+    width: 67%;
   }
 
   @media (max-width: 760px) {
