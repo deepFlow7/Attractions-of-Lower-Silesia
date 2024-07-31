@@ -8,7 +8,11 @@ import AttractionsList from './AttractionsList';
 import { Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
 import { useSearch } from '../Providers/SearchContext';
-import { FilterContainer, MapContainer, ListContainer, HomeContainer, TileCard, StyledInputBase } from '../Styles/Home';
+import { ViewContainer } from '../Styles/View';
+import { MapContainer } from '../Styles/Map';
+import { ListContainer } from '../Styles/List';
+import { FilterContainer } from '../Styles/Filter';
+import { Input } from '../Styles/Input';
 
 const Home = () => {
   const x = 51.1079;
@@ -47,20 +51,15 @@ const Home = () => {
   }
 
   return (
-    <HomeContainer>
+    <ViewContainer>
       <MapContainer>
-        <TileCard>
           <Map x={x} y={y} attractions={filterBySearch(filteredAttractions, search)} />
-        </TileCard>
       </MapContainer>
       <FilterContainer>
-        <TileCard>
           <FilterList onChange={handleFilterChange} />
-        </TileCard>
       </FilterContainer>
       <ListContainer>
-        <TileCard>
-          <StyledInputBase
+          <Input
             placeholder="Wyszukaj..."
             inputProps={{ 'aria-label': 'search' }}
             onChange={onChange}
@@ -71,10 +70,8 @@ const Home = () => {
             }
           />
           <AttractionsList attractions={filterBySearch(filteredAttractions, search)} />
-        </TileCard>
       </ListContainer>
-     
-    </HomeContainer>
+    </ViewContainer>
   );
 };
 export default Home;
