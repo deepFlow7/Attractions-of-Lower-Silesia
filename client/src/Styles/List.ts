@@ -31,3 +31,10 @@ export const ListContainer = styled.div<ListContainerProps>`
     width: 100%;
   }
 `;
+
+export const ChallengesContainer = styled.div`
+  width: 49%;
+  @media (max-width: 850px) {
+    width: 100%
+  }
+`;

@@ -13,6 +13,7 @@ import { ViewContainer } from '../Styles/View';
 import { MapContainer } from '../Styles/Map';
 import { DictionaryContainer } from '../Styles/Dictionary';
 import {Title, Description} from '../Styles/Typhography';
+
 function haversineDistanceBetweenPoints(
   lat1: number,
   lon1: number,
