@@ -205,6 +205,7 @@ const RoutePlanner = () => {
         x={initialMapView.center.x} 
         y={initialMapView.center.y} 
         zoom={initialMapView.zoom} 
+        path={true}
         attractions={selectedAttractionsDetails} 
       />
     </MapContainer>

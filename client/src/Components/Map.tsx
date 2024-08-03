@@ -7,6 +7,7 @@ interface MapProps {
     x: number;
     y: number;
     zoom?: number;
+    path?: boolean;
     attractions: Attraction[];
     onMapClick?: (coords: { x: number; y: number }) => void;
 }
@@ -39,7 +40,7 @@ export interface MapRef {
     setUserLocation: (coords: { x: number; y: number }) => void;
 }
 
-const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick }, ref) => {
+const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMapClick }, ref) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const mapInstance = useRef<L.Map | null>(null);
     const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
@@ -93,8 +94,10 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
                 marker.bindPopup(link).closePopup();
 
             });
-
-            L.polyline(attractions.map(attraction=>[attraction.coords.x,attraction.coords.y]),{}).addTo(mapInstance.current!);
+            
+            if(path){
+                L.polyline(attractions.map(attraction=>[attraction.coords.x,attraction.coords.y]),{}).addTo(mapInstance.current!);
+            }
             
 
             mapInstance.current.on('zoomend', function() {
