@@ -43,7 +43,7 @@ const RoutePlanner = () => {
   const reset = () => {
     setSelectedAttractions([]);
     setRefreshKey(prev => prev + 1);
-  }
+  };
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, attraction: Attraction) => {
     event.dataTransfer.setData('attraction', JSON.stringify(attraction.id));
@@ -63,9 +63,9 @@ const RoutePlanner = () => {
     setSelectedAttractions((prevSelected) => prevSelected.filter(attraction => attraction !== attractionId));
   };
 
-  const selectedAttractionsDetails = attractions.filter(attraction => 
-    selectedAttractions.includes(attraction.id)
-  );
+  const selectedAttractionsDetails = selectedAttractions.map(selected_attraction_id => 
+    attractions.find(attraction => attraction.id === selected_attraction_id)!
+);
 
   function handleFilterChange(selectedTypes: possible_type[], selectedSubtypes: subtypes[]) {
     setSelectedTypes(selectedTypes);
@@ -135,6 +135,64 @@ const RoutePlanner = () => {
     return deg * (Math.PI / 180);
   };
 
+  const calculate_shortest_path = () => {
+    const adj_matrix = selectedAttractions.map((attr_a) =>{
+        return selectedAttractions.map((attr_b)=>{
+            return calculateDistanceInKm(
+                attractions.find(attr => attr.id === attr_a)!.coords,
+                attractions.find(attr => attr.id === attr_b)!.coords
+            );
+        });
+    });
+
+    const n = selectedAttractions.length;
+    const dp = Array.from({ length: 1 << n }, () => Array(n).fill(Infinity));
+    const parent = Array.from({ length: 1 << n }, () => Array(n).fill(-1));
+
+    
+    for (let i = 0; i < n; i++) {
+        dp[1 << i][i] = 0;
+    }
+
+    
+    for (let mask = 0; mask < (1 << n); mask++) {
+        for (let u = 0; u < n; u++) {
+            if ((mask & (1 << u)) === 0) continue;
+            for (let v = 0; v < n; v++) {
+                if ((mask & (1 << v)) !== 0 || u === v) continue;
+                const newMask = mask | (1 << v);
+                if (dp[newMask][v] > dp[mask][u] + adj_matrix[u][v]) {
+                    dp[newMask][v] = dp[mask][u] + adj_matrix[u][v];
+                    parent[newMask][v] = u;
+                }
+            }
+        }
+    }
+
+    
+    const fullMask = (1 << n) - 1;
+    let minCost = Infinity;
+    let endVertex = -1;
+    for (let i = 0; i < n; i++) {
+        if (dp[fullMask][i] < minCost) {
+            minCost = dp[fullMask][i];
+            endVertex = i;
+        }
+    }
+
+    
+    const path = [];
+    let mask = fullMask;
+    while (endVertex !== -1) {
+        path.push(endVertex);
+        const temp = endVertex;
+        endVertex = parent[mask][endVertex];
+        mask ^= (1 << temp);
+    }
+
+    setSelectedAttractions(path.map(attr => selectedAttractions[attr]));
+  }
+
   return (
     <ViewContainer>
 
@@ -192,6 +250,9 @@ const RoutePlanner = () => {
     <Typography variant="h6">Długość trasy: {calculateTotalDistance()} km</Typography>
       <Button onClick={reset}>
         Zresetuj trasę
+      </Button>
+      <Button onClick={calculate_shortest_path}>
+        Sprawdź najkrótszą trasę
       </Button>
       <Typography variant="h6">Wybrane atrakcje (dostosuj kolejność)</Typography>
       <ScrollableBox>
