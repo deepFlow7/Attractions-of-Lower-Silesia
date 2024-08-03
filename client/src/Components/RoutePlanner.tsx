@@ -63,9 +63,9 @@ const RoutePlanner = () => {
     setSelectedAttractions((prevSelected) => prevSelected.filter(attraction => attraction !== attractionId));
   };
 
-  const selectedAttractionsDetails = attractions.filter(attraction => 
-    selectedAttractions.includes(attraction.id)
-  );
+  const selectedAttractionsDetails = selectedAttractions.map(selected_attraction_id => 
+    attractions.find(attraction => attraction.id === selected_attraction_id)!
+);
 
   function handleFilterChange(selectedTypes: possible_type[], selectedSubtypes: subtypes[]) {
     setSelectedTypes(selectedTypes);

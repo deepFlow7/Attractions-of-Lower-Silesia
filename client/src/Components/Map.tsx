@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Attraction,possibleSubtypes,subtypes } from '../types';
 
@@ -82,7 +82,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
     useEffect(() => {
         if (mapInstance.current) {
             mapInstance.current.eachLayer((layer) => {
-                if (layer instanceof L.Marker && layer !== markerInstance) {
+                if ((layer instanceof L.Marker && layer !== markerInstance) || (layer instanceof L.Path)){
                     mapInstance.current?.removeLayer(layer);
                 }
             });
@@ -93,7 +93,10 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, attractions, onMapClick 
                 marker.bindPopup(link).closePopup();
 
             });
+
+            L.polyline(attractions.map(attraction=>[attraction.coords.x,attraction.coords.y]),{}).addTo(mapInstance.current!);
             
+
             mapInstance.current.on('zoomend', function() {
                 var zoom=mapInstance.current!.getZoom();
                 var newzoom = 7/2*(zoom-1)+'px';
