@@ -3,7 +3,11 @@ const db = require('./DB/db_api.js');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
+const {Firestore} = require('@google-cloud/firestore');
+const {FirestoreStore} = require('@google-cloud/connect-firestore');
 const app = express();
+
+
 const normalizePort = val => {
     const port = parseInt(val, 10);
     if (isNaN(port)) {
@@ -16,22 +20,41 @@ const normalizePort = val => {
 };
 var port = normalizePort(process.env.PORT || 8080);
 
+
 app.use(bodyParser.json());
 app.use(cors({
-    //origin: 'http://localhost:5173',
+    origin: process.env.ORIGIN_URL || 'http://localhost:5173',
     credentials: true
 }));
 app.use(session({
+    store: new FirestoreStore({
+        dataset: new Firestore(),
+        kind: 'express-sessions',
+    }),
     secret: 'O Great Key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false }
 }));
 
 
-app.get('/', (req, res) => {
-    res.send('Hello from our server!')
-})
+const greetings = [
+    'Hello World',
+    'Hallo Welt',
+    'Ciao Mondo',
+    'Salut le Monde',
+    'Hola Mundo',
+  ];
+  
+  app.get('/', (req, res) => {
+    if (!req.session.views) {
+      req.session.views = 0;
+      req.session.greeting =
+        greetings[Math.floor(Math.random() * greetings.length)];
+    }
+    const views = req.session.views++;
+    res.send(`${views} views for ${req.session.greeting}`);
+  });
 
 
 //---Logowanie i autoryzacja---
@@ -46,11 +69,10 @@ app.post('/login', async (req, res) => {
         if (!check) {
             return res.status(400).json({ error: 'Invalid password' });
         }
-
-        req.session.userId = user.user_id;
-        req.session.role = user.role
-        const user_data = await db.get_user(user.user_id);
-        res.json({user : user_data, username: login, role: user.role});
+        req.session.login=login;
+        req.session.role=user.role;
+        req.session.user = await db.get_user(user.user_id);
+        res.json({authenticated:true});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -67,16 +89,12 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/profile', async (req, res) => {
-    if (!req.session.userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    
+    if (req.session.user) {
+        res.json({authenticated : true, user : req.session.user, username: req.session.login, role: req.session.role});
     }
-
-    try {
-        const user = await db.get_user(req.session.userId);
-        const login = await db.get_login_by_id(req.session.userId);
-        res.json({user : user, username: login, role: req.session.role});
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    else{
+        res.json({authenticated : false});
     }
 });
 

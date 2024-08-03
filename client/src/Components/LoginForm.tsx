@@ -27,7 +27,7 @@ const Title = styled(Typography)`
 const LoginForm = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { login, updateUser, updateUsername, setRole} = useAuth();
+  const { login} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,11 +36,7 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) =>  {
     e.preventDefault();
     try {
-        const response = await api.post('/api/login', { login:username, password });
-        updateUser(response.data.user as User);
-        updateUsername(response.data.username);
-        setRole(response.data.role);
-        login();
+        login(username,password);
         if(returnUrl)
           navigate(returnUrl);
         else
