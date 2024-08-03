@@ -9,6 +9,7 @@ handlers:
 
 env_variables:
   NODE_ENV: 'production'
+  ORIGIN_URL: 'https://client-dot-boxwood-builder-429215-k7.ue.r.appspot.com'
   DB_USER: 'postgres'
   DB_PASS: '6/SKkhmas:9m\09o'
   DB_NAME: 'maps'
