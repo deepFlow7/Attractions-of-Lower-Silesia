@@ -33,8 +33,8 @@ export const AuthProvider = ({ children } : {children : ReactNode}) => {
             if (response.data.authenticated) {
                 setIsAuthenticated(true);
                 setUser(response.data.user);
-                updateUsername(response.data.user.username);
-                setRole(response.data.user.role);
+                updateUsername(response.data.username);
+                setRole(response.data.role);
             } else {
                 setIsAuthenticated(false);
                 setUser(null);
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children } : {children : ReactNode}) => {
 
     const logout = async () => {
         try {
-            await api.post('/logout');
+            await api.get('/logout');
             setIsAuthenticated(false);
             setUser(null);
             updateUsername('');

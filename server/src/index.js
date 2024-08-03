@@ -60,7 +60,6 @@ const greetings = [
 //---Logowanie i autoryzacja---
 app.post('/login', async (req, res) => {
     const { login, password } = req.body;
-    console.log("trying to log in:",login,password);
 
     try {
         const result = await db.check_login(login,password);
@@ -70,12 +69,9 @@ app.post('/login', async (req, res) => {
         if (!check) {
             return res.status(400).json({ error: 'Invalid password' });
         }
-        console.log("Made it!");
         req.session.login=login;
         req.session.role=user.role;
         req.session.user = await db.get_user(user.user_id);
-        console.log("everything should be set up:",req.session.login,req.session.role,req.session.user);
-        console.log(req.session);
         res.json({authenticated:true});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -93,16 +89,11 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/profile', async (req, res) => {
-    console.log("trying to fetch data");
-    console.log(req.session);
     
-    console.log("everything should be set up:",req.session.login,req.session.role,req.session.user);
     if (req.session.user) {
-        console.log("user exists");
         res.json({authenticated : true, user : req.session.user, username: req.session.login, role: req.session.role});
     }
     else{
-        console.log("oh no");
         res.json({authenticated : false});
     }
 });

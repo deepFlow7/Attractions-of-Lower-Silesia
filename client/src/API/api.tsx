@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL:  import.meta.env.VITE_API_URL,
-  withCredentials: true;
+  withCredentials: true,
 });
 
 // Add a request interceptor to strip "/api" from the URL
