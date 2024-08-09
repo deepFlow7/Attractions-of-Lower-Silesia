@@ -6,13 +6,12 @@ export interface ListContainerProps {
 }
 
 export const ListContainer = styled.div<ListContainerProps>`
-  width: 15%;
+  width: 20%;
   max-height: 85vh;
   overflow: auto;
   @media (max-width: 1650px) {
-    width: ${props => (props.four ? '48%' : '15%')};
+    width: ${props => (props.four ? '48%' : '24%')};
     max-height: ${props => (props.four ? '70vh' : '100vh')};
-
   }
   @media (max-width: 1200px) {
     width: ${props => (props.four ? '48%' : '100%')};

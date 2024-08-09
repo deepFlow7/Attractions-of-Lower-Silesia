@@ -4,17 +4,7 @@ import { ChallengeRanking } from '../types';
 import api from '../API/api';
 import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
-
-const StyledTableContainer = styled.div`
-  max-width: 600px;
-  margin: 5% auto;
-`;
-
-const StyledPaper = styled(Paper)`
-  && {
-    width: 100%;
-  }
-`;
+import { Body } from '../Styles/Typography';
 
 const StyledTable = styled(Table)`
   && {
@@ -43,14 +33,13 @@ const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) =>
 
   if(!rankings){return <div>Loading...</div>;}
   return (
-    <StyledTableContainer>
-      <StyledPaper>
+      <>
         <TableContainer>
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell>Username</TableCell>
-                <TableCell align="right">Points</TableCell>
+                <TableCell><Body>Username</Body></TableCell>
+                <TableCell align="right"><Body>Points</Body></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -69,8 +58,7 @@ const RankingTable: React.FC<RankingTableProps> = (props : RankingTableProps) =>
             </TableBody>
           </StyledTable>
         </TableContainer>
-      </StyledPaper>
-    </StyledTableContainer>
+      </>
   );
 };
 

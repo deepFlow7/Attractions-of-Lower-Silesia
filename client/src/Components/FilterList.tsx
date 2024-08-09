@@ -1,20 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import Filter from './Filter';
 import { possibleTypes, possibleSubtypes, possible_type, subtypes } from '../types';
-import styled from '@emotion/styled';
-
+import  { Title } from '../Styles/Typography';
 interface FilterListProps {
   onChange: (selectedTypes: possible_type[], selectedSubtypes: subtypes[]) => void;
 }
-
-const TitleTypography = styled(Typography)`
-  font-weight: bold;
-  margin-bottom: 8px;
-  text-align: center;
-  padding: 10px;
-`;
 
 const FilterList: React.FC<FilterListProps> = ({ onChange }) => {
   const [selectedTypes, setSelectedTypes] = React.useState<possible_type[]>(possibleTypes);
@@ -35,18 +27,18 @@ const FilterList: React.FC<FilterListProps> = ({ onChange }) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <TitleTypography variant="h5">
+        <Title>
           Typy
-        </TitleTypography>
+        </Title>
         <Filter
           options={possibleTypes}
           onChange={(selectedOptions) => handleCheckboxChange(selectedOptions, true)}
         />
       </Grid>
       <Grid item xs={12}>
-        <TitleTypography variant="h5">
+        <Title>
           Podtypy
-        </TitleTypography>
+        </Title>
         <Filter
           options={possibleSubtypes}
           onChange={(selectedOptions) => handleCheckboxChange(selectedOptions, false)}

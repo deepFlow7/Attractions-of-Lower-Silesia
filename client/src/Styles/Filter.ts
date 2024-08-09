@@ -12,11 +12,9 @@ export const FilterContainer = styled.div<FilterContainerProps>`
   @media (max-width: 1650px) {
     width: ${props => (props.four ? '48%' : '15%')};
     max-height: ${props => (props.four ? '70vh' : '85vh')};
-
   }
   @media (max-width: 1200px) {
     width: ${props => (props.four ? '48%' : '30%')};
-
     max-height: 70vh;
   }
 

@@ -1,14 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Typography, Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
+import {  Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
 import { Challenge, completedChallenge } from '../types'; 
 import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
 import { ViewContainer } from '../Styles/View';
-import {Title} from '../Styles/Typhography';
+import {Title} from '../Styles/Typography';
 import { ChallengesContainer } from '../Styles/List';
 
 const Challenges = () => {
