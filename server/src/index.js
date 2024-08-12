@@ -33,9 +33,15 @@ app.use(session({
     }),
     secret: 'O Great Key',
     resave: false,
+    httpOnly: true,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { 
+        secure: true,
+        maxAge: 5000*60,
+        sameSite: 'none'
+    }
 }));
+app.set('trust proxy',1);
 
 
 const greetings = [
