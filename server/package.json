@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist",
-    "build": "babel src --out-dir dist",
     "dev": "node ./src/index.js",
     "start": "node ./src/index.js"
   },
@@ -16,15 +15,9 @@
     "@google-cloud/connect-firestore": "^3.0.0",
     "@google-cloud/firestore": "^7.9.0",
     "argon2": "^0.40.3",
-    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "pg": "^8.12.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.24.8",
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3"
   }
 }
