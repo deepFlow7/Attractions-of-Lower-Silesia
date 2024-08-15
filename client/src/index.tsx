@@ -27,7 +27,7 @@ const RootRedirect = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root!.render(
-  <React.StrictMode>
+  <>
     <AuthProvider>
     <SearchProvider>
     <BrowserRouter>
@@ -47,5 +47,5 @@ root!.render(
     </SearchProvider>
     </AuthProvider>
 
-  </React.StrictMode>
+  </>
 );
