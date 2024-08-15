@@ -1,11 +1,15 @@
 {
-    "name":"app",
-    "version":"0.1.0",
-    "private":true,
-    "scripts":
-    {
+    "name": "app",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
         "dev": "(gnome-terminal -- bash -c \"node ./server/src/index.js\") & cd client && (gnome-terminal -- bash -c \"npm run dev\")",
         "install": "cd client && npm install && cd ../server && npm install",
-        "build": ""
+        "start": "concurrently -n \"SERVER,CLIENT\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"npm run start:server\" \"npm run start:client\"",
+        "start:server": "cd server && npm start",
+        "start:client": "cd client && npm start"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
     }
 }
