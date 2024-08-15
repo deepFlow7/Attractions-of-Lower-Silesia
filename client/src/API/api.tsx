@@ -11,8 +11,8 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
       // Modify the request URL
-      if (config.url.startsWith('/api')) {
-        config.url = config.url.replace('/api', '');
+      if (config.url!.startsWith('/api')) {
+        config.url = config.url!.replace('/api', '');
       }
       return config;
     },

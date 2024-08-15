@@ -1,5 +1,5 @@
 var pg = require('pg');
-var bcrypt = require('bcrypt');
+var argon2 = require('argon2');
 
 const pool = new pg.Pool({
     user: process.env.DB_USER || 'pg',
@@ -80,7 +80,7 @@ class db_api {
     //------LOGINS---------
     async new_login(user_id, login, password, role) {
         try {
-            const hash = await bcrypt.hash(password, 12);
+            const hash = await argon2.hash(password);
             await pool.query('INSERT INTO logins (user_id, login, password, role) VALUES ($1, $2, $3, $4)', [user_id, login, hash, role]);
         } catch (error) {
             console.error('Error creating new login:', error);
@@ -94,7 +94,8 @@ class db_api {
             if (rows.length<=0){
                 throw "User with this login does not exist: "+login;
             }
-            const check=await bcrypt.compare(password,rows[0].password);
+            const user_hash=rows[0].password;
+            var check=await argon2.verify(user_hash,password);
             return {user:rows[0], check:check};
         }
         catch (error){
@@ -105,7 +106,7 @@ class db_api {
 
     async edit_login(id, login, password) {
         try {
-            const hash = await bcrypt.hash(password, 12);
+            const hash = await argon2.hash(password);
             await pool.query('UPDATE logins SET login = $1, password = $2 WHERE id = $3', [login, hash, id]);
         } catch (error) {
             console.error("Error updating login data:", error);

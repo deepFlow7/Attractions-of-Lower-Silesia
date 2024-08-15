@@ -29,8 +29,8 @@ const Registration = () => {
     navigate("/");
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/;
-  const nameSurnamePattern = /^[a-zA-Z\s-]+$/;
+  const passwordPattern = /^(?=.*[\p{Lowercase_Letter}])(?=.*[\p{Uppercase_Letter}])(?=.*\d)(?=.*[\W])[\p{Lowercase_Letter}\p{Uppercase_Letter}\d\W]{8,}$/u;  
+  const nameSurnamePattern = /^[\p{Letter}\s-]+$/u;
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
