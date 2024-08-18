@@ -11,8 +11,17 @@ export interface BodyProps {
 }
 
 export const titleMixin = `
-  color: ${colors.dark};
+  color: ${colors.secondary};
   font-size: ${sizes.titleSize};
+  @media (max-width: 600px) {
+    font-size: 2.5rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 2rem;
+  }
+  @media (max-width: 400px) {
+    font-size: 1.5rem;
+  }
   font-family: 'Bangers', sans-serif;
   transition: ${transitions.default};
   text-shadow: ${shadows.default};

@@ -7,7 +7,7 @@ export const ViewContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  background-color: ${colors.dark};
+  background-color: ${colors.secondary};
   position: absolute;
   padding: 1rem;
   left: -5px;

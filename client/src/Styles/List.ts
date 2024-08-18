@@ -11,7 +11,7 @@ export const ListContainer = styled.div<ListContainerProps>`
   overflow: auto;
   @media (max-width: 1650px) {
     width: ${props => (props.four ? '48%' : '24%')};
-    max-height: ${props => (props.four ? '70vh' : '100vh')};
+    max-height: ${props => (props.four ? '70vh' : '85vh')};
   }
   @media (max-width: 1200px) {
     width: ${props => (props.four ? '48%' : '100%')};

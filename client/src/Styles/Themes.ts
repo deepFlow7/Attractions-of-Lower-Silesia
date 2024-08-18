@@ -2,12 +2,13 @@
 import { css } from '@emotion/react';
 
 export const colors = {
-  primary: '#7c677f',
-  secondary: '#f9c5bd',
-  tertiary: '#9bc400',
+  primary: '#e9cbb0',
+  secondary: '#4d6e6d',
+  tertiary: '#d3d69b',
   white: '#fff',
-  dark: '#f9c5bd',
-  gray: '#272a4b',
+  dark: '#2a2b2a',
+  gray: '#949494',
+  light_gray: '#d7c8cb',
 };
 
 export const gradients = {

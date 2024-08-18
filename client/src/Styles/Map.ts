@@ -34,7 +34,7 @@ export const DropListContainer = styled.div<DropListContainerProps>`
 
 
 export const MapContainer = styled.div<MapContainerProps>`
-  height: 100%;
+  height: 85vh;
   width: ${props => (props.four ? '47%' : '58%')};
   overflow: hidden;
   @media (max-width: 1650px) {
