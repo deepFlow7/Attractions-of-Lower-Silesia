@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
+import { FormControlLabel, Checkbox, CardContent } from '@mui/material';
 import { colors } from '../Styles/Themes'; // Upewnij się, że ścieżka jest poprawna
+import { bodyMixin } from '../Styles/Typography';
 
 interface FilterProps {
   options: string[];
@@ -11,11 +12,15 @@ interface FilterProps {
 
 const StyledFormControlLabel = styled(FormControlLabel)`
   display: block;
+
+  .MuiFormControlLabel-label {
+    ${bodyMixin}
+  }
 `;
 
 const CustomCheckbox = styled(Checkbox)`
   &.Mui-checked {
-    color: ${colors.dark};
+    color: ${colors.secondary};
   }
 `;
 
@@ -41,34 +46,32 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   };
 
   return (
-    <>
-      <CardContent style={{ maxHeight: '45vh', overflow: 'auto' }}>
+    <CardContent style={{ maxHeight: '45vh', overflow: 'auto' }}>
+      <StyledFormControlLabel
+        key={'all'}
+        control={
+          <CustomCheckbox
+            checked={selectAll}
+            onChange={handleSelectAllChange}
+            name={'all'}
+          />
+        }
+        label={'Wybierz wszystkie'}
+      />
+      {options.map((option) => (
         <StyledFormControlLabel
-          key={'all'}
+          key={option}
           control={
             <CustomCheckbox
-              checked={selectAll}
-              onChange={handleSelectAllChange}
-              name={'all'}
+              checked={selectedOptions.includes(option)}
+              onChange={() => handleCheckboxChange(option)}
+              name={option}
             />
           }
-          label={'Wybierz wszystkie'}
+          label={option}
         />
-        {options.map((option) => (
-          <StyledFormControlLabel
-            key={option}
-            control={
-              <CustomCheckbox
-                checked={selectedOptions.includes(option)}
-                onChange={() => handleCheckboxChange(option)}
-                name={option}
-              />
-            }
-            label={option}
-          />
-        ))}
-      </CardContent>
-    </>
+      ))}
+    </CardContent>
   );
 };
 

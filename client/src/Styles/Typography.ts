@@ -8,6 +8,7 @@ export interface TitleProps {
 export interface BodyProps {
   gray?: boolean;
   big?: boolean;
+  margin?: boolean;
 }
 
 export const titleMixin = `
@@ -42,6 +43,7 @@ export const Title = styled.div<TitleProps>`
 
 export const Body = styled.div<BodyProps>`
   ${bodyMixin}
+  margin-left: ${props => (props.margin ? '1rem' : '0')};
   color: ${props => (props.gray ? colors.gray : colors.dark)};
   font-size: ${props => (props.big ? '2rem' : sizes.fontSize)};
 `;

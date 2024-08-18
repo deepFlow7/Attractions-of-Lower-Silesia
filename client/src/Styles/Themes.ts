@@ -19,7 +19,7 @@ export const sizes = {
   borderRadius: '2rem',
   paddingVertical: '0.5rem',
   paddingHorizontal: '1rem',
-  fontSize: '1rem',
+  fontSize: '1.3rem',
   titleSize: '3rem',
   navbarHeight: '5rem',
 };

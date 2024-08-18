@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
-import {Title, Body} from '../Styles/Typography';
+import { Title, Body } from '../Styles/Typography';
+import { bodyMixin } from "../Styles/Typography";
 
 interface ListProps {
   attractions: Attraction[];
@@ -28,27 +29,27 @@ const StyledListItem = styled(ListItem)`
 `;
 
 const StyledListItemText = styled(ListItemText)`
-  font-family: "Times New Roman", Times, serif; // nie dziala :((
+  .MuiListItemText-primary {
+    ${bodyMixin}
+  }
 `;
-
 
 const AttractionsList: React.FC<ListProps> = ({ attractions }) => {
   return (
     <StyledList>
       <Title>Atrakcje</Title>
-      {attractions
-        .map((attraction) => (
-          <Button
-            component={Link}
-            to={"/attraction/" + attraction.id}
-            color="inherit"
-            key={attraction.id}
-          >
-            <StyledListItem key={attraction.id}>
+      {attractions.map((attraction) => (
+        <Button
+          component={Link}
+          to={"/attraction/" + attraction.id}
+          color="inherit"
+          key={attraction.id}
+        >
+          <StyledListItem>
             <StyledListItemText primary={attraction.name} />
           </StyledListItem>
-          </Button>
-        ))}
+        </Button>
+      ))}
     </StyledList>
   );
 };
