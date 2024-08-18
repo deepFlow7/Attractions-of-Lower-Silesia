@@ -237,7 +237,7 @@ const RoutePlanner = () => {
                 key={index}
                 draggable
                 onDragStart={(event) => handleDragStart(event, attraction)}
-                style={{ padding: '0.5rem', cursor: 'move' }}
+                style={{ padding: '.5rem', cursor: 'move' }}
               >
                 <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark, textDecoration: 'none' }}>
 
@@ -271,7 +271,7 @@ const RoutePlanner = () => {
           {selectedAttractions.map((selected, index) => {
             const attraction = attractions.find(attr => attr.id === selected);
             return (
-              <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '8px', border: '1px solid black', marginBottom: '4px' }}>
+              <div key={index} style={{ display: 'flex', alignItems: 'center'}}>
                 <IconButton onClick={() => handleMoveUp(index)} disabled={index === 0}>
                   <ArrowUpward />
                 </IconButton>
@@ -280,11 +280,12 @@ const RoutePlanner = () => {
                 </IconButton>
                 <Body>
                   {attraction &&
-                    <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
+                    <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark, textDecoration: 'none' }}>
                       {attraction.name}
                     </a>}
                 </Body>
-                <Button variant="contained" color="secondary" onClick={() => handleRemoveAttraction(selected)}>Usuń</Button>
+                
+                <StyledButton secondary onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
               </div>
             );
           })}
