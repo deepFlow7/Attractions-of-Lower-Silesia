@@ -62,6 +62,7 @@ class db_api {
             throw error;
         }
     }
+
     static async findUserIdByUsername(username) {
         try {
             const result = await pool.query('SELECT id FROM users WHERE name = $1', [username]);
@@ -74,8 +75,7 @@ class db_api {
             console.error('Error finding user by username:', error);
             throw error;
         }
-    }
-    
+    } 
 
     //------LOGINS---------
     async new_login(user_id, login, password, role) {
@@ -160,6 +160,7 @@ class db_api {
             throw error;
         }
     }
+
     //---- WANTS TO VISIT -----------
     async isToVisit(attractionId, userId) {
         try {
@@ -237,21 +238,62 @@ class db_api {
         }
     }
 
-    //------COMMENTS--------
-    async new_comment(author, content, votes, attraction, parent) {
+    //------RATINGS--------
+    async get_rating(attraction_id) {
         try {
-
-            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
-                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
-                [author, content, votes, attraction, parent]);
-            return rows[0].id;
-           
+            const { rows } = await pool.query('SELECT rating FROM attractions \
+                 WHERE id = $1', 
+                 [attraction_id]);
+            return rows[0].rating;
         } catch (error) {
-            console.error('Error creating new comment:', error);
+            console.error('Error fetching rating:', error);
+            throw error;
+        }
+    }
+
+    async get_user_rating(user_id, attraction_id) {
+        try {
+            const { rows } = await pool.query('SELECT rating FROM ratings \
+                 WHERE user_id = $1 AND attraction_id = $2', 
+                 [user_id, attraction_id]);
+            if (rows.length)
+                return rows[0].rating;
+            return 0;
+        } catch (error) {
+            console.error('Error fetching user rating:', error);
+            throw error;
+        }
+    }
+
+    async add_or_update_rating(user_id, attraction_id, rating) {
+        try {
+            if (await this.get_user_rating(user_id, attraction_id)) {
+                await pool.query('UPDATE ratings SET rating = $3 \
+                    WHERE user_id = $1 AND attraction_id = $2', 
+                    [user_id, attraction_id, rating]); 
+            }
+            else {
+                await pool.query('INSERT INTO ratings VALUES ($1, $2, $3)', 
+                    [user_id, attraction_id, rating]);
+            }
+        } catch (error) {
+            console.error('Error updating rating:', error);
             throw error;
         }
     }
     
+    //------COMMENTS--------
+    async new_comment(author, content, votes, attraction, parent) {
+        try {
+            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
+                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+                [author, content, votes, attraction, parent]);
+            return rows[0].id;
+        } catch (error) {
+            console.error('Error creating new comment:', error);
+            throw error;
+        }
+    } 
 
     async get_comment(id) {
         try {

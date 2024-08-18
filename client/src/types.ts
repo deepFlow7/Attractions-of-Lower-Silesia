@@ -27,6 +27,11 @@ export interface NewAttraction {
   photos: NewPhoto[];
 }
 
+export interface AttractionWithComments {
+  attraction: Attraction;
+  comments: Comment[];
+}
+
 interface UserData {
   name: string;
   surname: string;

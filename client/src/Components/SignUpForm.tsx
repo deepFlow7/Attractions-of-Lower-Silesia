@@ -55,7 +55,6 @@ const Registration = () => {
   const onRegister = (newUser : NewUser): Promise<boolean> => {
     return api.post('/api/signup', {newUser})
           .then(response => {
-            console.log('Dodano');
             return response.data.success;
           })
           .catch(error => {

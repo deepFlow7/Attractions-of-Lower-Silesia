@@ -295,8 +295,39 @@ app.get('/attraction/is_to_visit/:attr_id/:user_id', async (req,res) =>{
     }
 })
 
+app.get('/attraction/rating/:attr_id', async (req,res) =>{
+    try{
+        const rating = await db.get_rating(req.params["attr_id"]);
+        res.json({ rating: rating });
+    }
+    catch(error){
+        console.error('Error fetching attraction rating' + error);
+        res.status(500).json({error:'Error fetching attraction rating' + error});
+    }
+})
+
+app.get('/attraction/rating/:attr_id/:user_id', async (req,res) =>{
+    try{
+        const rating = await db.get_user_rating(req.params["user_id"], req.params["attr_id"]);
+        res.json({ rating: rating });
+    }
+    catch(error){
+        console.error('Error fetching user rating for attraction' + error);
+        res.status(500).json({error:'Error fetching user rating for attraction' + error});
+    }
+})
+
+app.post('/changeRating', async (req, res) => {
+    const { userId, attractionId, rating } = req.body;
+    try {
+      await db.add_or_update_rating(userId, attractionId, rating);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
 app.post('/changeFavourites', async (req, res) => {
-    console.log("dsfsfdsfsdfdsf")
     const { userId, attractionId } = req.body;
     try {
       await db.changeFavourites(userId, attractionId);

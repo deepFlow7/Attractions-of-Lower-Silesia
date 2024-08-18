@@ -52,7 +52,7 @@ CREATE TABLE attractions (
     subtype subtypes NOT NULL,
     interactivity INTEGER NOT NULL CHECK (interactivity>0 and interactivity<11),
     time_it_takes INTEGER NOT NULL,
-    rating FLOAT,
+    rating FLOAT NOT NULL CHECK (rating >= 0 and rating <= 10),
     description TEXT NOT NULL 
 );
 
@@ -87,6 +87,13 @@ CREATE TABLE logins (
     login TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role role NOT NULL DEFAULT 'user'
+);
+
+CREATE TABLE ratings (
+    user_id INTEGER REFERENCES users(id) NOT NULL,
+    attraction_id INTEGER REFERENCES attractions(id) NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating >= 0 and rating <= 10),
+    UNIQUE (user_id, attraction_id)
 );
 
 CREATE TABLE comments (
@@ -163,7 +170,6 @@ AFTER INSERT ON visited_challenge_attractions
 FOR EACH ROW
 EXECUTE FUNCTION update_user_points();
 
-
 CREATE OR REPLACE FUNCTION update_bonus_points()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -178,3 +184,22 @@ CREATE TRIGGER set_bonus_points
 AFTER UPDATE OF finished_date ON challenges_started
 FOR EACH ROW
 EXECUTE FUNCTION update_bonus_points();
+
+CREATE OR REPLACE FUNCTION calculate_rating()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE attractions
+    SET rating = (
+        SELECT AVG(rating)
+        FROM ratings
+        WHERE NEW.attraction_id = ratings.attraction_id
+    )
+    WHERE id = NEW.attraction_id;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER calculate_rating_trigger
+AFTER INSERT OR UPDATE ON ratings
+FOR EACH ROW
+EXECUTE FUNCTION calculate_rating();
