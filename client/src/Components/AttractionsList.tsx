@@ -6,14 +6,18 @@ import {
   List,
   ListItem,
   ListItemText,
+  IconButton,
   Typography,
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router-dom";
-import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
+import { Attraction } from "../types"; 
+import { useAuth } from "../Providers/AuthContext";
 
 interface ListProps {
   attractions: Attraction[];
-  type_filter?: possible_type[];
+  isManaging?: boolean;
+  onDelete?: (id : number) => void; 
 }
 
 const StyledList = styled(List)`
@@ -21,35 +25,51 @@ const StyledList = styled(List)`
   padding: 16px;
 `;
 
+const Title = styled(Typography)`
+  font-weight: bold;
+`;
+
 const StyledListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
   &:nth-of-type(odd) {
+    background-color: #f5f5f5; 
   }
   &:hover {
     background-color: #d0d0d0;
   }
 `;
 
-const Title = styled(Typography)`
-  font-weight: bold;
-`;
+const AttractionsList: React.FC<ListProps> = ({ attractions, isManaging, onDelete }) => {
+  const { isAuthenticated, role } = useAuth();
 
-const AttractionsList: React.FC<ListProps> = ({ attractions }) => {
   return (
     <StyledList>
-      <Title variant="h5">Atrakcje</Title>
-      {attractions
-        .map((attraction) => (
+       <Title variant="h5" gutterBottom>
+        Atrakcje
+      </Title>
+      {attractions.map((attraction) => (
+        <StyledListItem key={attraction.id}>
           <Button
             component={Link}
-            to={"/attraction/" + attraction.id}
+            to={`/attraction/${attraction.id}`}
             color="inherit"
-            key={attraction.id}
+            style={{ flexGrow: 1 }}
           >
-            <StyledListItem key={attraction.id}>
-              <ListItemText primary={attraction.name} />
-            </StyledListItem>
+            <ListItemText primary={attraction.name} />
           </Button>
-        ))}
+          {isAuthenticated && role === 'admin' && isManaging && (
+            <IconButton
+              edge="end"
+              color="error"
+              onClick={() => onDelete!(attraction.id)}
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+        </StyledListItem>
+      ))}
     </StyledList>
   );
 };

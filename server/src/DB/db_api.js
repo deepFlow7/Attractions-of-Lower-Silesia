@@ -463,6 +463,8 @@ class db_api {
 
     async delete_challenge(challenge_id) {
         try {
+            await pool.query('DELETE FROM challenge_attractions WHERE challenge_id = $1', 
+                [challenge_id]);
             await pool.query('DELETE FROM challenges WHERE id = $1', [challenge_id]);
         } catch (error) {
             console.error('Error deleting challenge:', error);

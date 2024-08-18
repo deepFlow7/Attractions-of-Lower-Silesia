@@ -358,7 +358,26 @@ app.post('/addComment', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-  
+
+app.post('/attraction/delete', async (req, res) => {
+    const { attractionId } = req.body;
+    try {
+      await db.delete_attraction(attractionId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/challenge/delete', async (req, res) => {
+    const { challengeId } = req.body;
+    try {
+      await db.delete_challenge(challengeId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
 
 app.listen(port, () => {
       console.log('server listening on port', port)

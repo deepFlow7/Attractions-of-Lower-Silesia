@@ -27,6 +27,8 @@ const AdminView: React.FC = () => {
   const [challenges, setChallenges] = useState<Challenge[]>([]); 
   const [users, setUsers] = useState<UserWithLogin[]>([]); 
   const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true); 
+  const [manageAttractions, setManageAttractions] = useState(false);
+  const [manageChallenges, setManageChallenges] = useState(false);
 
   useEffect(() => {
     const fetchAttractions = async () => {
@@ -68,6 +70,42 @@ const AdminView: React.FC = () => {
     setIsAdminPanel(!isAdminPanel);
   };
 
+  const toggleManageAttractions = () => {
+    setManageAttractions(prevState => !prevState);
+  };
+
+  const toggleManageChallenges = () => {
+    setManageChallenges(prevState => !prevState);
+  };
+
+  const deleteAttraction = async (id: number) => {
+    const isConfirmed = window.confirm("Czy na pewno chcesz usunąć tę atrakcję?");
+    if (!isConfirmed) return; 
+  
+    try {
+      await api.post(`/api/attraction/delete`, { attractionId: id });
+      setAttractions(prevAttractions => 
+        prevAttractions.filter(attraction => attraction.id !== id)
+      );
+    } catch (error) {
+      console.error('Error deleting attraction:', error);
+    }
+  };
+
+  const deleteChallenge = async (id: number) => {
+    const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wyzwanie?");
+    if (!isConfirmed) return; 
+  
+    try {
+      await api.post(`/api/challenge/delete`, { challengeId: id });
+      setChallenges(prevChallenges => 
+        prevChallenges.filter(challenge => challenge.id !== id)
+      );
+    } catch (error) {
+      console.error('Error deleting challange:', error);
+    }
+  };
+
   return (
     <ViewContainer>
 
@@ -80,40 +118,34 @@ const AdminView: React.FC = () => {
       </StyledButton>
 
     {isAdminPanel ? (
-          <ViewContainer>
-<AdminContainer>
+      <ViewContainer>
+        <AdminContainer>
           <Card>
             <CardContent>
               <UsersList users={users} />
             </CardContent>
-            <CardActions>
-              <Button size="small" color="primary">
-                Manage Users
-              </Button>
-            </CardActions>
           </Card>
           </AdminContainer>
           <AdminContainer>
           <Card>
+            <CardActions>
+              <Button size="small" color="primary" onClick={toggleManageAttractions}>
+              {manageAttractions ? 'Wyjdź z trybu edycji' : 'Tryb edycji'}
+              </Button>
+            </CardActions>
             <CardContent>
-              
-              <AttractionsList attractions={attractions} />
+              <AttractionsList attractions={attractions} isManaging={manageAttractions} onDelete={deleteAttraction}/>
             </CardContent>
-            <CardActions>
-              <Button size="small" color="primary">
-                Manage Attractions
-              </Button>
-            </CardActions>
           </Card>
           </AdminContainer>
           <AdminContainer>
           <Card>
-              <ChallengesList challenges={challenges} />
             <CardActions>
-              <Button size="small" color="primary">
-                Manage Challenges
-              </Button>
+                <Button size="small" color="primary" onClick={toggleManageChallenges}>
+                {manageChallenges ? 'Wyjdź z trybu edycji' : 'Tryb edycji'}
+                </Button>
             </CardActions>
+            <ChallengesList challenges={challenges} isManaging={manageChallenges} onDelete={deleteChallenge}/>
           </Card>
           </AdminContainer>
         </ViewContainer>
