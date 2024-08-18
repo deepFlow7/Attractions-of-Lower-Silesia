@@ -6,11 +6,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Challenge } from "../types"; // Importujemy interfejs Attraction
-
+import { Title } from "../Styles/Typography";
 interface ListProps {
   challenges: Challenge[];
 }
@@ -20,15 +19,12 @@ const StyledList = styled(List)`
   padding: 16px;
 `;
 
-const Title = styled(Typography)`
-  font-weight: bold;
-`;
 
 
 const ChallengesList: React.FC<ListProps> = ({ challenges }) => {
   return (
     <StyledList>
-      <Title variant="h5" gutterBottom>
+      <Title>
         Wyzwania
       </Title>
         <List>

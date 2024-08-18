@@ -6,10 +6,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { possible_type, Attraction } from "../types"; // Importujemy interfejs Attraction
+import {Title, Body} from '../Styles/Typography';
 
 interface ListProps {
   attractions: Attraction[];
@@ -22,21 +22,20 @@ const StyledList = styled(List)`
 `;
 
 const StyledListItem = styled(ListItem)`
-  &:nth-of-type(odd) {
-  }
   &:hover {
     background-color: #d0d0d0;
   }
 `;
 
-const Title = styled(Typography)`
-  font-weight: bold;
+const StyledListItemText = styled(ListItemText)`
+  font-family: "Times New Roman", Times, serif; // nie dziala :((
 `;
+
 
 const AttractionsList: React.FC<ListProps> = ({ attractions }) => {
   return (
     <StyledList>
-      <Title variant="h5">Atrakcje</Title>
+      <Title>Atrakcje</Title>
       {attractions
         .map((attraction) => (
           <Button
@@ -46,8 +45,8 @@ const AttractionsList: React.FC<ListProps> = ({ attractions }) => {
             key={attraction.id}
           >
             <StyledListItem key={attraction.id}>
-              <ListItemText primary={attraction.name} />
-            </StyledListItem>
+            <StyledListItemText primary={attraction.name} />
+          </StyledListItem>
           </Button>
         ))}
     </StyledList>

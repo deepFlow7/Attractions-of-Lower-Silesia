@@ -1,81 +1,114 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
-import {Link, useNavigate, useLocation} from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
+import styled from "@emotion/styled";
+import { colors, sizes } from "../Styles/Themes";
+import { Title, Body } from '../Styles/Typography';
+
+const StyledAppBar = styled(AppBar)`
+  background-color: ${colors.primary};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500;
+  height: ${sizes.navbarHeight};
+`;
 
 const Navbar = () => {
-    const {isAuthenticated,logout, user, role, updateUser, username} = useAuth();
-    const location = useLocation();
-    const currentUrl = location.pathname + location.search; 
+  const { isAuthenticated, logout, user, role, updateUser, username } = useAuth();
+  const location = useLocation();
+  const currentUrl = location.pathname + location.search;
 
-    const handleRedirectWithReturnUrl = (route : string) => {
-      navigate(route, { state: { returnUrl: currentUrl } });
-    };
+  const handleRedirectWithReturnUrl = (route: string) => {
+    navigate(route, { state: { returnUrl: currentUrl } });
+  };
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const onLogout = async () => {
-        try {
-            await api.get('/api/logout');
-            updateUser(null);
-            logout();
-            navigate('/');
-        } catch (error) {
-            alert('Error logging out');
-        }
-    };   
-    
+  const onLogout = async () => {
+    try {
+      await api.get('/api/logout');
+      updateUser(null);
+      logout();
+      navigate('/');
+    } catch (error) {
+      alert('Error logging out');
+    }
+  };
+
   return (
-    <AppBar className='navbar' position="static">
+    <StyledAppBar position="static">
       <Toolbar>
-        <Typography  variant="h2" component="div" sx={{ flexGrow: 1 }}>
-            <Button component={Link} to="/" color="inherit">
-                    Atrakcje Dolnego Śląska
-            </Button>
-        </Typography>
+        <Button component={Link} to="/" color="inherit">
+          <Title>
+            Atrakcje Dolnego Śląska
+          </Title>
+
+        </Button>
 
         {isAuthenticated && (
-          <Typography variant="h6" component="div" sx={{ mr: 2, flexGrow: 1 }}>
+          <Body big>
             Witaj {username}!
-          </Typography>
+          </Body>
         )}
 
+        {isAuthenticated && (
+          <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
+            <Body big>
 
-      {isAuthenticated && (
-        <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
-          Dodaj atrakcję
-        </Button> 
-      )}
+              Dodaj atrakcję
+            </Body>
 
-      {isAuthenticated && role == "admin" ? (
-        <Button onClick={() => handleRedirectWithReturnUrl('/new_challenge')} color="inherit">
-            Dodaj wyzwanie
-        </Button>  
-      ) : (
-        <Button component={Link} to="/challenges" color="inherit">
-          Wyzwania
-        </Button>
-      )}
+          </Button>
+        )}
+
+        {isAuthenticated && role === "admin" ? (
+          <Button onClick={() => handleRedirectWithReturnUrl('/new_challenge')} color="inherit">
+            <Body big>
+
+              Dodaj wyzwanie
+            </Body>
+
+          </Button>
+        ) : (
+          <Button component={Link} to="/challenges" color="inherit">
+            <Body big>
+              Wyzwania
+            </Body>
+          </Button>
+        )}
 
         <Button component={Link} to="/route_planner" color="inherit">
+          <Body big>
+
             Trasy
+          </Body>
+
         </Button>
-        
-        {isAuthenticated && user?
-            (
-              <Button onClick={onLogout} color="inherit">
-                  Wyloguj
-              </Button>  
+
+        {isAuthenticated && user ? (
+          <Button onClick={onLogout} color="inherit">
+            <Body big>
+
+              Wyloguj
+            </Body>
+
+          </Button>
         ) : (
-              <Button color="inherit" onClick={() => handleRedirectWithReturnUrl('/login')}>
-                Zaloguj
-              </Button>
+          <Button color="inherit" onClick={() => handleRedirectWithReturnUrl('/login')}>
+            <Body big>
+
+              Zaloguj
+            </Body>
+
+          </Button>
         )}
       </Toolbar>
-    </AppBar>
+    </StyledAppBar>
   );
 }
 

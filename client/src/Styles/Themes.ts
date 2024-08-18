@@ -2,32 +2,25 @@
 import { css } from '@emotion/react';
 
 export const colors = {
-  primary: '#9bc400',
-  secondary: '#8076a3',
-  tertiary: '#f9c5bd',
-  mid: '#8E9D52',
-  mid1: '#92AA36',
-  mid2: '#89906D',
+  primary: '#7c677f',
+  secondary: '#f9c5bd',
+  tertiary: '#9bc400',
   white: '#fff',
-  dark: '#270101ff',
+  dark: '#f9c5bd',
+  gray: '#272a4b',
 };
 
 export const gradients = {
   primaryToSecondary: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-  primaryToMid: `linear-gradient(45deg, ${colors.primary}, ${colors.mid})`,
-  midToSecondary: `linear-gradient(45deg, ${colors.mid}, ${colors.secondary})`,
-  primaryToDark: `linear-gradient(45deg, ${colors.dark}, ${colors.primary})`,
-  secondaryToTertiary: `linear-gradient(45deg, ${colors.secondary}, ${colors.tertiary})`,
-  primaryToMid1: `linear-gradient(45deg, ${colors.primary}, ${colors.mid1})`,
-  mid1ToMid2: `linear-gradient(45deg, ${colors.mid1}, ${colors.mid2})`,
-  mid2ToSecondary: `linear-gradient(45deg, ${colors.mid2}, ${colors.secondary})`,
-};
+ };
 
 export const sizes = {
   borderRadius: '2rem',
   paddingVertical: '0.5rem',
   paddingHorizontal: '1rem',
   fontSize: '1rem',
+  titleSize: '3rem',
+  navbarHeight: '5rem',
 };
 
 export const transitions = {

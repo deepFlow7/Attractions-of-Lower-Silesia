@@ -1,13 +1,21 @@
 import styled from "@emotion/styled";
-import { shadows } from "./Themes";
+import { shadows, colors, sizes } from "./Themes";
+import { bodyMixin} from "./Typography";
 
 export const ViewContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 1rem;
   gap: 1rem;
+  background-color: ${colors.dark};
+  position: absolute;
+  padding: 1rem;
+  left: -5px;
+  top: ${sizes.navbarHeight};
+  ${bodyMixin}
+  
   & > * {
     box-shadow: ${shadows.default};
+    background-color: ${colors.primary};
   }
 `;

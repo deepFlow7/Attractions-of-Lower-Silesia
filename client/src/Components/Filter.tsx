@@ -2,25 +2,26 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { FormControlLabel, Checkbox, Card, CardContent } from '@mui/material';
+import { colors } from '../Styles/Themes'; // Upewnij się, że ścieżka jest poprawna
 
 interface FilterProps {
   options: string[];
   onChange: (selectedOptions: string[]) => void;
 }
 
-const StyledCard = styled(Card)`
-  padding: 2px;
-`;
-
-
 const StyledFormControlLabel = styled(FormControlLabel)`
   display: block;
+`;
+
+const CustomCheckbox = styled(Checkbox)`
+  &.Mui-checked {
+    color: ${colors.dark};
+  }
 `;
 
 const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(options);
   const [selectAll, setSelectAll] = useState(true);
-
 
   const handleCheckboxChange = (option: string) => {
     const updatedOptions = selectedOptions.includes(option)
@@ -28,51 +29,46 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
       : [...selectedOptions, option];
     setSelectedOptions(updatedOptions);
     onChange(updatedOptions);
-    if (updatedOptions.length == options.length)
-      setSelectAll(true);
-    else if (selectAll)
-      setSelectAll(false);
+    if (updatedOptions.length === options.length) setSelectAll(true);
+    else if (selectAll) setSelectAll(false);
   };
 
   const handleSelectAllChange = () => {
-    const updatedOptions = selectAll? [] : options;
+    const updatedOptions = selectAll ? [] : options;
     setSelectedOptions(updatedOptions);
     onChange(updatedOptions);
     setSelectAll(prev => !prev);
   };
 
- 
   return (
-    <StyledCard>
-      <CardContent style={{maxHeight: "45vh", overflow: "auto"}}>
-      <StyledFormControlLabel
-            key={"all"}
-            control={
-              <Checkbox
-                checked={selectAll}
-                onChange={() => handleSelectAllChange()}
-                name={"all"}
-                color="primary"
-              />
-            }
-            label={"Wybierz wszystkie"}
-          />
-        {options?.map((option) => (
+    <>
+      <CardContent style={{ maxHeight: '45vh', overflow: 'auto' }}>
+        <StyledFormControlLabel
+          key={'all'}
+          control={
+            <CustomCheckbox
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+              name={'all'}
+            />
+          }
+          label={'Wybierz wszystkie'}
+        />
+        {options.map((option) => (
           <StyledFormControlLabel
             key={option}
             control={
-              <Checkbox
+              <CustomCheckbox
                 checked={selectedOptions.includes(option)}
                 onChange={() => handleCheckboxChange(option)}
                 name={option}
-                color="primary"
               />
             }
             label={option}
           />
-        ))} 
+        ))}
       </CardContent>
-    </StyledCard>
+    </>
   );
 };
 

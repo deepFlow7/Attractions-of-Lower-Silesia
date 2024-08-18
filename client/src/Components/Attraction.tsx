@@ -8,15 +8,37 @@ import AttractionInfo from './AttractionInfo';
 import styled from '@emotion/styled';
 import { useAuth } from '../Providers/AuthContext';
 import api from '../API/api';
-
+import { colors, sizes, shadows } from '../Styles/Themes';
+import { ViewContainer } from '../Styles/View';
 interface AttractionWithComments {
   attraction: Attraction;
   comments: Comment[];
 }
 
-const Container = styled.div`
-  margin: 1.5% 1.5%;
+export const PhotoContainer = styled.div`
+  width: 60%;
+  background-color: ${colors.primary};
+  box-shadow: ${shadows.default};
+  @media (max-width: 920px) {
+    width: 100%;
+  }
 `;
+
+export const InfoContainer = styled.div`
+  width: 35%;
+  background-color: ${colors.primary};
+  box-shadow: ${shadows.default};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  @media (max-width: 1630px) {
+    width: 31%;
+  }
+  @media (max-width: 920px) {
+    width: 100%;
+  }
+`;
+
 
 const primaryColor = '#757575';
 const defaultColor = '#1976d2';
@@ -92,13 +114,11 @@ const AttractionView = () => {
   const { name, photos, type, subtype, description, interactivity, time_it_takes, rating } = attraction;
 
   return (
-    <Container>
-      <Grid container spacing={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Photos photos={photos} title={name} />
-          </Grid>
-          <Grid item xs={12} md={4}>
+    <ViewContainer>
+          <PhotoContainer>
+          <Photos photos={photos} title={name} />
+        </PhotoContainer>
+          <InfoContainer>
             {isAuthenticated && role == "user" && (
               <>
             <Button
@@ -125,13 +145,11 @@ const AttractionView = () => {
             </Button>
             </>)}
             <AttractionInfo attraction={attraction} />
-            <Grid item xs={12} >
+            <div>
               <Comments comments={comments} attraction_id={attraction.id} addComment={addComment}/>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Container>
+            </div>
+          </InfoContainer>
+    </ViewContainer>
   );
 };
 

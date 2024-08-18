@@ -31,10 +31,10 @@ export const StyledButton = styled(Button)`
   }
 
   &.btn--midToSecondary {
-    background: ${gradients.midToSecondary};
+    background: ${gradients.primaryToSecondary};
   }
   &.btn--primaryToMid {
-    background: ${gradients.primaryToMid};
+    background: ${gradients.primaryToSecondary};
   }
 
   &:hover {

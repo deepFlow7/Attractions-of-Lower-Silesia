@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Grid, Typography, Button, InputBase } from '@mui/material';
+import { Grid, Button, InputBase } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -13,8 +13,8 @@ import { MapContainer, DropListContainer } from '../Styles/Map';
 import { ListContainer } from '../Styles/List';
 import { FilterContainer } from '../Styles/Filter';
 import { Input } from '../Styles/Input';
-
-
+import { Body, Title } from '../Styles/Typography';
+import { StyledButton } from '../Styles/Button';
 const ScrollableBox = styled.div`
   overflow-y: auto;
 `;
@@ -197,7 +197,7 @@ const RoutePlanner = () => {
     <ViewContainer>
 
     <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
-    <Typography variant="h4" gutterBottom>Zaplanuj trasę</Typography>
+    <Title small>Zaplanuj trasę</Title>
      
       <Map 
         key={refreshKey} 
@@ -211,9 +211,9 @@ const RoutePlanner = () => {
     </MapContainer>
 
     <DropListContainer four>
-      <Typography variant="h6" style={{marginBottom: "5px"}}>
+      <Title small>
         Atrakcje (przeciągnij wybrane na mapkę)
-      </Typography>
+      </Title>
       <Input
         placeholder="Wyszukaj..."
         inputProps={{ 'aria-label': 'search' }}
@@ -248,14 +248,20 @@ const RoutePlanner = () => {
     </FilterContainer>
 
     <ListContainer four>
-    <Typography variant="h6">Długość trasy: {calculateTotalDistance()} km</Typography>
+    <Title small>Długość trasy: {calculateTotalDistance()} km</Title>
       <Button onClick={reset}>
+        <StyledButton>
         Zresetuj trasę
+        </StyledButton>
       </Button>
       <Button onClick={calculate_shortest_path}>
+      <StyledButton>
+       
         Sprawdź najkrótszą trasę
+        </StyledButton>
+
       </Button>
-      <Typography variant="h6">Wybrane atrakcje (dostosuj kolejność)</Typography>
+      <Title small>Wybrane atrakcje (dostosuj kolejność)</Title>
       <ScrollableBox>
         {selectedAttractions.map((selected, index) => {
           const attraction = attractions.find(attr => attr.id === selected);
@@ -267,12 +273,12 @@ const RoutePlanner = () => {
               <IconButton onClick={() => handleMoveDown(index)} disabled={index === selectedAttractions.length - 1}>
                 <ArrowDownward />
               </IconButton>
-              <Typography variant="body1" style={{ flex: 1 }}>
+              <Body>
                 {attraction && 
                 <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black'}}>
                   {attraction.name}
                 </a>}
-              </Typography>
+              </Body>
               <Button variant="contained" color="secondary" onClick={() => handleRemoveAttraction(selected)}>Usuń</Button>
             </div>
           );

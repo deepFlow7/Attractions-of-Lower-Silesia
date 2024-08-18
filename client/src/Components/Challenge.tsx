@@ -12,7 +12,7 @@ import { useAuth } from "../Providers/AuthContext";
 import { ViewContainer } from '../Styles/View';
 import { MapContainer } from '../Styles/Map';
 import { DictionaryContainer } from '../Styles/Dictionary';
-import {Title, Description} from '../Styles/Typhography';
+import {Title, Body} from '../Styles/Typography';
 
 function haversineDistanceBetweenPoints(
   lat1: number,
@@ -175,7 +175,7 @@ const ChallengeView: React.FC = () => {
     <ViewContainer>
     <MapContainer four challenge>
       <Title>{challenge.name}</Title>
-      <Description>{challenge.description}</Description>
+      <Body>{challenge.description}</Body>
         <CardContent>
           <Map
             x={challenge.coords.x}

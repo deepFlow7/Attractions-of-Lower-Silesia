@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
-import Navbar from './Components/Navbar';
+import StyledNavbar from './Components/Navbar';
 import Home from './Components/Home';
 import Attraction from "./Components/Attraction";
 import ChallengeView from './Components/Challenge';
@@ -31,7 +31,7 @@ root!.render(
     <AuthProvider>
     <SearchProvider>
     <BrowserRouter>
-      <Navbar />
+      <StyledNavbar />
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/attraction/:id" element={<Attraction />} />
