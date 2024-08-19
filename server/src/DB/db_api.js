@@ -229,6 +229,15 @@ class db_api {
         }
     }
 
+    async changeAttractionName(id, name) {
+        try {
+            await pool.query('UPDATE attractions SET name = $1 WHERE id = $2', [name, id]);
+        } catch (error) {
+            console.error("Error updating attraction data:", error);
+            throw error;
+        }
+    }
+
     async delete_attraction(id) {
         try {
             await pool.query('DELETE FROM attractions WHERE id = $1', [id]);
@@ -461,10 +470,17 @@ class db_api {
         }
     }
 
+    async changeChallengeName(id, name) {
+        try {
+            await pool.query('UPDATE challenges SET name = $1 WHERE id = $2', [name, id]);
+        } catch (error) {
+            console.error("Error updating challenge data:", error);
+            throw error;
+        }
+    }
+
     async delete_challenge(challenge_id) {
         try {
-            await pool.query('DELETE FROM challenge_attractions WHERE challenge_id = $1', 
-                [challenge_id]);
             await pool.query('DELETE FROM challenges WHERE id = $1', [challenge_id]);
         } catch (error) {
             console.error('Error deleting challenge:', error);

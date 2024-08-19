@@ -369,10 +369,30 @@ app.post('/attraction/delete', async (req, res) => {
     }
 });
 
+app.post('/attraction/update', async (req, res) => {
+    const { attractionId, newName } = req.body;
+    try {
+      await db.changeAttractionName(attractionId, newName);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
 app.post('/challenge/delete', async (req, res) => {
     const { challengeId } = req.body;
     try {
       await db.delete_challenge(challengeId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/challenge/update', async (req, res) => {
+    const { challengeId, newName } = req.body;
+    try {
+      await db.changeChallengeName(challengeId, newName);
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: error.message });

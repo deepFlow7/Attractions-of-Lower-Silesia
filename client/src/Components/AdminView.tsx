@@ -92,6 +92,19 @@ const AdminView: React.FC = () => {
     }
   };
 
+  const changeAttractionName = async (id: number, newName : string) => {
+    try {
+      await api.post(`/api/attraction/update`, { attractionId: id, newName: newName });
+      setAttractions(prevAttractions =>
+        prevAttractions.map(attraction =>
+          attraction.id === id ? { ...attraction, name: newName } : attraction
+        )
+      );
+    } catch (error) {
+      console.error('Error updating attraction:', error);
+    }
+  };
+
   const deleteChallenge = async (id: number) => {
     const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wyzwanie?");
     if (!isConfirmed) return; 
@@ -103,6 +116,19 @@ const AdminView: React.FC = () => {
       );
     } catch (error) {
       console.error('Error deleting challange:', error);
+    }
+  };
+
+  const changeChallengeName = async (id: number, newName : string) => {
+    try {
+      await api.post(`/api/challenge/update`, { challengeId: id, newName: newName });
+      setChallenges(prevChallenges =>
+        prevChallenges.map(challenge =>
+          challenge.id === id ? { ...challenge, name: newName } : challenge
+        )
+      );
+    } catch (error) {
+      console.error('Error updating challenge:', error);
     }
   };
 
@@ -134,7 +160,12 @@ const AdminView: React.FC = () => {
               </Button>
             </CardActions>
             <CardContent>
-              <AttractionsList attractions={attractions} isManaging={manageAttractions} onDelete={deleteAttraction}/>
+              <AttractionsList 
+                attractions={attractions} 
+                isManaging={manageAttractions} 
+                onDelete={deleteAttraction}
+                onSave={changeAttractionName}
+              />
             </CardContent>
           </Card>
           </AdminContainer>
@@ -145,7 +176,12 @@ const AdminView: React.FC = () => {
                 {manageChallenges ? 'Wyjdź z trybu edycji' : 'Tryb edycji'}
                 </Button>
             </CardActions>
-            <ChallengesList challenges={challenges} isManaging={manageChallenges} onDelete={deleteChallenge}/>
+            <ChallengesList 
+              challenges={challenges} 
+              isManaging={manageChallenges} 
+              onDelete={deleteChallenge}
+              onSave={changeChallengeName}
+            />
           </Card>
           </AdminContainer>
         </ViewContainer>

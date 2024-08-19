@@ -58,7 +58,7 @@ CREATE TABLE attractions (
 
 CREATE TABLE photos (
     id SERIAL PRIMARY KEY,
-    attraction_id INTEGER NOT NULL REFERENCES attractions(id),
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
     photo TEXT NOT NULL,
     caption TEXT 
 );
@@ -72,12 +72,12 @@ CREATE TABLE users (
 
 CREATE TABLE favourites (
     user_id INTEGER REFERENCES users(id),
-    attraction_id INTEGER REFERENCES attractions(id)
+    attraction_id INTEGER REFERENCES attractions(id) ON DELETE CASCADE
 );
 
 CREATE TABLE wants_to_visit (
     user_id INTEGER REFERENCES users(id),
-    attraction_id INTEGER REFERENCES attractions(id)
+    attraction_id INTEGER REFERENCES attractions(id) ON DELETE CASCADE
 );
 
 CREATE TYPE role AS ENUM ('admin','user');
@@ -91,7 +91,7 @@ CREATE TABLE logins (
 
 CREATE TABLE ratings (
     user_id INTEGER REFERENCES users(id) NOT NULL,
-    attraction_id INTEGER REFERENCES attractions(id) NOT NULL,
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
     rating INTEGER NOT NULL CHECK (rating >= 0 and rating <= 10),
     UNIQUE (user_id, attraction_id)
 );
@@ -101,7 +101,7 @@ CREATE TABLE comments (
     author INTEGER NOT NULL REFERENCES users(id),
     content TEXT NOT NULL,
     votes INTEGER NOT NULL DEFAULT 0,
-    attraction INTEGER NOT NULL REFERENCES attractions(id),
+    attraction INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
     parent INTEGER REFERENCES comments(id)
 );
 
@@ -116,7 +116,7 @@ CREATE TABLE challenges (
 
 CREATE TABLE challenges_started (
     user_id INTEGER NOT NULL REFERENCES users(id),
-    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id) ON DELETE CASCADE,
     start_date timestamp NOT NULL,
     finished_date timestamp,
     points INTEGER NOT NULL DEFAULT 0,
@@ -125,19 +125,20 @@ CREATE TABLE challenges_started (
 );
 
 CREATE TABLE challenge_attractions (
-    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
-    attraction_id INTEGER NOT NULL REFERENCES attractions(id),
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id) ON DELETE CASCADE,
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
     points INTEGER NOT NULL DEFAULT 10,
     UNIQUE (challenge_id, attraction_id)
 );
 
 CREATE TABLE visited_challenge_attractions (
-    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
-    attraction_id INTEGER NOT NULL REFERENCES attractions(id),
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id) ON DELETE CASCADE,
+    attraction_id INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
     user_id INTEGER NOT NULL REFERENCES users(id),
     UNIQUE (challenge_id, attraction_id, user_id)
 );
 
+--  TRIGGERS
 CREATE OR REPLACE FUNCTION update_challenge_points()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -170,6 +171,23 @@ AFTER INSERT ON visited_challenge_attractions
 FOR EACH ROW
 EXECUTE FUNCTION update_user_points();
 
+CREATE OR REPLACE FUNCTION subtract_user_points()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE challenges_started
+    SET points = points - (SELECT points FROM challenge_attractions 
+        WHERE challenge_attractions.challenge_id = OLD.challenge_id AND 
+        challenge_attractions.attraction_id = OLD.attraction_id)
+    WHERE user_id = OLD.user_id AND challenge_id = OLD.challenge_id;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER user_points_delete_trigger
+AFTER DELETE ON visited_challenge_attractions
+FOR EACH ROW
+EXECUTE FUNCTION subtract_user_points();
+
 CREATE OR REPLACE FUNCTION update_bonus_points()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -184,6 +202,21 @@ CREATE TRIGGER set_bonus_points
 AFTER UPDATE OF finished_date ON challenges_started
 FOR EACH ROW
 EXECUTE FUNCTION update_bonus_points();
+
+CREATE OR REPLACE FUNCTION subtract_challenge_points()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE challenges
+    SET points = points - OLD.points
+    WHERE id = OLD.challenge_id;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER challenge_points_delete_trigger
+AFTER DELETE ON challenge_attractions
+FOR EACH ROW
+EXECUTE FUNCTION subtract_challenge_points();
 
 CREATE OR REPLACE FUNCTION calculate_rating()
 RETURNS TRIGGER AS $$
