@@ -167,7 +167,7 @@ const Navbar = () => {
                 </Button>
               ) : (
                 <Button color="inherit" onClick={() => handleRedirectWithReturnUrl('/login')}>
-                  <Body big>
+                  <Body big secondary>
                     Zaloguj
                   </Body>
                 </Button>

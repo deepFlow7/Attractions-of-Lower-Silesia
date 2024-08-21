@@ -33,6 +33,7 @@ max-height: 85vh;
 
 export const ChallengesContainer = styled.div`
   width: 49%;
+  height: 85vh;
   @media (max-width: 850px) {
     width: 100%
   }
@@ -40,7 +41,7 @@ export const ChallengesContainer = styled.div`
 
 export const AdminContainer = styled.div`
   width: 32%;
-  height: 100vh;
+  height: 85vh;
   overflow: auto;
   @media (max-width: 900px) {
     width: 48%;

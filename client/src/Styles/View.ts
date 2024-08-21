@@ -4,8 +4,7 @@ import { bodyMixin } from "./Typography";
 
 export const ViewContainer = styled.div`
 box-sizing: border-box;
-  min-height: 100%;
-  width: 100%;
+  width: calc(100vw + 5px);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -16,6 +15,7 @@ box-sizing: border-box;
   top: ${sizes.navbarHeight};
   ${bodyMixin}
   padding: 1rem;
+  height: calc(100vh - ${sizes.navbarHeight});
   & > * {
     box-shadow: ${shadows.default};
     background-color: ${colors.primary};

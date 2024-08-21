@@ -8,18 +8,33 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Challenge } from "../types"; // Importujemy interfejs Attraction
+import { Challenge } from "../types";
 import { Title } from "../Styles/Typography";
+import { bodyMixin } from '../Styles/Typography'; // Importowanie bodyMixin
+
 interface ListProps {
   challenges: Challenge[];
 }
 
+// Stylowany komponent List
 const StyledList = styled(List)`
   border-radius: 8px;
   padding: 16px;
 `;
 
+// Stylowany komponent ListItem
+const StyledListItem = styled(ListItem)`
+  &:hover {
+    background-color: #d0d0d0;
+  }
+`;
 
+// Stylowany komponent ListItemText
+const StyledListItemText = styled(ListItemText)`
+  .MuiListItemText-primary {
+    ${bodyMixin}
+  }
+`;
 
 const ChallengesList: React.FC<ListProps> = ({ challenges }) => {
   return (
@@ -27,15 +42,13 @@ const ChallengesList: React.FC<ListProps> = ({ challenges }) => {
       <Title>
         Wyzwania
       </Title>
-        <List>
-          {challenges.map(challenge => (
-              <Button key={challenge.id+1} component={Link} to={'/challenge/'+challenge.id} color="inherit">
-                  <ListItem key={challenge.id+1}>
-                      <ListItemText primary={challenge.name} />
-                  </ListItem>
-              </Button>
-          ))}
-        </List>
+      {challenges.map(challenge => (
+        <Button key={challenge.id} component={Link} to={`/challenge/${challenge.id}`} color="inherit">
+          <StyledListItem>
+            <StyledListItemText primary={challenge.name} />
+          </StyledListItem>
+        </Button>
+      ))}
     </StyledList>
   );
 };

@@ -13,6 +13,7 @@ import { ViewContainer } from '../Styles/View';
 import { MapContainer } from '../Styles/Map';
 import { DictionaryContainer } from '../Styles/Dictionary';
 import {Title, Body} from '../Styles/Typography';
+import { StyledButton } from '../Styles/Button';
 
 function haversineDistanceBetweenPoints(
   lat1: number,
@@ -175,7 +176,7 @@ const ChallengeView: React.FC = () => {
     <ViewContainer>
     <MapContainer four challenge>
       <Title>{challenge.name}</Title>
-      <Body>{challenge.description}</Body>
+      <Body margin>{challenge.description}</Body>
         <CardContent>
           <Map
             x={challenge.coords.x}
@@ -201,13 +202,12 @@ const ChallengeView: React.FC = () => {
           <Title>Ranking</Title>
           <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
           {user && role == "user" && !takesPart && (
-            <Button
-              variant="contained"
-              color="primary"
+            <StyledButton
+          
               onClick={handleParticipation}
             >
               Weź udział
-            </Button>
+            </StyledButton>
           )}
         </CardContent>
     </DictionaryContainer>
