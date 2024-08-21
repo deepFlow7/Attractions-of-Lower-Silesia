@@ -14,16 +14,12 @@ export const StyledButton = styled(Button)<ButtonProps>`
   display: inline-block;
   border-radius: ${sizes.borderRadius};
   position: relative;
-  font-size: ${sizes.fontSize};
-  border: none;
   transition-property: all;
   transition-duration: ${transitions.default};
-  margin-top: 10px;
-  margin-bottom: 10px;
   ${bodyMixin};
   color: ${props => (props.secondary ? colors.secondary : colors.dark)};
 
-
+  height: ${sizes.buttonHeight};
   padding: ${sizes.paddingVertical} ${sizes.paddingHorizontal};
 
   &.btn--primary {

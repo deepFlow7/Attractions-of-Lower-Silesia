@@ -71,10 +71,8 @@ const AdminView: React.FC = () => {
       <StyledButton onClick={toggleView}>
         {isAdminPanel ? "Przełącz na widok główny" : "Przełącz na panel administratora"}
       </StyledButton>
-
       {isAdminPanel ? (
         <ViewContainer buttonOnTop>
-          
           <AdminContainer>
           <StyledButton>
               Manage Users
@@ -94,9 +92,9 @@ const AdminView: React.FC = () => {
             <ChallengesList challenges={challenges} />
           </AdminContainer>
         </ViewContainer>
-
       ) : (
-        <Home />
+        <AdminContainer>
+        <Home /></AdminContainer>
       )};
     </Container>
   );

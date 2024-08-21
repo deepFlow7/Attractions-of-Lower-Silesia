@@ -6,7 +6,6 @@ export interface ViewContainerProps {
   buttonOnTop?: boolean;
 }
 
-
 export const ViewContainer = styled.div<ViewContainerProps>`
   box-sizing: border-box;
   width: calc(100vw + 5px);
