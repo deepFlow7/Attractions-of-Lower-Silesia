@@ -72,6 +72,7 @@ app.post('/login', async (req, res) => {
         req.session.login=login;
         req.session.role=user.role;
         req.session.user = await db.get_user(user.user_id);
+        req.session.blocked = await db.is_user_blocked(user.user_id);
         res.json({authenticated:true});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -91,7 +92,8 @@ app.get('/logout', (req, res) => {
 app.get('/profile', async (req, res) => {
     
     if (req.session.user) {
-        res.json({authenticated : true, user : req.session.user, username: req.session.login, role: req.session.role});
+        res.json({authenticated : true, blocked : req.session.blocked, user : req.session.user, 
+            username: req.session.login, role: req.session.role});
     }
     else{
         res.json({authenticated : false});
@@ -394,6 +396,45 @@ app.post('/challenge/update', async (req, res) => {
     try {
       await db.changeChallengeName(challengeId, newName);
       res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/user/block', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      await db.block_user(user_id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/user/unblock', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      await db.unblock_user(user_id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/user/is_blocked/:id', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      const blocked = await db.is_user_blocked(req.params["id"]);
+      res.json({ blocked: blocked });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/users/blocked', async (req, res) => {
+    try {
+      const blocked = await db.get_blocked_users();
+      res.json({ blocked_users: blocked });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -70,6 +70,11 @@ CREATE TABLE users (
     mail TEXT UNIQUE NOT NULL
 );
 
+CREATE TABLE blocked_users (
+    user_id INTEGER PRIMARY KEY,
+    since timestamp NOT NULL
+);
+
 CREATE TABLE favourites (
     user_id INTEGER REFERENCES users(id),
     attraction_id INTEGER REFERENCES attractions(id) ON DELETE CASCADE

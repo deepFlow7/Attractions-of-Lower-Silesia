@@ -31,7 +31,9 @@ const AttractionView = () => {
   const [to_visit, setToVisit] = useState(false);
   const [favourite, setFavourite] = useState(false);
   const [userRating, setUserRating] = useState(0);
-  const { user, role, isAuthenticated } = useAuth();
+  const [savedUserRating, setSavedUserRating] = useState(0);
+  const { user, isBlocked, role, isAuthenticated } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(1);
   const { id } = useParams();
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const AttractionView = () => {
       api.get('/api/attraction/rating/' + id + '/' + user!.id)
       .then(response => {
         setUserRating(response.data.rating);
+        setSavedUserRating(response.data.rating);
       })
       .catch(error => {
         console.error('There was an error fetching the data!', error);
@@ -99,6 +102,12 @@ const AttractionView = () => {
   })};
 
   const handleAddRating = async (newRating : number|null) => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz wystawiać ani zmieniać ocen.")
+      setUserRating(savedUserRating);
+      setRefreshKey(prev => prev + 1);
+      return;
+    }
     if (newRating) {
       try {
         setUserRating(newRating);
@@ -113,11 +122,13 @@ const AttractionView = () => {
               rating: response.data.rating
             }
           }));
+          setSavedUserRating(newRating);
         })
       } catch (error) {
         console.error('Error updating rating:', error);
+        setUserRating(savedUserRating);  
       }
-    }
+    } 
   };
 
   if (!attr_info) {
@@ -169,6 +180,7 @@ const AttractionView = () => {
                   gutterBottom>Twoja ocena
                 </Title>
                 <Rating
+                  key={refreshKey}
                   name="user-rating"
                   value={userRating}
                   onChange={(event, newValue) => handleAddRating(newValue)}

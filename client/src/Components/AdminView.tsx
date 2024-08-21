@@ -26,9 +26,11 @@ const AdminView: React.FC = () => {
   const [attractions, setAttractions] = useState<Attraction[]>([]); 
   const [challenges, setChallenges] = useState<Challenge[]>([]); 
   const [users, setUsers] = useState<UserWithLogin[]>([]); 
+  const [blockedUsers, setBlockedUsers] = useState<number[]>([]); 
   const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true); 
   const [manageAttractions, setManageAttractions] = useState(false);
   const [manageChallenges, setManageChallenges] = useState(false);
+  const [manageUsers, setManageUsers] = useState(false);
 
   useEffect(() => {
     const fetchAttractions = async () => {
@@ -61,9 +63,20 @@ const AdminView: React.FC = () => {
       });
     };
 
+    const fetchBlockedUsers = async () => {
+      api.get('/api/users/blocked')
+      .then(response => {
+        setBlockedUsers(response.data.blocked_users);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
+    };
+
     fetchAttractions(); 
     fetchChallenges(); 
     fetchUsers(); 
+    fetchBlockedUsers();
   }, []); 
 
   const toggleView = () => {
@@ -76,6 +89,10 @@ const AdminView: React.FC = () => {
 
   const toggleManageChallenges = () => {
     setManageChallenges(prevState => !prevState);
+  };
+
+  const toggleManageUsers = () => {
+    setManageUsers(prevState => !prevState);
   };
 
   const deleteAttraction = async (id: number) => {
@@ -132,6 +149,42 @@ const AdminView: React.FC = () => {
     }
   };
 
+  const blockUser = async (id: number) => {
+    const isConfirmed = window.confirm("Czy na pewno chcesz zablokować tego użytkownika?");
+    if (!isConfirmed) return; 
+  
+    try {
+      await api.post(`/api/user/block`, { user_id: id });
+      setBlockedUsers(prevBlocked => 
+        [...prevBlocked, id]
+      );
+    } catch (error) {
+      console.error('Error blocking user:', error);
+    }
+  };
+
+  const unblockUser = async (id: number) => {
+    const isConfirmed = window.confirm("Czy na pewno chcesz odblokować tego użytkownika?");
+    if (!isConfirmed) return; 
+  
+    try {
+      await api.post(`/api/user/unblock`, { user_id: id });
+      setBlockedUsers(prevBlocked => 
+        prevBlocked.filter(userId => userId !== id)
+      );
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+    }
+  };
+
+  const changeUserBlock = async (id: number) => {
+    if (blockedUsers?.includes(id)) 
+      await unblockUser(id);
+    else
+      await blockUser(id);
+  }
+
+
   return (
     <ViewContainer>
 
@@ -147,8 +200,18 @@ const AdminView: React.FC = () => {
       <ViewContainer>
         <AdminContainer>
           <Card>
+            <CardActions>
+              <Button size="small" color="primary" onClick={toggleManageUsers}>
+              {manageUsers ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
+              </Button>
+            </CardActions>
             <CardContent>
-              <UsersList users={users} />
+              <UsersList 
+                users={users}
+                isManaging={manageUsers} 
+                changeUserBlock={changeUserBlock}
+                blockedUsers={blockedUsers}
+              />
             </CardContent>
           </Card>
           </AdminContainer>
@@ -156,7 +219,7 @@ const AdminView: React.FC = () => {
           <Card>
             <CardActions>
               <Button size="small" color="primary" onClick={toggleManageAttractions}>
-              {manageAttractions ? 'Wyjdź z trybu edycji' : 'Tryb edycji'}
+              {manageAttractions ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
               </Button>
             </CardActions>
             <CardContent>
@@ -173,7 +236,7 @@ const AdminView: React.FC = () => {
           <Card>
             <CardActions>
                 <Button size="small" color="primary" onClick={toggleManageChallenges}>
-                {manageChallenges ? 'Wyjdź z trybu edycji' : 'Tryb edycji'}
+                {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </Button>
             </CardActions>
             <ChallengesList 

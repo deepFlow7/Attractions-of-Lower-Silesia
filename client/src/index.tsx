@@ -20,6 +20,11 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   return isAuthenticated && role == "admin" ? element : <Navigate to="/" replace />;
 };
 
+const ProtectedRouteForUnblocked = ({ element }: { element: JSX.Element }) => {
+  const { isAuthenticated, isBlocked } = useAuth();
+  return isAuthenticated && !isBlocked ? element : <Navigate to="/" replace />;
+};
+
 const RootRedirect = () => {
   const { isAuthenticated, role } = useAuth();
   return isAuthenticated && role === "admin" ? <AdminView /> : <Home />;
@@ -38,7 +43,7 @@ root!.render(
         <Route path="/challenge/:id" element={<ChallengeView />} />
         <Route path="/challenges" element={<Challenges />} />
         <Route path="/login" element={<LoginForm  />} />
-        <Route path="/new_attraction" element={<NewAttractionForm />} />
+        <Route path="/new_attraction" element={<ProtectedRouteForUnblocked element={<NewAttractionForm />}/>} />
         <Route path="/new_challenge" element={<ProtectedRoute element={<NewChallengeForm />} />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/route_planner" element={<RoutePlanner />} />

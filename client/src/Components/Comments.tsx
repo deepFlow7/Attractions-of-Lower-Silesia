@@ -22,7 +22,7 @@ const Title = styled(Typography)`
 `;
 
 const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
-  const { user, isAuthenticated, role } = useAuth();
+  const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
   const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -30,6 +30,11 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
   };
 
   const handleAddComment = async () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.")
+      return;
+    }
+
     if (newComment.trim() === '') return;
 
     const commentData = {

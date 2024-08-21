@@ -2,13 +2,11 @@ import React, { useState, useRef } from 'react';
 import { Box, Grid, Typography, TextField, Button, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
-import styled from '@emotion/styled';
 import Map, {MapRef} from './Map';
 import api from '../API/api';
 import { ChallengesContainer } from '../Styles/List';
 import { ViewContainer } from '../Styles/View';
-
-
+import { useAuth } from '../Providers/AuthContext';
 
 const NewAttractionForm = () => {
   const [name, setName] = useState<string>('');
@@ -24,6 +22,7 @@ const NewAttractionForm = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loadingLocalization, setLoadingLocalization] = useState<boolean>(false);
   const mapRef = useRef<MapRef>(null);
+  const {isBlocked} = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,6 +86,11 @@ const NewAttractionForm = () => {
   }
 
   const handleSubmit = async () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać atrakcji.")
+      return;
+    }
+
     if (!validate() || coords == null || type == null || subtype == null) 
       return;
 

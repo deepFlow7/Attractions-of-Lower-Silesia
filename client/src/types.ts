@@ -44,6 +44,7 @@ export interface User extends UserData{
 
 export interface UserWithLogin extends UserData{
   login: string;
+  id: number;
 }
 
 export interface Login {

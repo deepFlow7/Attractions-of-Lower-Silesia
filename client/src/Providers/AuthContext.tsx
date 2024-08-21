@@ -7,6 +7,7 @@ import { AssistantDirection } from '@mui/icons-material';
 
 interface Context{
     isAuthenticated: boolean,
+    isBlocked: boolean,
     login: (username:string,password:string)=>void,
     logout: ()=>void,
     user: User|null,
@@ -23,6 +24,7 @@ const AuthContext = createContext({} as Context);
 
 export const AuthProvider = ({ children } : {children : ReactNode}) => {
     const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?',false);
+    const [isBlocked, setIsBlocked] = useSessionStorage('blocked?',false);
     const [user, setUser] = useSessionStorage('user',null);
     const [role, setRole] = useSessionStorage('role',null);
     const [username, updateUsername] = useSessionStorage('username', null);
@@ -32,6 +34,7 @@ export const AuthProvider = ({ children } : {children : ReactNode}) => {
             const response = await api.get('/profile');
             if (response.data.authenticated) {
                 setIsAuthenticated(true);
+                setIsBlocked(response.data.blocked);
                 setUser(response.data.user);
                 updateUsername(response.data.username);
                 setRole(response.data.role);
@@ -81,7 +84,7 @@ export const AuthProvider = ({ children } : {children : ReactNode}) => {
 
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, user, username, role, updateUsername, setRole, updateUser } as Context}>
+        <AuthContext.Provider value={{ isAuthenticated, isBlocked, login, logout, user, username, role, updateUsername, setRole, updateUser } as Context}>
             {children}
         </AuthContext.Provider>
     );

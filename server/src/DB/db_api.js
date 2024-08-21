@@ -23,7 +23,7 @@ class db_api {
 
     async get_users() {
         try {
-            const { rows } = await pool.query(`SELECT name, surname, mail, login \
+            const { rows } = await pool.query(`SELECT id, name, surname, mail, login \
                 FROM users, logins WHERE users.id=logins.user_id AND role='user'`);
             return rows;
         } catch (error) {
@@ -76,6 +76,47 @@ class db_api {
             throw error;
         }
     } 
+
+    async block_user(id) {
+        try {
+            const {rows} = await pool.query('SELECT role FROM logins WHERE user_id = $1', [id]);
+            if (rows.role == 'admin')
+                throw "Cannot blcok admin";
+            await pool.query('INSERT INTO blocked_users VALUES ($1, NOW())', [id]);
+        } catch (error) {
+            console.error('Error blocking user:', error);
+            throw error;
+        }
+    }
+
+    async unblock_user(id) {
+        try {
+            await pool.query('DELETE FROM blocked_users WHERE user_id = $1', [id]);
+        } catch (error) {
+            console.error('Error unblocking user:', error);
+            throw error;
+        }
+    }
+
+    async is_user_blocked(id) {
+        try {
+            const {rows} = await pool.query('SELECT * FROM blocked_users WHERE user_id = $1', [id]);
+            return rows.length > 0;
+        } catch (error) {
+            console.error('Error checking if user is blocked:', error);
+            throw error;
+        }
+    }
+
+    async get_blocked_users() {
+        try {
+            const {rows} = await pool.query('SELECT user_id FROM blocked_users');
+            return rows.map(row => row.user_id);
+        } catch (error) {
+            console.error('Error getting blocked users:', error);
+            throw error;
+        }
+    }
 
     //------LOGINS---------
     async new_login(user_id, login, password, role) {
@@ -533,8 +574,6 @@ class db_api {
             const result = await pool.query('SELECT * FROM visited_challenge_attractions \
                 WHERE user_id = $1 AND challenge_id = $2 AND attraction_id = $3', 
             [user_id, challenge_id, attraction_id]);
-            
-            console.log(result);
             if (result.rowCount > 0)
                 return;
     

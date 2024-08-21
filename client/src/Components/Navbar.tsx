@@ -7,7 +7,7 @@ import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 
 const Navbar = () => {
-    const {isAuthenticated,logout, user, role, updateUser, username} = useAuth();
+    const {isAuthenticated,logout, user, role, updateUser, username, isBlocked} = useAuth();
     const location = useLocation();
     const currentUrl = location.pathname + location.search; 
 
@@ -26,7 +26,15 @@ const Navbar = () => {
         } catch (error) {
             alert('Error logging out');
         }
-    };   
+    };
+    
+    const handleRedirectToNewAttraction = () => {
+      if (isBlocked) {
+        alert("Twoje konto jest zablokowane, nie możesz dodawać atrakcji.")
+        return;
+      }
+      handleRedirectWithReturnUrl('/new_attraction');
+    }
     
   return (
     <AppBar className='navbar' position="static">
@@ -45,7 +53,7 @@ const Navbar = () => {
 
 
       {isAuthenticated && (
-        <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
+        <Button onClick={handleRedirectToNewAttraction} color="inherit">
           Dodaj atrakcję
         </Button> 
       )}
