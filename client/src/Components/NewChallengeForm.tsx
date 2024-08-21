@@ -11,7 +11,9 @@ import { ViewContainer } from '../Styles/View';
 import { MapContainer, DropListContainer } from '../Styles/Map';
 import { ListContainer } from '../Styles/List';
 import { FilterContainer } from '../Styles/Filter';
+import { InputContainer } from '../Styles/TextField';
 import StyledTextField from '../Styles/TextField';
+
 import { Title, Body, bodyMixin } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 const FormContainer = styled(ViewContainer)`
@@ -37,13 +39,7 @@ const StyledInputBase = styled(InputBase)`
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
   }
 `;
-const InputContainer = styled.div`
-  width: 100%;
-  & > * {
-  width: 100%;
-    margin: 0 0;
-  }
-`
+
 const TitleContainer = styled.div`
   min-width: 20rem;
 `
@@ -186,121 +182,121 @@ const NewChallengeForm = () => {
   }
 
   return (
-      <FormContainer>
-        <TitleContainer>
-            <Title >Nowe Wyzwanie</Title>
-            <InputContainer>
-            <StyledTextField 
-              fullWidth
-              label="Nazwa"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              error={!!errors.name}
-              helperText={errors.name}
-            />
-            </InputContainer>
-            </TitleContainer>
-            <InputContainer style={{ width: 'calc(100vw - 24rem)' }}>
-
-            <StyledTextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Opis"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              error={!!errors.description}
-              helperText={errors.description}
-            />
-            </InputContainer>
-
-
-        <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
-          <Map
-            ref={mapRef}
-            x={initialMapView.center.x}
-            y={initialMapView.center.y}
-            zoom={initialMapView.zoom}
-            attractions={selectedAttractionsDetails}
+    <FormContainer>
+      <TitleContainer>
+        <Title >Nowe Wyzwanie</Title>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Nazwa"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
           />
-        </MapContainer>
+        </InputContainer>
+      </TitleContainer>
+      <InputContainer style={{ width: 'calc(100vw - 24rem)' }}>
 
-        <DropListContainer four>
-          <Body>
-            Atrakcje (przeciągnij wybrane na mapkę)
-          </Body>
-          <StyledInputBase
-            placeholder="Wyszukaj..."
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={onSearchChange}
-            startAdornment={
-              <IconButton sx={{ p: 0 }} disabled aria-label="search">
-                <SearchIcon />
-              </IconButton>
-            }
-          />
-          <ScrollableBox>
-            {attractions.map((attraction, index) => (
-              attraction.name.toLowerCase().includes(search.toLowerCase()) &&
-              selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
-                <div
-                  key={index}
-                  draggable
-                  onDragStart={(event) => handleDragStart(event, attraction)}
-                  style={{ padding: '0.5rem', cursor: 'move' }}
-                >
-                  <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
-                    {attraction.name}
-                  </a>
-                </div>
-              )))}
-          </ScrollableBox>
-        </DropListContainer>
+        <StyledTextField
+          fullWidth
+          multiline
+          rows={4}
+          label="Opis"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          error={!!errors.description}
+          helperText={errors.description}
+        />
+      </InputContainer>
 
-        <FilterContainer four>
-          <FilterList onChange={handleFilterChange}></FilterList>
-        </FilterContainer>
 
-        <ListContainer four>
-          <Body>Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Body>
-          <ScrollableBox style={{ minHeight: '50px' }}>
-            {selectedAttractions.map((selected, index) => {
-              const attraction = attractions.find(attr => attr.id == selected.id);
-              return (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
-                  <Body>
-                    {attraction &&
-                      <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
-                        {attraction.name}
-                      </a>}
-                  </Body>
-                  <StyledTextField
-                    type="number"
-                    label="Punkty"
-                    inputProps={{ min: 1, max: 100 }}
-                    value={selected.points}
-                    onChange={(e) => handlePointsChange(selected.id, parseInt(e.target.value))}
-                    style={{ width: '100px', marginRight: '8px' }}
-                    onBlur={(e) => {
-                      const value = parseInt(e.target.value);
-                      if (value < 1) {
-                        handlePointsChange(selected.id, 1);
-                      } else if (value > 100) {
-                        handlePointsChange(selected.id, 100);
-                      }
-                    }}
-                  />
-                  <StyledButton onClick={() => handleRemoveAttraction(selected.id)}>Usuń</StyledButton>
-                </div>
-              );
-            })}
-          </ScrollableBox>
-          {!!errors.attractions && (
-            <Body error>{errors.attractions}</Body>
-          )}
-          <StyledButton  onClick={handleSubmit}>Zapisz Wyzwanie</StyledButton>
-        </ListContainer>
-      </FormContainer>
+      <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
+        <Map
+          ref={mapRef}
+          x={initialMapView.center.x}
+          y={initialMapView.center.y}
+          zoom={initialMapView.zoom}
+          attractions={selectedAttractionsDetails}
+        />
+      </MapContainer>
+
+      <DropListContainer four>
+        <Body>
+          Atrakcje (przeciągnij wybrane na mapkę)
+        </Body>
+        <StyledInputBase
+          placeholder="Wyszukaj..."
+          inputProps={{ 'aria-label': 'search' }}
+          onChange={onSearchChange}
+          startAdornment={
+            <IconButton sx={{ p: 0 }} disabled aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          }
+        />
+        <ScrollableBox>
+          {attractions.map((attraction, index) => (
+            attraction.name.toLowerCase().includes(search.toLowerCase()) &&
+            selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
+              <div
+                key={index}
+                draggable
+                onDragStart={(event) => handleDragStart(event, attraction)}
+                style={{ padding: '0.5rem', cursor: 'move' }}
+              >
+                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
+                  {attraction.name}
+                </a>
+              </div>
+            )))}
+        </ScrollableBox>
+      </DropListContainer>
+
+      <FilterContainer four>
+        <FilterList onChange={handleFilterChange}></FilterList>
+      </FilterContainer>
+
+      <ListContainer four>
+        <Body>Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Body>
+        <ScrollableBox style={{ minHeight: '50px' }}>
+          {selectedAttractions.map((selected, index) => {
+            const attraction = attractions.find(attr => attr.id == selected.id);
+            return (
+              <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
+                <Body>
+                  {attraction &&
+                    <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
+                      {attraction.name}
+                    </a>}
+                </Body>
+                <StyledTextField
+                  type="number"
+                  label="Punkty"
+                  inputProps={{ min: 1, max: 100 }}
+                  value={selected.points}
+                  onChange={(e) => handlePointsChange(selected.id, parseInt(e.target.value))}
+                  style={{ width: '100px', marginRight: '8px' }}
+                  onBlur={(e) => {
+                    const value = parseInt(e.target.value);
+                    if (value < 1) {
+                      handlePointsChange(selected.id, 1);
+                    } else if (value > 100) {
+                      handlePointsChange(selected.id, 100);
+                    }
+                  }}
+                />
+                <StyledButton onClick={() => handleRemoveAttraction(selected.id)}>Usuń</StyledButton>
+              </div>
+            );
+          })}
+        </ScrollableBox>
+        {!!errors.attractions && (
+          <Body error>{errors.attractions}</Body>
+        )}
+        <StyledButton onClick={handleSubmit}>Zapisz Wyzwanie</StyledButton>
+      </ListContainer>
+    </FormContainer>
   );
 };
 

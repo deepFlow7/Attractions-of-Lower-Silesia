@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { ChallengeAttraction } from "../types";
 import { bodyMixin, Title, Body } from '../Styles/Typography'; // Importowanie bodyMixin
-
+import { shadows } from "../Styles/Themes";
 interface ListProps {
   attractions: ChallengeAttraction[];
   onClick: (attraction: ChallengeAttraction) => void;
@@ -31,7 +31,7 @@ const StyledList = styled(List)`
 // Stylowany komponent ListItem
 const StyledListItem = styled(ListItem)`
   &:hover {
-    background-color: #d0d0d0;
+    shadow: ${shadows.active};
   }
 `;
 
@@ -91,13 +91,7 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
         <Grid container spacing={2}>
           {attractions.map((attraction) => (
             <Grid item xs={12} key={attraction.id}>
-              <Box
-                border={1}
-                borderColor="grey.400"
-                borderRadius={2}
-                padding={2}
-                marginBottom={2}
-              >
+             
                 <Button
                   component={Link}
                   to={`/attraction/${attraction.id}`}
@@ -126,7 +120,6 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                       Odwiedź 
                     </VisitButton>
                   )))}
-              </Box>
             </Grid>
           ))}
         </Grid>

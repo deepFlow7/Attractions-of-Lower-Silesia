@@ -21,4 +21,11 @@ width: 95%;
 
 `;
 
+export const InputContainer = styled.div`
+  & > * {
+  width: 100%;
+    margin: 0 0;
+  }
+`
+
 export default StyledTextField;
