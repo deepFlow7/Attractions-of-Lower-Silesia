@@ -12,18 +12,7 @@ import { InputContainer} from '../Styles/TextField';
 import { StyledButton } from '../Styles/Button';
 import {Title} from '../Styles/Typography';
 import { Grid, Typography, TextField, Button } from '@mui/material';
-
-const FormContainer = styled(ViewContainer)`
-  display: flex; /* Ustawienie flexboxa */
-  flex-direction: column; /* Układanie elementów w kolumnie */
-  align-items: center; /* Wyśrodkowanie elementów wzdłuż osi X */
-  & > * {
-    width: 50vw;
-    margin: 0 0;
-    padding: 1rem;
-    box-sizing: border-box;  /* Zapewnia, że border nie wpływa na rozmiar elementu */
-  }
-`;
+import { FormContainer, FormContent } from '../Styles/Form';
 
 
 const LoginForm = () => {
@@ -56,13 +45,15 @@ const LoginForm = () => {
   return (
     <FormContainer>
       <Title>Logowanie</Title>
+      <FormContent>
       <InputContainer>
       <StyledTextField fullWidth label="Login" value={username} onChange={(e) => setUsername(e.target.value)} />
       </InputContainer><InputContainer>
       <StyledTextField fullWidth label="Hasło" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </InputContainer>
-      <StyledButton variant="contained" color="primary" onClick={handleSubmit} fullWidth>Zaloguj się</StyledButton>
-      <Button component={Link} to='/signup' variant="contained" color="secondary" fullWidth>Zarejestruj</Button>
+      <StyledButton  onClick={handleSubmit} fullWidth>Zaloguj się</StyledButton>
+      <Button component={Link} to='/signup'  fullWidth>Zarejestruj</Button>
+      </FormContent>
     </FormContainer>
   );
 };

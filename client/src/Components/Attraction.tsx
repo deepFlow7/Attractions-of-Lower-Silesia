@@ -16,7 +16,7 @@ interface AttractionWithComments {
 }
 
 export const PhotoContainer = styled.div`
-  width: 60%;
+  width: 60vw;
   background-color: ${colors.primary};
   box-shadow: ${shadows.default};
   @media (max-width: 920px) {
@@ -25,7 +25,7 @@ export const PhotoContainer = styled.div`
 `;
 
 export const InfoContainer = styled.div`
-  width: 35%;
+  width: 37vw;
   background-color: ${colors.primary};
   box-shadow: ${shadows.default};
   display: flex;
