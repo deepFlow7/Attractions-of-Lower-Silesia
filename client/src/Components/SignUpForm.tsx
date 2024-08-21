@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button } from '@mui/material';
+import { useState } from 'react';
+import { Typography } from '@mui/material';
 import api from '../API/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
@@ -53,7 +53,6 @@ const Registration = () => {
   const onRegister = (newUser: NewUser): Promise<boolean> => {
     return api.post('/api/signup', { newUser })
       .then(response => {
-        console.log('Dodano');
         return response.data.success;
       })
       .catch(error => {

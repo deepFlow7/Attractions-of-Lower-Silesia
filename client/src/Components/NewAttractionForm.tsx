@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Grid, Typography, Button, MenuItem, CircularProgress } from '@mui/material';
+import { Grid, Typography, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NewAttraction, NewPhoto, possible_type, subtypes, possibleTypes, possibleSubtypes } from '../types';
 import styled from '@emotion/styled';
@@ -10,6 +10,7 @@ import { ViewContainer } from '../Styles/View';
 import { Title } from '../Styles/Typography';
 import StyledTextField from '../Styles/TextField';
 import { StyledButton } from '../Styles/Button';
+import { useAuth } from '../Providers/AuthContext';
 
 const MapContainer = styled.div`
   height: 40vh;
@@ -30,6 +31,7 @@ const NewAttractionForm = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loadingLocalization, setLoadingLocalization] = useState<boolean>(false);
   const mapRef = useRef<MapRef>(null);
+  const {isBlocked} = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,6 +95,11 @@ const NewAttractionForm = () => {
   };
 
   const handleSubmit = async () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać atrakcji.")
+      return;
+    }
+
     if (!validate() || coords == null || type == null || subtype == null) 
       return;
 

@@ -25,14 +25,22 @@ const StyledAppBar = styled(AppBar)`
 `;
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user, role, updateUser, username } = useAuth();
-  const location = useLocation();
-  const currentUrl = location.pathname + location.search;
-  const navigate = useNavigate();
+    const {isAuthenticated, isBlocked, logout, user, role, updateUser, username} = useAuth();
+    const location = useLocation();
+    const currentUrl = location.pathname + location.search; 
+    const navigate = useNavigate();
 
   const handleRedirectWithReturnUrl = (route: string) => {
     navigate(route, { state: { returnUrl: currentUrl } });
   };
+
+  const handleRedirectToNewAttraction = () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać atrakcji.")
+      return;
+    }
+    handleRedirectWithReturnUrl('/new_attraction');
+  }
 
   const onLogout = async () => {
     try {
@@ -105,7 +113,7 @@ const Navbar = () => {
                   </MenuItem>
                 )}
                 {isAuthenticated && (
-                  <MenuItem onClick={() => { handleRedirectWithReturnUrl('/new_attraction'); handleMenuClose(); }}>
+                  <MenuItem onClick={() => { handleRedirectToNewAttraction(); handleMenuClose(); }}>
                     Dodaj atrakcję
                   </MenuItem>
                 )}
@@ -135,7 +143,7 @@ const Navbar = () => {
           ) : (
             <>
               {isAuthenticated && (
-                <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
+                <Button onClick={() => handleRedirectToNewAttraction()} color="inherit">
                   <Body big>
                     Dodaj atrakcję
                   </Body>

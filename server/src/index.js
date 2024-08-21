@@ -72,6 +72,7 @@ app.post('/login', async (req, res) => {
         req.session.login=login;
         req.session.role=user.role;
         req.session.user = await db.get_user(user.user_id);
+        req.session.blocked = await db.is_user_blocked(user.user_id);
         res.json({authenticated:true});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -91,7 +92,8 @@ app.get('/logout', (req, res) => {
 app.get('/profile', async (req, res) => {
     
     if (req.session.user) {
-        res.json({authenticated : true, user : req.session.user, username: req.session.login, role: req.session.role});
+        res.json({authenticated : true, blocked : req.session.blocked, user : req.session.user, 
+            username: req.session.login, role: req.session.role});
     }
     else{
         res.json({authenticated : false});
@@ -295,8 +297,39 @@ app.get('/attraction/is_to_visit/:attr_id/:user_id', async (req,res) =>{
     }
 })
 
+app.get('/attraction/rating/:attr_id', async (req,res) =>{
+    try{
+        const rating = await db.get_rating(req.params["attr_id"]);
+        res.json({ rating: rating });
+    }
+    catch(error){
+        console.error('Error fetching attraction rating' + error);
+        res.status(500).json({error:'Error fetching attraction rating' + error});
+    }
+})
+
+app.get('/attraction/rating/:attr_id/:user_id', async (req,res) =>{
+    try{
+        const rating = await db.get_user_rating(req.params["user_id"], req.params["attr_id"]);
+        res.json({ rating: rating });
+    }
+    catch(error){
+        console.error('Error fetching user rating for attraction' + error);
+        res.status(500).json({error:'Error fetching user rating for attraction' + error});
+    }
+})
+
+app.post('/changeRating', async (req, res) => {
+    const { userId, attractionId, rating } = req.body;
+    try {
+      await db.add_or_update_rating(userId, attractionId, rating);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
 app.post('/changeFavourites', async (req, res) => {
-    console.log("dsfsfdsfsdfdsf")
     const { userId, attractionId } = req.body;
     try {
       await db.changeFavourites(userId, attractionId);
@@ -327,7 +360,85 @@ app.post('/addComment', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-  
+
+app.post('/attraction/delete', async (req, res) => {
+    const { attractionId } = req.body;
+    try {
+      await db.delete_attraction(attractionId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/attraction/update', async (req, res) => {
+    const { attractionId, newName } = req.body;
+    try {
+      await db.changeAttractionName(attractionId, newName);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/challenge/delete', async (req, res) => {
+    const { challengeId } = req.body;
+    try {
+      await db.delete_challenge(challengeId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/challenge/update', async (req, res) => {
+    const { challengeId, newName } = req.body;
+    try {
+      await db.changeChallengeName(challengeId, newName);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/user/block', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      await db.block_user(user_id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/user/unblock', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      await db.unblock_user(user_id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/user/is_blocked/:id', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+      const blocked = await db.is_user_blocked(req.params["id"]);
+      res.json({ blocked: blocked });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/users/blocked', async (req, res) => {
+    try {
+      const blocked = await db.get_blocked_users();
+      res.json({ blocked_users: blocked });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
 
 app.listen(port, () => {
       console.log('server listening on port', port)

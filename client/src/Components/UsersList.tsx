@@ -1,11 +1,16 @@
 import React from "react";
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { List, ListItem, ListItemText, Typography, Button } from "@mui/material";
 import styled from "@emotion/styled";
 import { UserWithLogin } from "../types";
 import { Title, bodyMixin } from "../Styles/Typography";
 import { shadows , colors} from "../Styles/Themes";
+import { useAuth } from "../Providers/AuthContext";
+
 interface UsersListProps {
   users: UserWithLogin[];
+  isManaging?: boolean;
+  changeUserBlock?: (id : number) => void;
+  blockedUsers? : number [];
 }
 // Stylizacja Listy
 const StyledList = styled(List)`
@@ -30,7 +35,12 @@ const StyledSecondaryTypography = styled(Typography)`
   ${bodyMixin} /* Zastosowanie mixin bodyMixin do secondary */
 `;
 
-const UsersList: React.FC<UsersListProps> = ({ users }) => {
+const UsersList: React.FC<UsersListProps> = ({ users, isManaging, changeUserBlock, blockedUsers }) => {
+  const { isAuthenticated, role } = useAuth();
+  const isUserBlocked = (id: number) => {
+    return blockedUsers?.includes(id);
+  };
+
   return (
     <StyledList>
       <Title>
@@ -42,6 +52,15 @@ const UsersList: React.FC<UsersListProps> = ({ users }) => {
             primary={<StyledPrimaryTypography>{`${user.name} ${user.surname}`}</StyledPrimaryTypography>}
             secondary={<StyledSecondaryTypography>{`${user.login} ${user.mail}`}</StyledSecondaryTypography>}
           />
+          {isAuthenticated && role === 'admin' && isManaging && (
+            <Button
+              variant="contained"
+              color={isUserBlocked(user.id) ? "secondary" : "primary"}
+              onClick={() => changeUserBlock!(user.id)}
+            >
+              {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}
+            </Button>
+          )}
         </StyledListItem>
       ))}
     </StyledList>

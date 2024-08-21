@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, List, ListItem, TextField, Button } from '@mui/material';
+import { CardContent, List, ListItem, TextField, Button } from '@mui/material';
 /** @jsxImportSource @emotion/react */
 import { Title, Body } from '../Styles/Typography';
 import { Comment } from '../types';
@@ -13,7 +13,7 @@ interface CommentsProps {
 }
 
 const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
-  const { user, isAuthenticated, role } = useAuth();
+  const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
   const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -21,6 +21,11 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
   };
 
   const handleAddComment = async () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.")
+      return;
+    }
+
     if (newComment.trim() === '') return;
 
     const commentData = {
