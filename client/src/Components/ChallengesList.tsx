@@ -9,8 +9,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Challenge } from "../types";
-import { Title } from "../Styles/Typography";
-import { bodyMixin } from '../Styles/Typography'; // Importowanie bodyMixin
+import { Title,  bodyMixin  } from "../Styles/Typography";
 
 interface ListProps {
   challenges: Challenge[];

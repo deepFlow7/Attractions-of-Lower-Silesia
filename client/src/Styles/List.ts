@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-
+import { sizes} from "../Styles/Themes";
 export interface ListContainerProps {
   three?: boolean;
   four?: boolean;
@@ -33,7 +33,6 @@ max-height: 85vh;
 
 export const ChallengesContainer = styled.div`
   width: 49%;
-  height: 85vh;
   @media (max-width: 850px) {
     width: 100%
   }
@@ -41,7 +40,7 @@ export const ChallengesContainer = styled.div`
 
 export const AdminContainer = styled.div`
   width: 32%;
-  height: 85vh;
+  height: calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
   overflow: auto;
   @media (max-width: 900px) {
     width: 48%;

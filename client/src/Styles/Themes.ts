@@ -22,6 +22,7 @@ export const sizes = {
   fontSize: '1.3rem',
   titleSize: '3rem',
   navbarHeight: '5rem',
+  buttonHeight: '5rem',
 };
 
 export const transitions = {
