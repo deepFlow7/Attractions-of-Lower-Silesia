@@ -20,7 +20,7 @@ const StyledAppBar = styled(AppBar)`
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 500;
+  z-index: 1001;
   height: ${sizes.navbarHeight};
 `;
 
