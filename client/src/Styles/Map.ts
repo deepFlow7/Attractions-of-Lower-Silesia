@@ -34,13 +34,12 @@ export const DropListContainer = styled.div<DropListContainerProps>`
 
 
 export const MapContainer = styled.div<MapContainerProps>`
-  height: 100%;
-  width: ${props => (props.four ? '52%' : '58%')};
+  height: 85vh;
+  width: ${props => (props.four ? '47%' : '58%')};
   overflow: hidden;
   @media (max-width: 1650px) {
     width: ${props => (props.four ? '68%' : '58%')};
     max-height: ${props => (props.four ? '70vh' : '100vh')};
-
   }
   @media (max-width: 1200px) {
     max-height: 70vh;

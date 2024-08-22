@@ -2,20 +2,24 @@
 import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
 import { colors, sizes, transitions, shadows, animations, gradients } from './Themes';
+import { bodyMixin } from './Typography';
 
-export const StyledButton = styled(Button)`
+export interface ButtonProps {
+  secondary?: boolean;
+}
+
+export const StyledButton = styled(Button)<ButtonProps>`
   text-transform: uppercase;
   text-decoration: none;
   display: inline-block;
   border-radius: ${sizes.borderRadius};
   position: relative;
-  font-size: ${sizes.fontSize};
-  border: none;
   transition-property: all;
   transition-duration: ${transitions.default};
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: ${colors.white};
+  ${bodyMixin};
+  color: ${props => (props.secondary ? colors.secondary : colors.dark)};
+
+  height: ${sizes.buttonHeight};
   padding: ${sizes.paddingVertical} ${sizes.paddingHorizontal};
 
   &.btn--primary {
@@ -31,10 +35,10 @@ export const StyledButton = styled(Button)`
   }
 
   &.btn--midToSecondary {
-    background: ${gradients.midToSecondary};
+    background: ${gradients.primaryToSecondary};
   }
   &.btn--primaryToMid {
-    background: ${gradients.primaryToMid};
+    background: ${gradients.primaryToSecondary};
   }
 
   &:hover {

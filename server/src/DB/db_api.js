@@ -23,7 +23,7 @@ class db_api {
 
     async get_users() {
         try {
-            const { rows } = await pool.query(`SELECT name, surname, mail, login \
+            const { rows } = await pool.query(`SELECT id, name, surname, mail, login \
                 FROM users, logins WHERE users.id=logins.user_id AND role='user'`);
             return rows;
         } catch (error) {
@@ -62,6 +62,7 @@ class db_api {
             throw error;
         }
     }
+
     static async findUserIdByUsername(username) {
         try {
             const result = await pool.query('SELECT id FROM users WHERE name = $1', [username]);
@@ -74,8 +75,48 @@ class db_api {
             console.error('Error finding user by username:', error);
             throw error;
         }
+    } 
+
+    async block_user(id) {
+        try {
+            const {rows} = await pool.query('SELECT role FROM logins WHERE user_id = $1', [id]);
+            if (rows.role == 'admin')
+                throw "Cannot blcok admin";
+            await pool.query('INSERT INTO blocked_users VALUES ($1, NOW())', [id]);
+        } catch (error) {
+            console.error('Error blocking user:', error);
+            throw error;
+        }
     }
-    
+
+    async unblock_user(id) {
+        try {
+            await pool.query('DELETE FROM blocked_users WHERE user_id = $1', [id]);
+        } catch (error) {
+            console.error('Error unblocking user:', error);
+            throw error;
+        }
+    }
+
+    async is_user_blocked(id) {
+        try {
+            const {rows} = await pool.query('SELECT * FROM blocked_users WHERE user_id = $1', [id]);
+            return rows.length > 0;
+        } catch (error) {
+            console.error('Error checking if user is blocked:', error);
+            throw error;
+        }
+    }
+
+    async get_blocked_users() {
+        try {
+            const {rows} = await pool.query('SELECT user_id FROM blocked_users');
+            return rows.map(row => row.user_id);
+        } catch (error) {
+            console.error('Error getting blocked users:', error);
+            throw error;
+        }
+    }
 
     //------LOGINS---------
     async new_login(user_id, login, password, role) {
@@ -160,6 +201,7 @@ class db_api {
             throw error;
         }
     }
+
     //---- WANTS TO VISIT -----------
     async isToVisit(attractionId, userId) {
         try {
@@ -228,6 +270,15 @@ class db_api {
         }
     }
 
+    async changeAttractionName(id, name) {
+        try {
+            await pool.query('UPDATE attractions SET name = $1 WHERE id = $2', [name, id]);
+        } catch (error) {
+            console.error("Error updating attraction data:", error);
+            throw error;
+        }
+    }
+
     async delete_attraction(id) {
         try {
             await pool.query('DELETE FROM attractions WHERE id = $1', [id]);
@@ -237,21 +288,62 @@ class db_api {
         }
     }
 
-    //------COMMENTS--------
-    async new_comment(author, content, votes, attraction, parent) {
+    //------RATINGS--------
+    async get_rating(attraction_id) {
         try {
-
-            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
-                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
-                [author, content, votes, attraction, parent]);
-            return rows[0].id;
-           
+            const { rows } = await pool.query('SELECT rating FROM attractions \
+                 WHERE id = $1', 
+                 [attraction_id]);
+            return rows[0].rating;
         } catch (error) {
-            console.error('Error creating new comment:', error);
+            console.error('Error fetching rating:', error);
+            throw error;
+        }
+    }
+
+    async get_user_rating(user_id, attraction_id) {
+        try {
+            const { rows } = await pool.query('SELECT rating FROM ratings \
+                 WHERE user_id = $1 AND attraction_id = $2', 
+                 [user_id, attraction_id]);
+            if (rows.length)
+                return rows[0].rating;
+            return 0;
+        } catch (error) {
+            console.error('Error fetching user rating:', error);
+            throw error;
+        }
+    }
+
+    async add_or_update_rating(user_id, attraction_id, rating) {
+        try {
+            if (await this.get_user_rating(user_id, attraction_id)) {
+                await pool.query('UPDATE ratings SET rating = $3 \
+                    WHERE user_id = $1 AND attraction_id = $2', 
+                    [user_id, attraction_id, rating]); 
+            }
+            else {
+                await pool.query('INSERT INTO ratings VALUES ($1, $2, $3)', 
+                    [user_id, attraction_id, rating]);
+            }
+        } catch (error) {
+            console.error('Error updating rating:', error);
             throw error;
         }
     }
     
+    //------COMMENTS--------
+    async new_comment(author, content, votes, attraction, parent) {
+        try {
+            const {rows} = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
+                VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+                [author, content, votes, attraction, parent]);
+            return rows[0].id;
+        } catch (error) {
+            console.error('Error creating new comment:', error);
+            throw error;
+        }
+    } 
 
     async get_comment(id) {
         try {
@@ -419,6 +511,15 @@ class db_api {
         }
     }
 
+    async changeChallengeName(id, name) {
+        try {
+            await pool.query('UPDATE challenges SET name = $1 WHERE id = $2', [name, id]);
+        } catch (error) {
+            console.error("Error updating challenge data:", error);
+            throw error;
+        }
+    }
+
     async delete_challenge(challenge_id) {
         try {
             await pool.query('DELETE FROM challenges WHERE id = $1', [challenge_id]);
@@ -473,8 +574,6 @@ class db_api {
             const result = await pool.query('SELECT * FROM visited_challenge_attractions \
                 WHERE user_id = $1 AND challenge_id = $2 AND attraction_id = $3', 
             [user_id, challenge_id, attraction_id]);
-            
-            console.log(result);
             if (result.rowCount > 0)
                 return;
     

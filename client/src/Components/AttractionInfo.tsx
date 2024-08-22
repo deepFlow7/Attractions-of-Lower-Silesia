@@ -1,54 +1,53 @@
 import React from 'react';
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
-import { Typography, Card, CardContent, List, ListItemText, ListItem } from '@mui/material';
+import { Card, CardContent, List, ListItemText, ListItem } from '@mui/material';
 import { Attraction } from '../types';
+import { colors, shadows } from '../Styles/Themes';
+import { Title, Body } from '../Styles/Typography';
 
 interface AttractionInfoProps {
   attraction: Attraction;
 }
 
-
-const TileCard = styled(Card)`
-  margin: 1%;
-  margin-top: 5%;
+export const Info = styled.div`
+  display: grid;
+  gap: 1rem;
+  background-color: ${colors.dark};
+  & > * {
+    background-color: ${colors.primary};
+    box-shadow: ${shadows.default};
+  }
 `;
 
 const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
-const { type, subtype, description, interactivity, time_it_takes, rating } = attraction;
-
-
-  return ( <>
-    <TileCard>
+  const { type, subtype, description, interactivity, time_it_takes, rating } = attraction;
+  return (
+  <Info>
     <CardContent>
-      <Typography variant="h5" gutterBottom>Opis</Typography>
-      <Typography variant="body1">{description}</Typography>
+      <Title small>Opis</Title>
+      <Body>{description}</Body>
     </CardContent>
-  </TileCard>
-  <TileCard>
     <CardContent>
-      <Typography variant="h5" gutterBottom>Typy i Podtypy</Typography>
-      <Typography variant="body1">Typ: {type}</Typography>
-      <Typography variant="body1">Podtyp: {subtype}</Typography>
+      <Title small>Typy i Podtypy</Title>
+      <Body>Typ: {type}</Body>
+      <Body>Podtyp: {subtype}</Body>
     </CardContent>
-  </TileCard>
-  <TileCard>
     <CardContent>
-      <Typography variant="h5" gutterBottom>Statystyki</Typography>
+      <Title small>Statystyki</Title>
       <List>
         <ListItem>
-          <ListItemText primary={`Interaktywność: ${interactivity}/10`} />
+          <Body>{`Interaktywność: ${interactivity}/10`} </Body>
         </ListItem>
         <ListItem>
-          <ListItemText primary={`Czas zwiedzania: ${time_it_takes} minut`} />
+          <Body>{`Czas zwiedzania: ${time_it_takes} minut`} </Body>
         </ListItem>
         <ListItem>
-          <ListItemText primary={`Ocena: ${rating ? rating.toFixed(1) : 'Brak oceny'}`} />
+          <Body>{`Ocena: ${rating ? rating.toFixed(1) : 'Brak oceny'}`} </Body>
         </ListItem>
       </List>
     </CardContent>
-  </TileCard>
-  </>
+  </Info>
   );
 };
 

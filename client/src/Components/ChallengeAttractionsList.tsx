@@ -6,14 +6,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography,
   Grid,
   Box,
   CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ChallengeAttraction } from "../types";
-
+import { bodyMixin, Title, Body } from '../Styles/Typography'; // Importowanie bodyMixin
+import { shadows } from "../Styles/Themes";
 interface ListProps {
   attractions: ChallengeAttraction[];
   onClick: (attraction: ChallengeAttraction) => void;
@@ -22,23 +22,21 @@ interface ListProps {
   loadingAttractions: { attraction_id: number }[];
 }
 
+// Stylowany komponent List
 const StyledList = styled(List)`
   border-radius: 8px;
   padding: 16px;
 `;
 
+// Stylowany komponent ListItem
 const StyledListItem = styled(ListItem)`
-  &:nth-of-type(odd) {
-  }
   &:hover {
-    background-color: #d0d0d0;
+    shadow: ${shadows.active};
   }
 `;
 
-const Title = styled(Typography)`
-  font-weight: bold;
-`;
 
+// Stylowany komponent VisitButton
 const VisitButton = styled(Button)`
   && {
     background-color: #42a5f5;
@@ -54,16 +52,11 @@ const VisitButton = styled(Button)`
   }
 `;
 
-const VisitedText = styled(Typography)`
-  && {
-    background-color: #d0d0d0;
-    color: white;
-    border-radius: 4px;
-    margin: 8px auto 0 auto;
-    display: block;
-    text-align: center;
-    width: 90%;
-    padding: 5px 0px;
+
+// Stylowany komponent ListItemText
+const StyledListItemText = styled(ListItemText)`
+  .MuiListItemText-primary {
+    ${bodyMixin}
   }
 `;
 
@@ -88,7 +81,7 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
 
   return (
     <StyledList>
-      <Title variant="h5">Lista Atrakcji</Title>
+      <Title >Lista Atrakcji</Title>
       <Box
         sx={{
           maxHeight: 400, 
@@ -98,42 +91,35 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
         <Grid container spacing={2}>
           {attractions.map((attraction) => (
             <Grid item xs={12} key={attraction.id}>
-              <Box
-                border={1}
-                borderColor="grey.400"
-                borderRadius={2}
-                padding={2}
-                marginBottom={2}
-              >
+             
                 <Button
                   component={Link}
-                  to={"/attraction/" + attraction.id}
+                  to={`/attraction/${attraction.id}`}
                   color="inherit"
                   key={attraction.id}
                   fullWidth
                   style={{ justifyContent: "flex-start" }}
                 >
-                  <StyledListItem key={attraction.id}>
-                    <ListItemText primary={attraction.name} />
-                    <ListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }}/>
+                  <StyledListItem>
+                    <StyledListItemText primary={attraction.name} />
+                    <StyledListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }}/>
                   </StyledListItem>
                 </Button>
                 {showVisitButtons &&
                   (isAttractionVisited(attraction.id) ? (
-                    <VisitedText variant="body1">
+                    <Body gray>
                       Odwiedzone 
-                    </VisitedText>
+                    </Body>
                   ) : (
                     isAttractionLoading(attraction.id) ? (
-                      <VisitedText style={{background: "#126cb5"}}>
+                      <Body gray>
                          Sprawdzam lokalizację <CircularProgress size={15}/>
-                      </VisitedText>
+                      </Body>
                     ) : (
                     <VisitButton onClick={() => onClick(attraction)}>
                       Odwiedź 
                     </VisitButton>
                   )))}
-              </Box>
             </Grid>
           ))}
         </Grid>

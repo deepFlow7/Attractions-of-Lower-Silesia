@@ -1,18 +1,17 @@
 import styled from "@emotion/styled";
-
+import { sizes} from "../Styles/Themes";
 export interface ListContainerProps {
   three?: boolean;
   four?: boolean;
 }
 
 export const ListContainer = styled.div<ListContainerProps>`
-  width: 15%;
-  max-height: 85vh;
+width: 20%;
+max-height: 85vh;
   overflow: auto;
   @media (max-width: 1650px) {
-    width: ${props => (props.four ? '48%' : '15%')};
-    max-height: ${props => (props.four ? '70vh' : '100vh')};
-
+    width: ${props => (props.four ? '48%' : '24%')};
+    max-height: ${props => (props.four ? '70vh' : '85vh')};
   }
   @media (max-width: 1200px) {
     width: ${props => (props.four ? '48%' : '100%')};
@@ -41,7 +40,7 @@ export const ChallengesContainer = styled.div`
 
 export const AdminContainer = styled.div`
   width: 32%;
-  height: 100vh;
+  height: calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
   overflow: auto;
   @media (max-width: 900px) {
     width: 48%;

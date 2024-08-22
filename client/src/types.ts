@@ -27,6 +27,11 @@ export interface NewAttraction {
   photos: NewPhoto[];
 }
 
+export interface AttractionWithComments {
+  attraction: Attraction;
+  comments: Comment[];
+}
+
 interface UserData {
   name: string;
   surname: string;
@@ -39,6 +44,7 @@ export interface User extends UserData{
 
 export interface UserWithLogin extends UserData{
   login: string;
+  id: number;
 }
 
 export interface Login {
