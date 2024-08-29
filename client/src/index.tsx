@@ -11,7 +11,6 @@ import SignUpForm from './Components/SignUpForm';
 import LoginForm from './Components/LoginForm';
 import NewChallengeForm from './Components/NewChallengeForm';
 import { AuthProvider, useAuth } from './Providers/AuthContext';
-import {SearchProvider} from './Providers/SearchContext';
 import RoutePlanner from './Components/RoutePlanner';
 import AdminView from './Components/AdminView';
 
@@ -34,7 +33,6 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root!.render(
   <React.StrictMode>
     <AuthProvider>
-    <SearchProvider>
     <BrowserRouter>
       <StyledNavbar />
       <Routes>
@@ -49,7 +47,6 @@ root!.render(
         <Route path="/route_planner" element={<RoutePlanner />} />
       </Routes>
     </BrowserRouter>
-    </SearchProvider>
     </AuthProvider>
 
   </React.StrictMode>

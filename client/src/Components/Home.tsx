@@ -8,7 +8,6 @@ import AttractionsList from './AttractionsList';
 
 import { Attraction, possible_type, subtypes } from '../types';
 import FilterList from './FilterList';
-import { useSearch } from '../Providers/SearchContext';
 import { ViewContainer } from '../Styles/View';
 import { MapContainer, MapContainerProps } from '../Styles/Map';
 import { ListContainer } from '../Styles/List';
@@ -36,7 +35,7 @@ const Home = () => {
   const y = 17.0385;
   const [attractions, setAttractions] = useState<Attraction[] | null>(null);
   const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
-  const { search, setSearch } = useSearch();
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     api.get('/api/attractions')
