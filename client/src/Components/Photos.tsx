@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Grid, CardContent, Button } from '@mui/material';
+
 import { Photo } from '../types';
-import { Grid, Card, CardContent, Button } from '@mui/material';
-import { Title, Body} from '../Styles/Typography';
+import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 
 interface PhotoProps {
@@ -14,11 +14,11 @@ interface PhotoProps {
 const Photos: React.FC<PhotoProps> = ({ photos, title }) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
-  const handleNextPhoto = (photos: Photo[]) => {
+  const handleNextPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
   };
 
-  const handlePreviousPhoto = (photos: Photo[]) => {
+  const handlePreviousPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
   };
 
@@ -31,21 +31,27 @@ const Photos: React.FC<PhotoProps> = ({ photos, title }) => {
         <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {photos.length > 0 && (
             <>
-              <img src={photos[currentPhotoIndex].photo} alt={`Photo ${currentPhotoIndex + 1}`} style={{ maxWidth: '100%', height: 'auto' }} />
+              <img
+                src={photos[currentPhotoIndex].photo}
+                alt={`Photo ${currentPhotoIndex + 1}`}
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
               <Body>{photos[currentPhotoIndex].caption}</Body>
             </>
           )}
         </Grid>
         <Grid item xs={6}>
-        <StyledButton>
-
-          <Button onClick={() => handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
+          <StyledButton>
+            <Button onClick={handlePreviousPhoto} variant="contained" color="primary" fullWidth>
+              Poprzednie
+            </Button>
           </StyledButton>
-      
         </Grid>
         <Grid item xs={6}>
           <StyledButton>
-            <Button onClick={() => handleNextPhoto(photos)} variant="contained" color="primary" fullWidth>Następne</Button>
+            <Button onClick={handleNextPhoto} variant="contained" color="primary" fullWidth>
+              Następne
+            </Button>
           </StyledButton>
         </Grid>
       </Grid>

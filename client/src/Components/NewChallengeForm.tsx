@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, IconButton, InputBase, useMediaQuery, Button } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChallengeForm, Attraction, challengeAttractionInput, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
-import FilterList from './FilterList';
 import styled from '@emotion/styled';
+import { Box, IconButton, InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+
+import { ChallengeForm, Attraction, ChallengeAttractionInput, PossibleType, 
+  Subtypes, possibleSubtypes, possibleTypes } from '../types';
+import FilterList from './FilterList';
 import api from '../API/api';
 import Map, { MapRef } from './Map';
 import { ViewContainer } from '../Styles/View';
@@ -17,13 +19,14 @@ import { Title, Body, bodyMixin } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 
 const FormContainer = styled(ViewContainer)`
-width: 100vw;
-display: flex;
+  width: 100vw;
+  display: flex;
   flex-wrap: wrap;
+
   & > * {
     margin: 0 0;
     padding: 1rem;
-    box-sizing: border-box;  /* Zapewnia, że border nie wpływa na rozmiar elementu */
+    box-sizing: border-box;
   }
 `;
 
@@ -35,6 +38,7 @@ const StyledInputBase = styled(InputBase)`
   padding: 4px 8px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   ${bodyMixin};
+
   &:hover {
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
   }
@@ -42,24 +46,22 @@ const StyledInputBase = styled(InputBase)`
 
 const TitleContainer = styled.div`
   min-width: 20rem;
-`
+`;
 
 const ScrollableBox = styled(Box)`
   max-height: 40rem;
   overflow-y: auto;
 `;
 
-
 const NewChallengeForm = () => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [selectedAttractions, setSelectedAttractions] = useState<challengeAttractionInput[]>([]);
+  const [selectedAttractions, setSelectedAttractions] = useState<ChallengeAttractionInput[]>([]);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<possible_type[]>(possibleTypes);
-  const [selectedSubtypes, setSelectedSubtypes] = useState<subtypes[]>(possibleSubtypes);
+  const [selectedTypes, setSelectedTypes] = useState<PossibleType[]>(possibleTypes);
+  const [selectedSubtypes, setSelectedSubtypes] = useState<Subtypes[]>(possibleSubtypes);
   const initialMapView = { center: { x: 51.1079, y: 17.0385 }, zoom: 8 };
-  const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(
-    initialMapView);
+  const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(initialMapView);
   const [search, setSearch] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
 
@@ -83,40 +85,32 @@ const NewChallengeForm = () => {
   const onSubmit = (newChallenge: ChallengeForm) => {
     api.post('/api/new_challenge', { newChallenge })
       .then(response => {
+        // Handle successful response
       })
       .catch(error => {
         console.error('There was an error sending the data!', error);
       });
-  }
+  };
 
   const handleGetView = () => {
     if (mapRef.current) {
       const view = mapRef.current.getView();
-      const current_view = {
+      const currentView = {
         center: { x: view.center.lat, y: view.center.lng },
         zoom: view.zoom
-      }
-      setMapView(current_view);
-      return current_view;
+      };
+      setMapView(currentView);
+      return currentView;
     }
-    else
-      return mapView;
+    return mapView;
   };
 
   const handleSubmit = () => {
     const newErrors: { name?: string; description?: string; attractions?: string } = {};
 
-    if (!name) {
-      newErrors.name = 'Nazwa jest wymagana';
-    }
-
-    if (!description) {
-      newErrors.description = 'Opis jest wymagany';
-    }
-
-    if (selectedAttractions.length === 0) {
-      newErrors.attractions = 'Musisz wybrać co najmniej jedną atrakcję';
-    }
+    if (!name) newErrors.name = 'Nazwa jest wymagana';
+    if (!description) newErrors.description = 'Opis jest wymagany';
+    if (selectedAttractions.length === 0) newErrors.attractions = 'Musisz wybrać co najmniej jedną atrakcję';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -124,7 +118,6 @@ const NewChallengeForm = () => {
     }
 
     const view = handleGetView();
-
     const newChallenge: ChallengeForm = {
       name,
       description,
@@ -134,12 +127,8 @@ const NewChallengeForm = () => {
     };
 
     onSubmit(newChallenge);
-
-    alert("Dodano wyzwanie.");
-    if (returnUrl)
-      navigate(returnUrl);
-    else
-      navigate('/');
+    alert('Dodano wyzwanie.');
+    navigate(returnUrl || '/');
   };
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, attraction: Attraction) => {
@@ -161,14 +150,12 @@ const NewChallengeForm = () => {
   };
 
   const handleRemoveAttraction = (attractionId: number) => {
-    setSelectedAttractions((prevSelected) => prevSelected.filter(attraction => attraction.id !== attractionId));
+    setSelectedAttractions(prevSelected => prevSelected.filter(attraction => attraction.id !== attractionId));
   };
 
   const handlePointsChange = (attractionId: number, points: number) => {
-    setSelectedAttractions((prevSelected) =>
-      prevSelected.map(attraction =>
-        attraction.id === attractionId ? { ...attraction, points } : attraction
-      )
+    setSelectedAttractions(prevSelected =>
+      prevSelected.map(attraction => (attraction.id === attractionId ? { ...attraction, points } : attraction))
     );
   };
 
@@ -176,44 +163,43 @@ const NewChallengeForm = () => {
     selectedAttractions.some(selected => selected.id === attraction.id)
   );
 
-  function handleFilterChange(selectedTypes: possible_type[], selectedSubtypes: subtypes[]) {
+  const handleFilterChange = (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[]) => {
     setSelectedTypes(selectedTypes);
     setSelectedSubtypes(selectedSubtypes);
-  }
+  };
 
   const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-  }
+  };
 
   return (
     <FormContainer>
       <TitleContainer>
-        <Title >Nowe Wyzwanie</Title>
+        <Title>Nowe Wyzwanie</Title>
         <InputContainer>
           <StyledTextField
             fullWidth
             label="Nazwa"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
             error={!!errors.name}
             helperText={errors.name}
           />
         </InputContainer>
       </TitleContainer>
-      <InputContainer style={{ width: 'calc(100vw - 24rem)' }}>
 
+      <InputContainer style={{ width: 'calc(100vw - 24rem)' }}>
         <StyledTextField
           fullWidth
           multiline
           rows={4}
           label="Opis"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
           error={!!errors.description}
           helperText={errors.description}
         />
       </InputContainer>
-
 
       <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
         <Map
@@ -262,7 +248,7 @@ const NewChallengeForm = () => {
                 <div
                 key={index}
                 draggable
-                onDragStart={(event) => handleDragStart(event, attraction)}
+                onDragStart={event => handleDragStart(event, attraction)}
                 style={{ padding: '0.5rem', cursor: 'move' }}
               >
                 <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
@@ -282,23 +268,24 @@ const NewChallengeForm = () => {
         <Body>Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Body>
         <ScrollableBox style={{ minHeight: '50px' }}>
           {selectedAttractions.map((selected, index) => {
-            const attraction = attractions.find(attr => attr.id == selected.id);
+            const attraction = attractions.find(attr => attr.id === selected.id);
             return (
               <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
                 <Body>
-                  {attraction &&
+                  {attraction && (
                     <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
                       {attraction.name}
-                    </a>}
+                    </a>
+                  )}
                 </Body>
                 <StyledTextField
                   type="number"
                   label="Punkty"
                   inputProps={{ min: 1, max: 100 }}
                   value={selected.points}
-                  onChange={(e) => handlePointsChange(selected.id, parseInt(e.target.value))}
+                  onChange={e => handlePointsChange(selected.id, parseInt(e.target.value))}
                   style={{ width: '100px', marginRight: '8px' }}
-                  onBlur={(e) => {
+                  onBlur={e => {
                     const value = parseInt(e.target.value);
                     if (value < 1) {
                       handlePointsChange(selected.id, 1);
@@ -312,9 +299,7 @@ const NewChallengeForm = () => {
             );
           })}
         </ScrollableBox>
-        {!!errors.attractions && (
-          <Body error>{errors.attractions}</Body>
-        )}
+        {!!errors.attractions && <Body error>{errors.attractions}</Body>}
         <StyledButton onClick={handleSubmit}>Zapisz Wyzwanie</StyledButton>
       </ListContainer>
     </FormContainer>

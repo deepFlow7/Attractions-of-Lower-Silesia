@@ -1,89 +1,101 @@
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
-import { User, role } from '../types';
+
 import { useSessionStorage } from '../Hooks/SessionStorage';
 import api from '../API/api';
+import { User, Role } from '../types';
 
-interface Context{
-    isAuthenticated: boolean,
-    isBlocked: boolean,
-    login: (username:string,password:string)=>void,
-    logout: ()=>void,
-    user: User|null,
-    username: string,
-    role: role,
-    setRole: (r:role)=>void,
-    updateUsername: (s:string)=>void,
-    updateUser: (new_user:User|null)=>void
+interface Context {
+  isAuthenticated: boolean;
+  isBlocked: boolean;
+  login: (username: string, password: string) => void;
+  logout: () => void;
+  user: User | null;
+  username: string;
+  role: Role;
+  setRole: (r: Role) => void;
+  updateUsername: (s: string) => void;
+  updateUser: (new_user: User | null) => void;
 }
 
 const AuthContext = createContext({} as Context);
 
-export const AuthProvider = ({ children } : {children : ReactNode}) => {
-    const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?',false);
-    const [isBlocked, setIsBlocked] = useSessionStorage('blocked?',false);
-    const [user, setUser] = useSessionStorage('user',null);
-    const [role, setRole] = useSessionStorage('role',null);
-    const [username, updateUsername] = useSessionStorage('username', null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?', false);
+  const [isBlocked, setIsBlocked] = useSessionStorage('blocked?', false);
+  const [user, setUser] = useSessionStorage('user', null);
+  const [role, setRole] = useSessionStorage('role', null);
+  const [username, updateUsername] = useSessionStorage('username', null);
 
-    const fetchSession = async () => {
-        try {
-            const response = await api.get('/profile');
-            if (response.data.authenticated) {
-                setIsAuthenticated(true);
-                setIsBlocked(response.data.blocked);
-                setUser(response.data.user);
-                updateUsername(response.data.username);
-                setRole(response.data.role);
-            } else {
-                setIsAuthenticated(false);
-                setUser(null);
-                updateUsername('');
-                setRole(null);
-            }
-        } catch (error) {
-            console.error('Failed to fetch session', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchSession();
-    }, []);
-    
-
-    const updateUser=(new_user:User|null)=>{
-        setUser(new_user);
+  const fetchSession = async () => {
+    try {
+      const response = await api.get('/profile');
+      if (response.data.authenticated) {
+        setIsAuthenticated(true);
+        setIsBlocked(response.data.blocked);
+        setUser(response.data.user);
+        updateUsername(response.data.username);
+        setRole(response.data.role);
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        updateUsername('');
+        setRole(null);
+      }
+    } catch (error) {
+      console.error('Failed to fetch session', error);
     }
+  };
 
-    const login = async (username:string,password:string) => {
-        try {
-            const response = await api.post('/login',{login:username,password});
-            if (response.data.authenticated) {
-                setIsAuthenticated(true);
-                fetchSession();
-            }
-        } catch (error) {
-            console.error('Login failed', error);
-        }
-    };
+  useEffect(() => {
+    fetchSession();
+  }, []);
 
-    const logout = async () => {
-        try {
-            await api.get('/logout');
-            setIsAuthenticated(false);
-            setUser(null);
-            updateUsername('');
-            setRole(null);
-        } catch (error) {
-            console.error('Logout failed', error);
-        }
-    };
+  const updateUser = (new_user: User | null) => {
+    setUser(new_user);
+  };
 
+  const login = async (username: string, password: string) => {
+    try {
+      const response = await api.post('/login', { login: username, password });
+      if (response.data.authenticated) {
+        setIsAuthenticated(true);
+        fetchSession();
+      }
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
 
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, isBlocked, login, logout, user, username, role, updateUsername, setRole, updateUser } as Context}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const logout = async () => {
+    try {
+      await api.get('/logout');
+      setIsAuthenticated(false);
+      setUser(null);
+      updateUsername('');
+      setRole(null);
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        isBlocked,
+        login,
+        logout,
+        user,
+        username,
+        role,
+        updateUsername,
+        setRole,
+        updateUser
+      } as Context}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);
