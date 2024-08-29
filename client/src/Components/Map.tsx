@@ -21,7 +21,7 @@ const createCustomIcon = ({iconUrl} : {iconUrl: string}): L.Icon => {
 };
 
 const corgiIcon = L.icon({
-    iconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0w828bdU5VGkb_MDCoKUehyDV7YzQBhNu5vd9naFgQ&s',
+    iconUrl: '/obrazki/corgi.png',
     iconSize: [50, 50],
     iconAnchor: [25, 5],
 });
