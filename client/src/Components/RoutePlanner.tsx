@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Grid, Button, InputBase } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -16,6 +16,7 @@ import { Input } from '../Styles/Input';
 import { Body, Title } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 import {colors } from '../Styles/Themes';
+
 const ScrollableBox = styled.div`
   overflow-y: auto;
 `;
@@ -29,6 +30,9 @@ const RoutePlanner = () => {
   const [search, setSearch] = useState<string>('');
   const [refreshKey, setRefreshKey] = useState(0);
 
+  const mapRef = useRef<MapRef>(null);
+  const isMobile = useMediaQuery('(max-width:1300px)');
+
   useEffect(() => {
     api.get('/api/attractions')
       .then(response => {
@@ -38,8 +42,6 @@ const RoutePlanner = () => {
         console.error('There was an error fetching the data!', error);
       });
   }, []);
-
-  const mapRef = useRef<MapRef>(null);
 
   const reset = () => {
     setSelectedAttractions([]);
@@ -233,6 +235,21 @@ const RoutePlanner = () => {
             !selectedAttractions.includes(attraction.id) &&
             attraction.name.toLowerCase().includes(search.toLowerCase()) &&
             selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
+              isMobile ? (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
+                  <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1, textDecoration: 'none' }}>
+                    {attraction.name}
+                  </a>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => setSelectedAttractions((prevSelected) => [...prevSelected, attraction.id])}
+                  >
+                    +
+                  </Button>
+                </div>
+              ) : (
               <div
                 key={index}
                 draggable
@@ -244,7 +261,7 @@ const RoutePlanner = () => {
                   {attraction.name}
                 </a>
               </div>
-            )))}
+            ))))}
         </ScrollableBox>
       </DropListContainer>
 
@@ -254,18 +271,12 @@ const RoutePlanner = () => {
 
       <ListContainer four>
         <Title small>Długość trasy: {calculateTotalDistance()} km</Title>
-        <Button onClick={reset}>
-          <StyledButton>
+          <StyledButton onClick={reset}>
             Zresetuj trasę
           </StyledButton>
-        </Button>
-        <Button onClick={calculate_shortest_path}>
-          <StyledButton>
-
+        <StyledButton onClick={calculate_shortest_path}>
             Sprawdź najkrótszą trasę
-          </StyledButton>
-
-        </Button>
+        </StyledButton>
         <Title small>Wybrane atrakcje (dostosuj kolejność)</Title>
         <ScrollableBox>
           {selectedAttractions.map((selected, index) => {
@@ -285,7 +296,7 @@ const RoutePlanner = () => {
                     </a>}
                 </Body>
                 
-                <StyledButton secondary onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
+                <StyledButton onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
               </div>
             );
           })}

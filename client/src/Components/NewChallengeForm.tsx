@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, IconButton, InputBase } from '@mui/material';
+import { Box, IconButton, InputBase, useMediaQuery, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChallengeForm, Attraction, challengeAttractionInput, possible_type, subtypes, possibleSubtypes, possibleTypes } from '../types';
@@ -13,9 +13,9 @@ import { ListContainer } from '../Styles/List';
 import { FilterContainer } from '../Styles/Filter';
 import { InputContainer } from '../Styles/TextField';
 import StyledTextField from '../Styles/TextField';
-
 import { Title, Body, bodyMixin } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
+
 const FormContainer = styled(ViewContainer)`
 width: 100vw;
 display: flex;
@@ -44,7 +44,6 @@ const TitleContainer = styled.div`
   min-width: 20rem;
 `
 
-
 const ScrollableBox = styled(Box)`
   max-height: 40rem;
   overflow-y: auto;
@@ -67,6 +66,7 @@ const NewChallengeForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
+  const isMobile = useMediaQuery('(max-width:1300px)');
 
   useEffect(() => {
     api.get('/api/attractions')
@@ -148,12 +148,16 @@ const NewChallengeForm = () => {
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     const attraction = JSON.parse(event.dataTransfer.getData('attraction'));
-    const newSelected = { id: attraction.id, points: 10 };
-    setSelectedAttractions((prevSelected) => [...prevSelected, newSelected]);
+    selectAttraction(attraction);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+  };
+
+  const selectAttraction = (attraction: Attraction) => {
+    const newSelected = { id: attraction.id, points: 10 };
+    setSelectedAttractions((prevSelected) => [...prevSelected, newSelected]);
   };
 
   const handleRemoveAttraction = (attractionId: number) => {
@@ -223,7 +227,7 @@ const NewChallengeForm = () => {
 
       <DropListContainer four>
         <Body>
-          Atrakcje (przeciągnij wybrane na mapkę)
+          Atrakcje ({isMobile ? 'zaznacz, aby dodać' : 'przeciągnij wybrane na mapkę'})
         </Body>
         <StyledInputBase
           placeholder="Wyszukaj..."
@@ -238,8 +242,24 @@ const NewChallengeForm = () => {
         <ScrollableBox>
           {attractions.map((attraction, index) => (
             attraction.name.toLowerCase().includes(search.toLowerCase()) &&
-            selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && (
-              <div
+            selectedSubtypes.includes(attraction.subtype) && selectedTypes.includes(attraction.type) && 
+            !selectedAttractions.some(selected => selected.id === attraction.id) && (
+              isMobile ? (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
+                  <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1 }}>
+                    {attraction.name}
+                  </a>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => selectAttraction(attraction)}
+                  >
+                    +
+                  </Button>
+                </div>
+              ) : (
+                <div
                 key={index}
                 draggable
                 onDragStart={(event) => handleDragStart(event, attraction)}
@@ -249,6 +269,7 @@ const NewChallengeForm = () => {
                   {attraction.name}
                 </a>
               </div>
+              )
             )))}
         </ScrollableBox>
       </DropListContainer>
