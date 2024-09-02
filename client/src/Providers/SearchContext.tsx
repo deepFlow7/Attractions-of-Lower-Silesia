@@ -1,13 +1,13 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-interface Context{
-    search: string,
-    setSearch: (new_str:string)=>void
+interface Context {
+  search: string;
+  setSearch: (new_str: string) => void;
 }
 
 const SearchContext = createContext({} as Context);
 
-export const SearchProvider = ({ children } : {children : ReactNode}) => {
+export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useState("");
 
   return (

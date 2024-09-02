@@ -1,21 +1,16 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import api from '../API/api';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../Providers/AuthContext';
-import { User } from '../types';
-import { ViewContainer } from '../Styles/View';
-import StyledTextField from '../Styles/TextField';
-import { InputContainer} from '../Styles/TextField';
+import { Button } from '@mui/material';
 
+import { useAuth } from '../Providers/AuthContext';
+import StyledTextField from '../Styles/TextField';
+import { InputContainer } from '../Styles/TextField';
 import { StyledButton } from '../Styles/Button';
-import {Title} from '../Styles/Typography';
-import { Grid, Typography, TextField, Button } from '@mui/material';
+import { Title } from '../Styles/Typography';
 import { FormContainer, FormContent } from '../Styles/Form';
 
-
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { login } = useAuth();
@@ -27,17 +22,18 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      login(username, password);
-      if (returnUrl)
+      await login(username, password);
+      if (returnUrl) {
         navigate(returnUrl);
-      else
-        navigate('/');
-    } catch (error: any) {
-      var status = error.response.status;
-      if (status == 400) {
-        alert("błędne hasło lub nieznany użytkownik");
       } else {
-        alert("błąd serwera, odczekaj chwilę i spróbuj ponownie");
+        navigate('/');
+      }
+    } catch (error: any) {
+      const status = error.response?.status;
+      if (status === 400) {
+        alert('Błędne hasło lub nieznany użytkownik');
+      } else {
+        alert('Błąd serwera, odczekaj chwilę i spróbuj ponownie');
       }
     }
   };
@@ -46,13 +42,29 @@ const LoginForm = () => {
     <FormContainer>
       <Title>Logowanie</Title>
       <FormContent>
-      <InputContainer>
-      <StyledTextField fullWidth label="Login" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </InputContainer><InputContainer>
-      <StyledTextField fullWidth label="Hasło" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </InputContainer>
-      <StyledButton  onClick={handleSubmit} fullWidth>Zaloguj się</StyledButton>
-      <Button component={Link} to='/signup'  fullWidth>Zarejestruj</Button>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Login"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Hasło"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </InputContainer>
+        <StyledButton onClick={handleSubmit} fullWidth>
+          Zaloguj się
+        </StyledButton>
+        <Button component={Link} to="/signup" fullWidth>
+          Zarejestruj
+        </Button>
       </FormContent>
     </FormContainer>
   );
