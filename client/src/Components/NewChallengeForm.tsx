@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Box, IconButton, InputBase } from '@mui/material';
+import { Box, IconButton, InputBase, Button, useMediaQuery } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { ChallengeForm, Attraction, ChallengeAttractionInput, PossibleType, 
@@ -85,7 +85,6 @@ const NewChallengeForm = () => {
   const onSubmit = (newChallenge: ChallengeForm) => {
     api.post('/api/new_challenge', { newChallenge })
       .then(response => {
-        // Handle successful response
       })
       .catch(error => {
         console.error('There was an error sending the data!', error);

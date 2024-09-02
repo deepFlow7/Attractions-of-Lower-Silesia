@@ -52,7 +52,7 @@ const Registration: React.FC = () => {
 
   const registerUser = async (newUser: NewUser): Promise<boolean> => {
     try {
-      const response = await api.post('/api/signup', newUser);
+      const response = await api.post('/api/signup', { newUser });
       return response.data.success;
     } catch (error) {
       console.error('There was an error sending the data!', error);

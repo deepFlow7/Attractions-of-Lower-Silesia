@@ -250,7 +250,7 @@ const RoutePlanner: React.FC = () => {
           <StyledButton onClick={reset}>
             Zresetuj trasę
           </StyledButton>
-        <StyledButton onClick={calculate_shortest_path}>
+        <StyledButton onClick={calculateShortestPath}>
             Sprawdź najkrótszą trasę
         </StyledButton>
         <Title small>Wybrane atrakcje (dostosuj kolejność)</Title>

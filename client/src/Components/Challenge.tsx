@@ -128,7 +128,7 @@ const ChallengeView: React.FC = () => {
         );
 
         if (accuracy > 50) {
-          alert("Cannot get your precise location.");
+          alert("Nie możemy pobrać twojej dokładnej lokalizacji.");
           return;
         }
 
@@ -142,7 +142,7 @@ const ChallengeView: React.FC = () => {
         const roundedDistance = Math.round(distance / 10) * 10;
 
         if (roundedDistance > 80) {
-          alert(`You are not at the location. The attraction is ${roundedDistance}m from your current location.`);
+          alert("Nie jesteś na miejscu, obiekt znajduje się " + distance + "m od twojej obecnej lokalizacji.");
           return;
         }
 
@@ -165,7 +165,7 @@ const ChallengeView: React.FC = () => {
       setLoadingAttractions((prev) =>
         prev.filter((a) => a.attraction_id !== attraction.id)
       );
-      alert("Location is disabled or unsupported by this browser.");
+      alert("Lokalizacja jest wyłączona lub nieobsługiwana przez tę przeglądarkę.");
       console.log("Failed to get location.");
       return;
     }
@@ -202,7 +202,7 @@ const ChallengeView: React.FC = () => {
           <RankingTable key={refreshKey} challengeId={id ? parseInt(id) : null} />
           {user && role === "user" && !takesPart && (
             <StyledButton onClick={handleParticipation}>
-              Join Challenge
+              Weź udział
             </StyledButton>
           )}
         </CardContent>

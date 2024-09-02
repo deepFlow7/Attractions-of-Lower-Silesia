@@ -63,7 +63,7 @@ const AdminView: React.FC = () => {
     const fetchBlockedUsers = async () => {
       try {
         const response = await api.get('/api/users/blocked');
-        setBlockedUsers(response.data.blocked_users);
+        setBlockedUsers(response.data.blockedUsers);
       } catch (error) {
         console.error('There was an error fetching the blocked users data!', error);
       }
@@ -150,7 +150,7 @@ const AdminView: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/user/block', { user_id: id });
+      await api.post('/api/user/block', { userId: id });
       setBlockedUsers(prevBlocked =>
         [...prevBlocked, id]
       );
@@ -164,7 +164,7 @@ const AdminView: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/user/unblock', { user_id: id });
+      await api.post('/api/user/unblock', { userId: id });
       setBlockedUsers(prevBlocked =>
         prevBlocked.filter(userId => userId !== id)
       );

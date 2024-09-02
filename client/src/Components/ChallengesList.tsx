@@ -24,20 +24,17 @@ interface ListProps {
   onSave?: (id: number, newName: string) => void; 
 }
 
-// Styled List component
 const StyledList = styled(List)`
   border-radius: 8px;
   padding: 16px;
 `;
 
-// Styled ListItem component
 const StyledListItem = styled(ListItem)`
   &:hover {
     background-color: #d0d0d0;
   }
 `;
 
-// Styled ListItemText component
 const StyledListItemText = styled(ListItemText)`
   .MuiListItemText-primary {
     ${bodyMixin}
