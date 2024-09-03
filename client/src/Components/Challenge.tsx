@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import api from '../API/api';
-import { useParams } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
-import { Card, CardContent, Grid, Typography, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { CardContent } from "@mui/material";
+
+import api from '../API/api';
 import Map from "./Map";
 import ChallengeAttractionsList from "./ChallengeAttractionsList";
 import RankingTable from "./Ranking";
-import { Challenge, ChallengeAttraction } from "../types";
 import { useAuth } from "../Providers/AuthContext";
+import { Challenge, ChallengeAttraction } from "../types";
 import { ViewContainer } from '../Styles/View';
 import { MapContainer } from '../Styles/Map';
 import { DictionaryContainer } from '../Styles/Dictionary';
-import {Title, Body} from '../Styles/Typography';
+import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 
 function haversineDistanceBetweenPoints(
@@ -48,9 +48,9 @@ const ChallengeView: React.FC = () => {
 
   const { id } = useParams();
 
-  const get_challenge_data = () => {
+  const getChallengeData = () => {
     api
-      .get("/api/challenge/" + id)
+      .get(`/api/challenge/${id}`)
       .then((response) => {
         setChallenge(response.data);
       })
@@ -60,8 +60,8 @@ const ChallengeView: React.FC = () => {
   };
 
   useEffect(() => {
-    get_challenge_data();
-    if (user && role == "user") {
+    getChallengeData();
+    if (user && role === "user") {
       api
         .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
         .then((response) => {
@@ -80,21 +80,23 @@ const ChallengeView: React.FC = () => {
         .catch((error) => {
           console.error("There was an error fetching the data!", error);
         });
-    } else console.log("nie zalogowoano");
-  }, [id, user]);
+    } else {
+      console.log("Not authenticated");
+    }
+  }, [id, user, role]);
 
   if (!challenge) {
     return <div>Loading...</div>;
   }
 
   const handleParticipation = () => {
-    if (!user || role != "user") return;
+    if (!user || role !== "user") return;
     api
-      .post("/api/start_challenge/" + challenge.id + "/" + user.id)
-      .then((response) => {
+      .post(`/api/start_challenge/${challenge.id}/${user.id}`)
+      .then(() => {
         setTakesPart(true);
-        get_challenge_data();
-        setRefreshKey(key => key + 1);
+        getChallengeData();
+        setRefreshKey((key) => key + 1);
       })
       .catch((error) => {
         console.error("There was an error starting the challenge:", error);
@@ -118,11 +120,8 @@ const ChallengeView: React.FC = () => {
     ]);
 
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-
-        const x = position.coords.latitude;
-        const y = position.coords.longitude;
-        const accuracy = position.coords.accuracy;
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude, accuracy } = position.coords;
 
         setLoadingAttractions((prev) =>
           prev.filter((a) => a.attraction_id !== attraction.id)
@@ -133,16 +132,16 @@ const ChallengeView: React.FC = () => {
           return;
         }
 
-        var distance = haversineDistanceBetweenPoints(
-          x,
-          y,
+        const distance = haversineDistanceBetweenPoints(
+          latitude,
+          longitude,
           attraction.coords.x,
           attraction.coords.y
         );
 
-        distance = Math.round(distance / 10) * 10;
+        const roundedDistance = Math.round(distance / 10) * 10;
 
-        if (distance > 80) {
+        if (roundedDistance > 80) {
           alert("Nie jesteś na miejscu, obiekt znajduje się " + distance + "m od twojej obecnej lokalizacji.");
           return;
         }
@@ -156,7 +155,7 @@ const ChallengeView: React.FC = () => {
               ...prev,
               { attraction_id: attraction.id },
             ]);
-            setRefreshKey(key => key + 1);
+            setRefreshKey((key) => key + 1);
           })
           .catch((error) => {
             console.error("There was an error visiting attraction:", error);
@@ -167,16 +166,16 @@ const ChallengeView: React.FC = () => {
         prev.filter((a) => a.attraction_id !== attraction.id)
       );
       alert("Lokalizacja jest wyłączona lub nieobsługiwana przez tę przeglądarkę.");
-      console.log("Nie udało się pobrać lokalizacji.");
+      console.log("Failed to get location.");
       return;
     }
   };
 
   return (
     <ViewContainer>
-    <MapContainer four challenge>
-      <Title>{challenge.name}</Title>
-      <Body margin>{challenge.description}</Body>
+      <MapContainer four challenge>
+        <Title>{challenge.name}</Title>
+        <Body margin>{challenge.description}</Body>
         <CardContent>
           <Map
             x={challenge.coords.x}
@@ -185,8 +184,8 @@ const ChallengeView: React.FC = () => {
             attractions={challenge.attractions}
           />
         </CardContent>
-    </MapContainer>
-    <DictionaryContainer>
+      </MapContainer>
+      <DictionaryContainer>
         <CardContent>
           <ChallengeAttractionsList
             attractions={challenge.attractions}
@@ -196,22 +195,19 @@ const ChallengeView: React.FC = () => {
             loadingAttractions={loadingAttractions}
           />
         </CardContent>
-    </DictionaryContainer>
-    <DictionaryContainer second>
+      </DictionaryContainer>
+      <DictionaryContainer second>
         <CardContent>
           <Title>Ranking</Title>
-          <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
-          {user && role == "user" && !takesPart && (
-            <StyledButton
-          
-              onClick={handleParticipation}
-            >
+          <RankingTable key={refreshKey} challengeId={id ? parseInt(id) : null} />
+          {user && role === "user" && !takesPart && (
+            <StyledButton onClick={handleParticipation}>
               Weź udział
             </StyledButton>
           )}
         </CardContent>
-    </DictionaryContainer>
-  </ViewContainer>
+      </DictionaryContainer>
+    </ViewContainer>
   );
 };
 

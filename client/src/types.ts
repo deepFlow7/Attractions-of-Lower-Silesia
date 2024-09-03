@@ -1,9 +1,9 @@
 export interface Photo {
-    id: number;
-    attraction_id: number;
-    photo: string;
-    caption?: string;
-  }
+  id: number;
+  attraction_id: number;
+  photo: string;
+  caption?: string;
+}
 
 export interface Attraction extends NewAttraction {
   id: number;
@@ -19,12 +19,17 @@ export interface NewPhoto {
 export interface NewAttraction {
   name: string;
   coords: { x: number; y: number };
-  type: possible_type;
-  subtype: subtypes;
+  type: PossibleType;
+  subtype: Subtypes;
   interactivity: number;
   time_it_takes: number;
   description: string;
   photos: NewPhoto[];
+}
+
+export interface AttractionWithComments {
+  attraction: Attraction;
+  comments: Comment[];
 }
 
 interface UserData {
@@ -33,12 +38,13 @@ interface UserData {
   mail: string;
 }
 
-export interface User extends UserData{
+export interface User extends UserData {
   id: number;
 }
 
-export interface UserWithLogin extends UserData{
+export interface UserWithLogin extends UserData {
   login: string;
+  id: number;
 }
 
 export interface Login {
@@ -65,7 +71,6 @@ export interface Comment {
   parent?: number | null;
 }
 
-
 export interface ChallengeRanking {
   login: string;
   score: number;
@@ -84,13 +89,13 @@ export interface Challenge {
   attractions: ChallengeAttraction[];
 }
 
-export interface completedChallenge {
+export interface CompletedChallenge {
   id: number;
   name: string;
   points: number;
 }
 
-export interface challengeAttractionInput {
+export interface ChallengeAttractionInput {
   id: number;
   points: number;
 }
@@ -100,7 +105,7 @@ export interface ChallengeForm {
   description: string;
   coords: { x: number; y: number };
   zoom: number;
-  attractions: challengeAttractionInput[];
+  attractions: ChallengeAttractionInput[];
 }
 
 export interface Route {
@@ -109,10 +114,11 @@ export interface Route {
   attractions: number[];
 }
 
-export type role = 'admin' | 'user';
+export type Role = 'admin' | 'user';
 
-export type possible_type = "natura" | "urbanistyka";
-export type subtypes = 
+export type PossibleType = "natura" | "urbanistyka";
+
+export type Subtypes =
   | "zamek"
   | "kościół"
   | "muzeum"
@@ -135,8 +141,9 @@ export type subtypes =
   | "krasnal"
   | "bazylika";
 
-export const possibleTypes: possible_type[] = ["natura", "urbanistyka"];
-export const possibleSubtypes: subtypes[] = [
+export const possibleTypes: PossibleType[] = ["natura", "urbanistyka"];
+
+export const possibleSubtypes: Subtypes[] = [
   "zamek",
   "kościół",
   "muzeum",

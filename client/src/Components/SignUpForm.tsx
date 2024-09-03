@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button } from '@mui/material';
-import api from '../API/api';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Typography } from '@mui/material';
+
+import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { NewUser } from '../types';
 import StyledTextField from '../Styles/TextField';
@@ -11,9 +12,7 @@ import { StyledButton } from '../Styles/Button';
 import { Title } from '../Styles/Typography';
 import { FormContainer, FormContent } from '../Styles/Form';
 
-
-
-const Registration = () => {
+const Registration: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
   const [login, setLogin] = useState<string>('');
@@ -27,8 +26,8 @@ const Registration = () => {
   if (isAuthenticated) navigate('/');
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordPattern = /^(?=.*[\p{Lowercase_Letter}])(?=.*[\p{Uppercase_Letter}])(?=.*\d)(?=.*[\W])[\p{Lowercase_Letter}\p{Uppercase_Letter}\d\W]{8,}$/u;  
-  const nameSurnamePattern = /^[\p{Letter}\s-]+$/u;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[a-zA-Z\d\W]{8,}$/;
+  const nameSurnamePattern = /^[a-zA-Z\s-]+$/;
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
@@ -40,8 +39,9 @@ const Registration = () => {
     else if (!nameSurnamePattern.test(surname)) newErrors.surname = 'Nazwisko może zawierać tylko litery, spacje i myślniki';
 
     if (!login) newErrors.login = 'Login jest wymagany';
-    if (!mail) newErrors.mail = 'Adres email jest wymagany';
-    else if (!emailPattern.test(mail)) newErrors.mail = 'Podaj poprawny adres email';
+
+    if (!mail) newErrors.mail = 'Adres e-mail jest wymagany';
+    else if (!emailPattern.test(mail)) newErrors.mail = 'Podaj poprawny adres e-mail';
 
     if (!password) newErrors.password = 'Hasło jest wymagane';
     else if (!passwordPattern.test(password)) newErrors.password = 'Hasło musi mieć co najmniej 8 znaków i zawierać co najmniej jedną wielką literę, jedną małą literę, jedną cyfrę oraz jeden znak specjalny';
@@ -50,16 +50,14 @@ const Registration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const onRegister = (newUser: NewUser): Promise<boolean> => {
-    return api.post('/api/signup', { newUser })
-      .then(response => {
-        console.log('Dodano');
-        return response.data.success;
-      })
-      .catch(error => {
-        console.error('There was an error sending the data!', error);
-        return false;
-      });
+  const registerUser = async (newUser: NewUser): Promise<boolean> => {
+    try {
+      const response = await api.post('/api/signup', { newUser });
+      return response.data.success;
+    } catch (error) {
+      console.error('There was an error sending the data!', error);
+      return false;
+    }
   };
 
   const handleSubmit = async () => {
@@ -74,7 +72,7 @@ const Registration = () => {
       password
     };
 
-    const success = await onRegister(newUser);
+    const success = await registerUser(newUser);
 
     if (success) {
       setName('');
@@ -84,7 +82,7 @@ const Registration = () => {
       setPassword('');
       navigate('/login');
     } else {
-      setRegisterError('Użytkownik o tym loginie lub adresie email już istnieje');
+      setRegisterError('Użytkownik o tym loginie lub adresie e-mail już istnieje');
     }
   };
 
@@ -95,60 +93,60 @@ const Registration = () => {
         <Typography color="error" style={{ marginBottom: '1rem' }}>{registerError}</Typography>
       )}
       <FormContent>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Imię"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={!!errors.name}
-          helperText={errors.name}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Nazwisko"
-          value={surname}
-          onChange={(e) => setSurname(e.target.value)}
-          error={!!errors.surname}
-          helperText={errors.surname}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Login"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-          error={!!errors.login}
-          helperText={errors.login}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Adres e-mail"
-          value={mail}
-          onChange={(e) => setMail(e.target.value)}
-          error={!!errors.mail}
-          helperText={errors.mail}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Hasło"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          error={!!errors.password}
-          helperText={errors.password}
-        />
-      </InputContainer>
-      <StyledButton  onClick={handleSubmit} fullWidth>
-        Zarejestruj się
-      </StyledButton>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Imię"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Nazwisko"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            error={!!errors.surname}
+            helperText={errors.surname}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Login"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            error={!!errors.login}
+            helperText={errors.login}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Adres e-mail"
+            value={mail}
+            onChange={(e) => setMail(e.target.value)}
+            error={!!errors.mail}
+            helperText={errors.mail}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Hasło"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
+          />
+        </InputContainer>
+        <StyledButton onClick={handleSubmit} fullWidth>
+          Zarejestruj się
+        </StyledButton>
       </FormContent>
     </FormContainer>
   );

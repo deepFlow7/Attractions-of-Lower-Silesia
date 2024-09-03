@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import styled from "@emotion/styled";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -6,11 +8,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Box } from '@mui/material';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
+
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import styled from "@emotion/styled";
 import { colors, sizes } from "../Styles/Themes";
 import { Title, Body } from '../Styles/Typography';
 
@@ -25,16 +26,24 @@ const StyledAppBar = styled(AppBar)`
 `;
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user, role, updateUser, username } = useAuth();
+  const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
   const location = useLocation();
-  const currentUrl = location.pathname + location.search;
+  const currentUrl = location.pathname + location.search; 
   const navigate = useNavigate();
 
-  const handleRedirectWithReturnUrl = (route: string) => {
+  const redirectWithReturnUrl = (route: string) => {
     navigate(route, { state: { returnUrl: currentUrl } });
   };
 
-  const onLogout = async () => {
+  const redirectToNewAttraction = () => {
+    if (isBlocked) {
+      alert("Twoje konto jest zablokowane, nie możesz dodawać atrakcji.");
+      return;
+    }
+    redirectWithReturnUrl('/new_attraction');
+  };
+
+  const handleLogout = async () => {
     try {
       await api.get('/api/logout');
       updateUser(null);
@@ -45,11 +54,9 @@ const Navbar = () => {
     }
   };
 
-  // Sprawdzamy szerokość ekranu
-  const isMobile = useMediaQuery('(max-width:1300px)');
-  const isSmallScreen = useMediaQuery('(max-width:750px)');
+  const isMediumScreen = useMediaQuery('(max-width:1300px)');
+  const isVerySmallScreen = useMediaQuery('(max-width:750px)');
 
-  // Stan do zarządzania menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -63,27 +70,20 @@ const Navbar = () => {
   return (
     <StyledAppBar position="static">
       <Toolbar>
-        {/* Lewa część - Tytuł */}
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Button component={Link} to="/" color="inherit">
-            <Title>
-              Atrakcje Dolnego Śląska
-            </Title>
+            <Title>Atrakcje Dolnego Śląska</Title>
           </Button>
         </Box>
 
-        {/* Środkowa część - Witaj */}
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-          {isAuthenticated && !isSmallScreen && (
-            <Body big gray>
-              Witaj {username}!
-            </Body>
+          {isAuthenticated && !isVerySmallScreen && (
+            <Body big gray>Witaj {username}!</Body>
           )}
         </Box>
 
-        {/* Prawa część - Przyciski */}
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
-          {isMobile ? (
+          {isMediumScreen ? (
             <>
               <IconButton
                 edge="end"
@@ -99,18 +99,16 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                {isSmallScreen && isAuthenticated && (
-                  <MenuItem onClick={handleMenuClose}>
-                    Witaj {username}!
-                  </MenuItem>
+                {isVerySmallScreen && isAuthenticated && (
+                  <MenuItem onClick={handleMenuClose}>Witaj {username}!</MenuItem>
                 )}
                 {isAuthenticated && (
-                  <MenuItem onClick={() => { handleRedirectWithReturnUrl('/new_attraction'); handleMenuClose(); }}>
+                  <MenuItem onClick={() => { redirectToNewAttraction(); handleMenuClose(); }}>
                     Dodaj atrakcję
                   </MenuItem>
                 )}
                 {isAuthenticated && role === "admin" ? (
-                  <MenuItem onClick={() => { handleRedirectWithReturnUrl('/new_challenge'); handleMenuClose(); }}>
+                  <MenuItem onClick={() => { redirectWithReturnUrl('/new_challenge'); handleMenuClose(); }}>
                     Dodaj wyzwanie
                   </MenuItem>
                 ) : (
@@ -122,11 +120,11 @@ const Navbar = () => {
                   Trasy
                 </MenuItem>
                 {isAuthenticated && user ? (
-                  <MenuItem onClick={() => { onLogout(); handleMenuClose(); }}>
+                  <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
                     Wyloguj
                   </MenuItem>
                 ) : (
-                  <MenuItem onClick={() => { handleRedirectWithReturnUrl('/login'); handleMenuClose(); }}>
+                  <MenuItem onClick={() => { redirectWithReturnUrl('/login'); handleMenuClose(); }}>
                     Zaloguj
                   </MenuItem>
                 )}
@@ -135,41 +133,29 @@ const Navbar = () => {
           ) : (
             <>
               {isAuthenticated && (
-                <Button onClick={() => handleRedirectWithReturnUrl('/new_attraction')} color="inherit">
-                  <Body big>
-                    Dodaj atrakcję
-                  </Body>
+                <Button onClick={redirectToNewAttraction} color="inherit">
+                  <Body big>Dodaj atrakcję</Body>
                 </Button>
               )}
               {isAuthenticated && role === "admin" ? (
-                <Button onClick={() => handleRedirectWithReturnUrl('/new_challenge')} color="inherit">
-                  <Body big>
-                    Dodaj wyzwanie
-                  </Body>
+                <Button onClick={() => redirectWithReturnUrl('/new_challenge')} color="inherit">
+                  <Body big>Dodaj wyzwanie</Body>
                 </Button>
               ) : (
                 <Button component={Link} to="/challenges" color="inherit">
-                  <Body big>
-                    Wyzwania
-                  </Body>
+                  <Body big>Wyzwania</Body>
                 </Button>
               )}
               <Button component={Link} to="/route_planner" color="inherit">
-                <Body big>
-                  Trasy
-                </Body>
+                <Body big>Trasy</Body>
               </Button>
               {isAuthenticated && user ? (
-                <Button onClick={onLogout} color="inherit">
-                  <Body big>
-                    Wyloguj
-                  </Body>
+                <Button onClick={handleLogout} color="inherit">
+                  <Body big>Wyloguj</Body>
                 </Button>
               ) : (
-                <Button color="inherit" onClick={() => handleRedirectWithReturnUrl('/login')}>
-                  <Body big secondary>
-                    Zaloguj
-                  </Body>
+                <Button color="inherit" onClick={() => redirectWithReturnUrl('/login')}>
+                  <Body big secondary>Zaloguj</Body>
                 </Button>
               )}
             </>
@@ -178,6 +164,6 @@ const Navbar = () => {
       </Toolbar>
     </StyledAppBar>
   );
-}
+};
 
 export default Navbar;

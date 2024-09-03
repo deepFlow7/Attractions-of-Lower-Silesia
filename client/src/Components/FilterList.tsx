@@ -1,24 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import { Grid } from '@mui/material';
+
 import Filter from './Filter';
-import { possibleTypes, possibleSubtypes, possible_type, subtypes } from '../types';
-import  { Title } from '../Styles/Typography';
+import { possibleTypes, possibleSubtypes, PossibleType, Subtypes } from '../types';
+import { Title } from '../Styles/Typography';
+
 interface FilterListProps {
-  onChange: (selectedTypes: possible_type[], selectedSubtypes: subtypes[]) => void;
+  onChange: (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[]) => void;
 }
 
 const FilterList: React.FC<FilterListProps> = ({ onChange }) => {
-  const [selectedTypes, setSelectedTypes] = React.useState<possible_type[]>(possibleTypes);
-  const [selectedSubtypes, setSelectedSubtypes] = React.useState<subtypes[]>(possibleSubtypes);
+  const [selectedTypes, setSelectedTypes] = React.useState<PossibleType[]>(possibleTypes);
+  const [selectedSubtypes, setSelectedSubtypes] = React.useState<Subtypes[]>(possibleSubtypes);
 
-  const handleCheckboxChange = (selected: string[], isType: boolean) => {
+  const handleCheckboxChange = (selectedOptions: string[], isType: boolean) => {
     if (isType) {
-      const updatedTypes = selected as possible_type[];
+      const updatedTypes = selectedOptions as PossibleType[];
       setSelectedTypes(updatedTypes);
       onChange(updatedTypes, selectedSubtypes);
     } else {
-      const updatedSubtypes = selected as subtypes[];
+      const updatedSubtypes = selectedOptions as Subtypes[];
       setSelectedSubtypes(updatedSubtypes);
       onChange(selectedTypes, updatedSubtypes);
     }
@@ -27,18 +29,14 @@ const FilterList: React.FC<FilterListProps> = ({ onChange }) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Title>
-          Typy
-        </Title>
+        <Title>Typy</Title>
         <Filter
           options={possibleTypes}
           onChange={(selectedOptions) => handleCheckboxChange(selectedOptions, true)}
         />
       </Grid>
       <Grid item xs={12}>
-        <Title>
-          Podtypy
-        </Title>
+        <Title>Podtypy</Title>
         <Filter
           options={possibleSubtypes}
           onChange={(selectedOptions) => handleCheckboxChange(selectedOptions, false)}
