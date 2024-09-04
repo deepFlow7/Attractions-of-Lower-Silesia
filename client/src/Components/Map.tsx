@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { Attraction, possibleSubtypes, Subtypes } from '../types';
+import { colors } from '../Styles/Themes';
 
 interface MapProps {
   x: number;
@@ -102,7 +103,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
       }
 
       if (path) {
-        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {}).addTo(mapInstance.current!);
+        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {color:colors.secondary}).addTo(mapInstance.current!);
       }
 
       mapInstance.current.on('zoomend', () => {
