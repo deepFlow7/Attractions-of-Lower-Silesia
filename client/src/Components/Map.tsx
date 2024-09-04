@@ -94,6 +94,13 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
         marker.bindPopup(link).closePopup();
       });
 
+      
+      const zoomLevel = mapInstance.current!.getZoom();
+      const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
+      if (mapContainer.current) {
+          $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
+      }
+
       if (path) {
         L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {}).addTo(mapInstance.current!);
       }
@@ -102,7 +109,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
         const zoomLevel = mapInstance.current!.getZoom();
         const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
         if (mapContainer.current) {
-          document.querySelector(`#${mapContainer.current.id} .ikona`)?.setAttribute('style', `width: ${newZoomSize}; height: ${newZoomSize};`);
+            $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
         }
       });
     }
