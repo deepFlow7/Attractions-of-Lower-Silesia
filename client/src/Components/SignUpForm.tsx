@@ -11,7 +11,10 @@ import { InputContainer } from '../Styles/TextField';
 import { StyledButton } from '../Styles/Button';
 import { Title } from '../Styles/Typography';
 import { FormContainer, FormContent } from '../Styles/Form';
-
+import styled from '@emotion/styled';
+const Squeeze = styled.div`
+  margin-bottom: -1rem;
+`;
 const Registration: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
@@ -44,7 +47,7 @@ const Registration: React.FC = () => {
     else if (!emailPattern.test(mail)) newErrors.mail = 'Podaj poprawny adres e-mail';
 
     if (!password) newErrors.password = 'Hasło jest wymagane';
-    else if (!passwordPattern.test(password)) newErrors.password = 'Hasło musi mieć co najmniej 8 znaków i zawierać co najmniej jedną wielką literę, jedną małą literę, jedną cyfrę oraz jeden znak specjalny';
+    else if (!passwordPattern.test(password)) newErrors.password = 'co najmniej 8 znaków, wielką i małą literę, cyfrę i znak specjalny';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,13 +91,17 @@ const Registration: React.FC = () => {
 
   return (
     <FormContainer>
-      <Title>Rejestracja</Title>
       {registerError && (
         <Typography color="error" style={{ marginBottom: '1rem' }}>{registerError}</Typography>
       )}
+      
+
       <FormContent>
+      <Squeeze>
+      <Title>Rejestracja</Title>
+      </Squeeze>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField slim 
             fullWidth
             label="Imię"
             value={name}
@@ -104,7 +111,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField slim 
             fullWidth
             label="Nazwisko"
             value={surname}
@@ -114,7 +121,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField slim 
             fullWidth
             label="Login"
             value={login}
@@ -124,7 +131,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField slim 
             fullWidth
             label="Adres e-mail"
             value={mail}
@@ -134,7 +141,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField slim 
             fullWidth
             label="Hasło"
             type="password"

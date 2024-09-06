@@ -1,17 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
-import { Grid, CardContent, Button } from '@mui/material';
-
+import { Grid, CardContent } from '@mui/material';
 import { Photo } from '../types';
 import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
+import styled from '@emotion/styled';
 
 interface PhotoProps {
   photos: Photo[];
   title: string;
+  displayButton: boolean;
 }
-
-const Photos: React.FC<PhotoProps> = ({ photos, title }) => {
+interface ButtonContainerProps {
+  display:boolean;
+}
+const ButtonContainer = styled.div<ButtonContainerProps>`
+  display: ${props => (props.display ?  'inline-block' : 'none')};
+  
+`;
+const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const handleNextPhoto = () => {
@@ -40,20 +47,14 @@ const Photos: React.FC<PhotoProps> = ({ photos, title }) => {
             </>
           )}
         </Grid>
-        <Grid item xs={6}>
-          <StyledButton>
-            <Button onClick={handlePreviousPhoto} variant="contained" color="primary" fullWidth>
+        <ButtonContainer display={displayButton}>
+            <StyledButton onClick={handlePreviousPhoto} >
               Poprzednie
-            </Button>
-          </StyledButton>
-        </Grid>
-        <Grid item xs={6}>
-          <StyledButton>
-            <Button onClick={handleNextPhoto} variant="contained" color="primary" fullWidth>
+            </StyledButton>
+            <StyledButton onClick={handleNextPhoto}>
               Następne
-            </Button>
-          </StyledButton>
-        </Grid>
+            </StyledButton>
+        </ButtonContainer>
       </Grid>
     </CardContent>
   );

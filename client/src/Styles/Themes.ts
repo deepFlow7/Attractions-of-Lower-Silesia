@@ -35,7 +35,7 @@ export const shadows = {
 };
 
 export const animations = {
-  moveInBottom: css`
+  moveInBottom: `
     0% {
       opacity: 0;
       transform: translateY(3rem);
@@ -43,6 +43,5 @@ export const animations = {
     100% {
       opacity: 1;
       transform: translateY(0);
-    }
-  `,
+    }`
 };

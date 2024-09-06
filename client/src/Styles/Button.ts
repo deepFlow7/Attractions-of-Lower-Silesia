@@ -6,12 +6,13 @@ import { bodyMixin } from './Typography';
 
 export interface ButtonProps {
   secondary?: boolean;
+  hidden?: boolean;
 }
 
 export const StyledButton = styled(Button)<ButtonProps>`
   text-transform: uppercase;
   text-decoration: none;
-  display: inline-block;
+  display: ${props => (props.hidden ? 'none' : 'inline-block')};
   border-radius: ${sizes.borderRadius};
   position: relative;
   transition-property: all;

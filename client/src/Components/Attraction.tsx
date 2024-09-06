@@ -162,7 +162,7 @@ const AttractionView: React.FC = () => {
   return (
     <ViewContainer>
       <PhotoContainer>
-        <Photos photos={photos} title={name} />
+        <Photos photos={photos} title={name} displayButton={photos.length > 1}/>
       </PhotoContainer>
       <InfoContainer>
         {isAuthenticated && role === 'user' && (

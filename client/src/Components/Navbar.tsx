@@ -25,10 +25,11 @@ const StyledAppBar = styled(AppBar)`
   height: ${sizes.navbarHeight};
 `;
 
+
 const Navbar = () => {
   const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
   const location = useLocation();
-  const currentUrl = location.pathname + location.search; 
+  const currentUrl = location.pathname + location.search;
   const navigate = useNavigate();
 
   const redirectWithReturnUrl = (route: string) => {

@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
-
 import { useAuth } from '../Providers/AuthContext';
 import StyledTextField from '../Styles/TextField';
 import { InputContainer } from '../Styles/TextField';
-import { StyledButton } from '../Styles/Button';
+import { StyledButton} from '../Styles/Button';
 import { Title } from '../Styles/Typography';
+import styled from '@emotion/styled';
 import { FormContainer, FormContent } from '../Styles/Form';
 
 const LoginForm: React.FC = () => {
@@ -40,8 +40,9 @@ const LoginForm: React.FC = () => {
 
   return (
     <FormContainer>
-      <Title>Logowanie</Title>
       <FormContent>
+
+      <Title>Logowanie</Title>
         <InputContainer>
           <StyledTextField
             fullWidth
@@ -63,8 +64,8 @@ const LoginForm: React.FC = () => {
           Zaloguj się
         </StyledButton>
         <Button component={Link} to="/signup" fullWidth>
-          Zarejestruj
-        </Button>
+      Zarejestruj
+    </Button>
       </FormContent>
     </FormContainer>
   );
