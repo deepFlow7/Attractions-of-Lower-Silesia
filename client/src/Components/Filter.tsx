@@ -13,7 +13,6 @@ interface FilterProps {
 
 const StyledFormControlLabel = styled(FormControlLabel)`
   display: block;
-
   .MuiFormControlLabel-label {
     ${bodyMixin}
   }
