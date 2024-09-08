@@ -217,14 +217,13 @@ const RoutePlanner: React.FC = () => {
                   <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1, textDecoration: 'none' }}>
                     {attraction.name}
                   </a>
-                  <Button
+                  <StyledButton
                     variant="contained"
-                    color="primary"
-                    size="small"
+                    big={true}
                     onClick={() => setSelectedAttractions((prevSelected) => [...prevSelected, attraction.id])}
                   >
                     +
-                  </Button>
+                  </StyledButton>
                 </div>
               ) : (
               <div

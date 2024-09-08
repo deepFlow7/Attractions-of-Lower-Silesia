@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 export const colors = {
   primary: '#e9cbb0',
   secondary: '#4d6e6d',
-  tertiary: '#d3d69b',
+  tertiary: '#B45834',
   white: '#fff',
   dark: '#2a2b2a',
   gray: '#949494',
@@ -23,6 +23,8 @@ export const sizes = {
   titleSize: '3rem',
   navbarHeight: '5rem',
   buttonHeight: '5rem',
+  buttonHeightPadded: '6rem',
+
 };
 
 export const transitions = {
@@ -35,7 +37,7 @@ export const shadows = {
 };
 
 export const animations = {
-  moveInBottom: css`
+  moveInBottom: `
     0% {
       opacity: 0;
       transform: translateY(3rem);
@@ -43,6 +45,5 @@ export const animations = {
     100% {
       opacity: 1;
       transform: translateY(0);
-    }
-  `,
+    }`
 };

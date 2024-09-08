@@ -141,7 +141,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
   }));
 
   return (
-    <div id="MapContainer" style={{ padding: 0, margin: 0, width: '100%', height: '80vh' }} ref={mapContainer}></div>
+    <div id="MapContainer" style={{ padding: 0, margin: 0, width: '100%', height: '100%' }} ref={mapContainer}></div>
   );
 });
 

@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
-
 import { useAuth } from '../Providers/AuthContext';
 import StyledTextField from '../Styles/TextField';
 import { InputContainer } from '../Styles/TextField';
-import { StyledButton } from '../Styles/Button';
+import { StyledButton} from '../Styles/Button';
 import { Title } from '../Styles/Typography';
+import styled from '@emotion/styled';
 import { FormContainer, FormContent } from '../Styles/Form';
-
+import { colors, sizes } from '../Styles/Themes';
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -52,14 +52,15 @@ const LoginForm: React.FC = () => {
 
   return (
     <FormContainer>
-      <Title>Logowanie</Title>
       <FormContent>
+      <Title>Logowanie</Title>
         <InputContainer>
           <StyledTextField
             fullWidth
             label="Login"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            error={false}
           />
         </InputContainer>
         <InputContainer>
@@ -68,6 +69,8 @@ const LoginForm: React.FC = () => {
             label="Hasło"
             type="password"
             value={password}
+            error={false}
+
             onChange={(e) => setPassword(e.target.value)}
           />
         </InputContainer>
@@ -75,9 +78,19 @@ const LoginForm: React.FC = () => {
         <StyledButton onClick={handleSubmit} fullWidth>
           Zaloguj się
         </StyledButton>
-        <Button component={Link} to="/signup" fullWidth>
-          Zarejestruj
-        </Button>
+        <Button
+  component={Link}
+  to="/signup"
+  style={{
+    color: colors.tertiary,
+    fontFamily: "'Englebert', sans-serif",
+    textDecoration: 'none',
+    fontSize: sizes.fontSize,
+  }}
+>
+  Zarejestruj
+</Button>
+
       </FormContent>
     </FormContainer>
   );

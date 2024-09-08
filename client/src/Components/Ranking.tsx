@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell} from '@mui/material';
 
 import { ChallengeRanking } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { Body } from '../Styles/Typography';
-
+import { colors } from '../Styles/Themes';
 const StyledTable = styled(Table)`
   && {
     min-width: 300px;
+    background-color: transparent; /* Ustawienie przezroczystego tła dla tabeli */
+  }
+`;
+
+const StyledTableCell = styled(TableCell)`
+  && {
+    background-color: ${colors.primary}; /* Przezroczyste tło dla komórek */
   }
 `;
 
@@ -42,12 +49,12 @@ const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
       <StyledTable>
         <TableHead>
           <TableRow>
-            <TableCell>
+            <StyledTableCell>
               <Body>Username</Body>
-            </TableCell>
-            <TableCell align="right">
+            </StyledTableCell>
+            <StyledTableCell align="right">
               <Body>Points</Body>
-            </TableCell>
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -56,11 +63,15 @@ const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
               key={index}
               style={{
                 backgroundColor:
-                  isAuthenticated && ranking.login === username ? 'lightblue' : 'inherit',
+                  isAuthenticated && ranking.login === username ? 'lightblue' : 'transparent',
               }}
             >
-              <TableCell>{ranking.login}</TableCell>
-              <TableCell align="right">{ranking.score}</TableCell>
+              <StyledTableCell>
+                <Body>{ranking.login}</Body>
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <Body>{ranking.score}</Body>
+              </StyledTableCell>
             </TableRow>
           ))}
         </TableBody>

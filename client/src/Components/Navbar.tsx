@@ -25,10 +25,14 @@ const StyledAppBar = styled(AppBar)`
   height: ${sizes.navbarHeight};
 `;
 
+const StyledIconButton = styled(IconButton)`
+  color: ${colors.secondary}; /* Apply primary color to the IconButton */
+`;
+
 const Navbar = () => {
   const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
   const location = useLocation();
-  const currentUrl = location.pathname + location.search; 
+  const currentUrl = location.pathname + location.search;
   const navigate = useNavigate();
 
   const redirectWithReturnUrl = (route: string) => {
@@ -85,14 +89,13 @@ const Navbar = () => {
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
           {isMediumScreen ? (
             <>
-              <IconButton
+              <StyledIconButton
                 edge="end"
-                color="inherit"
                 aria-label="menu"
                 onClick={handleMenuOpen}
               >
                 <MenuIcon />
-              </IconButton>
+              </StyledIconButton>
               <Menu
                 anchorEl={anchorEl}
                 keepMounted

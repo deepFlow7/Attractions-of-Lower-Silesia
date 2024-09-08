@@ -1,11 +1,23 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { CardContent, List, ListItem, TextField, Button } from '@mui/material';
-
 import { Comment } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { Title, Body } from '../Styles/Typography';
+import styled from '@emotion/styled';
+import { colors, shadows } from '../Styles/Themes';
+import { StyledButton } from '../Styles/Button';
+import StyledTextField from '../Styles/TextField';
+export const Container = styled.div`
+display: flex;
+gap: 1rem;
+flex-direction: column;
+& > * {
+  background-color: ${colors.primary};
+  box-shadow: ${shadows.default};
+}
+`;
 
 interface CommentsProps {
   comments: Comment[];
@@ -50,8 +62,8 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
   };
 
   return (
-    <div>
-      <CardContent>
+    <Container>
+      <div>
         <Title small>Komentarze</Title>
         <List>
           {comments.map((comment) => (
@@ -73,12 +85,11 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
             </ListItem>
           ))}
         </List>
-      </CardContent>
-
+        </div>
       {isAuthenticated && role === "user" && (
         <CardContent>
           <Title small>Dodaj komentarz</Title>
-          <TextField
+          <StyledTextField
             label="Treść komentarza"
             multiline
             rows={4}
@@ -86,12 +97,12 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
             onChange={handleCommentChange}
             fullWidth
           />
-          <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
+          <StyledButton  onClick={handleAddComment} >
             Dodaj
-          </Button>
+          </StyledButton>
         </CardContent>
       )}
-    </div>
+    </Container>
   );
 };
 
