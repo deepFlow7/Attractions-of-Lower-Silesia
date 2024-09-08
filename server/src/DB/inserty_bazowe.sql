@@ -65,17 +65,6 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
     ('Meloman', POINT(51.1077, 17.0348), 'urbanistyka', 'krasnal', 2, 5, 3, 'Krasnal z gitarą.'),
     ('Janinek', POINT(51.1103, 17.0325), 'urbanistyka', 'krasnal', 2, 5, 3, 'Przy stacji pocztowej.');
 
-INSERT INTO users (name, surname, mail) 
-VALUES 
-  ('John', 'Doe', 'john.doe@example.com'),
-  ('Alice', 'Smith', 'alice.smith@example.com');
-
--- Inserting sample data into the logins table
-INSERT INTO logins (user_id, login, password, role) 
-VALUES 
-  (1, 'johndoe', 'password123', 'admin'),
-  (2, 'alicesmith', 'password456', 'user');
-
 -- Inserting sample data into the comments table
 INSERT INTO comments (author, content, votes, attraction) 
 VALUES 
