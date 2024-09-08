@@ -23,6 +23,8 @@ export const sizes = {
   titleSize: '3rem',
   navbarHeight: '5rem',
   buttonHeight: '5rem',
+  buttonHeightPadded: '6rem',
+
 };
 
 export const transitions = {

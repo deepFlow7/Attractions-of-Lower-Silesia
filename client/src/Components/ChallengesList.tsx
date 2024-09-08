@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Challenge } from "../types"; 
 import { useAuth } from "../Providers/AuthContext";
 import { Title, bodyMixin } from "../Styles/Typography";
+import StyledTextField from "../Styles/TextField";
 
 interface ListProps {
   challenges: Challenge[];
@@ -70,7 +71,7 @@ const ChallengesList: React.FC<ListProps> = ({
         <StyledListItem key={challenge.id}>
           {isAuthenticated && role === "admin" && isManaging ? (
             <>
-              <TextField
+              <StyledTextField
                 value={editedChallenges[challenge.id] || challenge.name}
                 onChange={(e) => handleInputChange(challenge.id, e.target.value)}
                 fullWidth

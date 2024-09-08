@@ -9,6 +9,7 @@ export interface ViewContainerProps {
 export const ViewContainer = styled.div<ViewContainerProps>`
   box-sizing: border-box;
   width: calc(100vw + 5px);
+  width: ${(props) => props.buttonOnTop ? 'calc(100vw + 10px)' : 'calc(100vw + 5px)'};
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -16,11 +17,11 @@ export const ViewContainer = styled.div<ViewContainerProps>`
   background-color: ${colors.secondary};
   position: absolute;
   left: -5px;
-  top: ${props => (props.buttonOnTop ? sizes.navbarHeight + sizes.buttonHeight : sizes.navbarHeight)};
+  top: ${props => (props.buttonOnTop ? sizes.navbarHeight + sizes.buttonHeightPadded : sizes.navbarHeight)};
   ${bodyMixin}
   padding: 1rem;
   min-height: ${(props) => props.buttonOnTop 
-    ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeight})` 
+    ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeightPadded})` 
     : `calc(100vh - ${sizes.navbarHeight})`};
   & > * {
     box-shadow: ${shadows.default};

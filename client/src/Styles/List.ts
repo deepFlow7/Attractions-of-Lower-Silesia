@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { sizes} from "../Styles/Themes";
+import { colors, sizes} from "../Styles/Themes";
 export interface ListContainerProps {
   three?: boolean;
   four?: boolean;
@@ -40,8 +40,14 @@ export const ChallengesContainer = styled.div`
 
 export const AdminContainer = styled.div`
   width: 32%;
-  height: calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
+  height: calc(98vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
   overflow: auto;
+  background-color: ${colors.primary};
+
+  & > * {
+  background-color: ${colors.primary};
+  box-shadow: none;
+  }
   @media (max-width: 900px) {
     width: 48%;
     height: 70vh;

@@ -17,6 +17,7 @@ import { useAuth } from "../Providers/AuthContext";
 import { Attraction } from "../types"; 
 import { Title } from '../Styles/Typography';
 import { bodyMixin } from "../Styles/Typography";
+import StyledTextField from "../Styles/TextField";
 
 interface ListProps {
   attractions: Attraction[];
@@ -77,7 +78,7 @@ const AttractionsList: React.FC<ListProps> = ({
           <StyledListItem key={attraction.id}>
             {isAuthenticated && role === 'admin' && isManaging ? (
               <>
-                <TextField
+                <StyledTextField
                   value={editedAttractions[attraction.id] || attraction.name}
                   onChange={(e) => handleInputChange(attraction.id, e.target.value)}
                   fullWidth

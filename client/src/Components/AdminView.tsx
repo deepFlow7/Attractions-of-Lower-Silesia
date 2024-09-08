@@ -14,12 +14,13 @@ import { StyledButton } from '../Styles/Button';
 import { colors, sizes } from '../Styles/Themes';
 
 const Container = styled.div`
+  box-sizing: border-box;
+  padding: 1rem;
   background-color: ${colors.secondary};
   position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
   width: calc(100vw + 5px);
-  height: calc(100vh - ${sizes.navbarHeight});
 `;
 
 const AdminView: React.FC = () => {
@@ -183,7 +184,7 @@ const AdminView: React.FC = () => {
 
   return (
     <Container>
-      <StyledButton onClick={toggleView}>
+      <StyledButton onClick={toggleView} background={true}>
         {isAdminPanel ? 'Przełącz na widok główny' : 'Przełącz na panel administratora'}
       </StyledButton>
 

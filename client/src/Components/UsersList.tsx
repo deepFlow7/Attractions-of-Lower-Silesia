@@ -6,6 +6,7 @@ import { UserWithLogin } from "../types";
 import { useAuth } from "../Providers/AuthContext";
 import { Title, bodyMixin } from "../Styles/Typography";
 import { shadows, colors } from "../Styles/Themes";
+import { StyledButton } from "../Styles/Button";
 
 interface UsersListProps {
   users: UserWithLogin[];
@@ -64,13 +65,12 @@ const UsersList: React.FC<UsersListProps> = ({
             }
           />
           {isAuthenticated && role === "admin" && isManaging && (
-            <Button
-              variant="contained"
+            <StyledButton
               color={isUserBlocked(user.id) ? "secondary" : "primary"}
               onClick={() => changeUserBlock?.(user.id)}
             >
               {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}
-            </Button>
+            </StyledButton>
           )}
         </StyledListItem>
       ))}
