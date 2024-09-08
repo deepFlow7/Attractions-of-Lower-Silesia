@@ -11,7 +11,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-
+import { StyledButton } from "../Styles/Button";
 import { ChallengeAttraction } from "../types";
 import { bodyMixin, Title, Body } from '../Styles/Typography';
 import { shadows } from "../Styles/Themes";
@@ -24,21 +24,6 @@ const StyledList = styled(List)`
 const StyledListItem = styled(ListItem)`
   &:hover {
     box-shadow: ${shadows.active};
-  }
-`;
-
-const VisitButton = styled(Button)`
-  && {
-    background-color: #42a5f5;
-    color: white;
-    border-radius: 4px;
-    margin: 8px auto 0 auto;
-    display: block;
-    width: 90%;
-    padding: 5px 0;
-    &:hover {
-      background-color: #1976d2;
-    }
   }
 `;
 
@@ -107,9 +92,9 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                       Sprawdzam lokalizację <CircularProgress size={15} />
                     </Body>
                   ) : (
-                    <VisitButton onClick={() => onClick(attraction)}>
+                    <StyledButton onClick={() => onClick(attraction)}>
                       Odwiedź
-                    </VisitButton>
+                    </StyledButton>
                   )
                 )
               )}

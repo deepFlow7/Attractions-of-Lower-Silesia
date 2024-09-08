@@ -1,11 +1,10 @@
-// In ../Styles/TextField.ts
 import { TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { bodyMixin } from './Typography';
+import { colors } from './Themes'; // Importuj kolory, jeśli są w osobnym pliku
 
 export interface TextProps {
-  slim? : boolean;
-
+  slim?: boolean;
 }
 
 const StyledTextField = styled(TextField)<TextProps>`
@@ -22,25 +21,33 @@ const StyledTextField = styled(TextField)<TextProps>`
     padding: ${(props) => (props.slim ? '0.25rem' : 'auto')}; /* Zmniejszenie paddingu dla slim */
     padding-left: 1rem;
   }
+  
   & .MuiFormHelperText-root {
     margin-top: 0.25rem; /* Zmniejszenie marginesu dla tekstu pomocy */
     font-size: 0.75rem; /* Opcjonalnie: Zmniejszenie rozmiaru czcionki */
     position: absolute; /* Zapobiega rozciąganiu kontenera przez tekst błędu */
     bottom: -1.25rem; /* Pozycjonowanie tekstu błędu poniżej pola */
   }
+
   & .MuiInputBase-input::placeholder {
     ${bodyMixin};
   }
+
   & .MuiOutlinedInput-root {
     border-radius: 1rem; /* Zaokrąglenie ramki */
-  } 
+    & fieldset {
+    }
+    &.Mui-focused fieldset {
+      border-color: ${colors.tertiary}; /* Kolor ramki na focus */
+    }
+  }
 `;
 
 export const InputContainer = styled.div`
   & > * {
-  width: 100%;
+    width: 100%;
     margin: 0 0;
   }
-`
+`;
 
 export default StyledTextField;

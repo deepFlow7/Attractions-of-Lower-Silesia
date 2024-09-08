@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 export const colors = {
   primary: '#e9cbb0',
   secondary: '#4d6e6d',
-  tertiary: '#1c322f',
+  tertiary: '#B45834',
   white: '#fff',
   dark: '#2a2b2a',
   gray: '#949494',

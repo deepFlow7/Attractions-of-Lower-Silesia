@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Grid, Button, Card, CardContent, Typography, Rating } from '@mui/material';
-
+import { Title } from '../Styles/Typography';
 import Comments from './Comments';
 import Photos from './Photos';
 import AttractionInfo from './AttractionInfo';
@@ -11,6 +11,7 @@ import api from '../API/api';
 import { AttractionWithComments, Comment } from '../types';
 import { colors, shadows } from '../Styles/Themes';
 import {AttractionContainer } from '../Styles/View';
+import { StyledButton } from '../Styles/Button';
 
 export const PhotoContainer = styled.div`
   background-color: ${colors.primary};
@@ -26,16 +27,9 @@ export const InfoContainer = styled.div`
 `;
 
 const TileCard = styled(Card)`
-  margin: 1%;
-  margin-top: 5%;
+background-color: ${colors.primary};
 `;
 
-const Title = styled(Typography)`
-  text-align: center;
-`;
-
-const primaryColor = '#757575';
-const defaultColor = '#1976d2';
 
 const AttractionView: React.FC = () => {
   const [attractionInfo, setAttractionInfo] = useState<AttractionWithComments | null>(null);
@@ -156,35 +150,26 @@ const AttractionView: React.FC = () => {
       <InfoContainer>
         {isAuthenticated && role === 'user' && (
           <>
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: isFavourite ? primaryColor : defaultColor,
-                marginTop: '10px',
-                marginBottom: '10px',
-              }}
+            <StyledButton
+             background={true}
+             
               onClick={handleFavouriteToggle}
             >
               {isFavourite ? 'Ulubione' : 'Dodaj do ulubionych'}
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: toVisit ? primaryColor : defaultColor,
-                marginTop: '10px',
-                marginBottom: '10px',
-              }}
+            </StyledButton>
+            <StyledButton
+             background={true}
               onClick={handleToVisitToggle}
             >
               {toVisit ? 'Do odwiedzenia' : 'Dodaj na listę do odwiedzenia'}
-            </Button>
+            </StyledButton>
           </>
         )}
         <AttractionInfo attraction={attraction} />
         {isAuthenticated && role === 'user' && (
           <TileCard>
             <CardContent>
-              <Title variant="h5" gutterBottom>
+              <Title>
                 Twoja ocena
               </Title>
               <Rating
