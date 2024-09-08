@@ -1,11 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { CardContent, List, ListItem, TextField, Button } from '@mui/material';
-
 import { Comment } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { Title, Body } from '../Styles/Typography';
+import styled from '@emotion/styled';
+import { colors, shadows } from '../Styles/Themes';
+
+export const Container = styled.div`
+  background-color: ${colors.primary};
+  box-shadow: ${shadows.default};
+`;
 
 interface CommentsProps {
   comments: Comment[];
@@ -50,7 +56,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
   };
 
   return (
-    <div>
+    <Container>
       <CardContent>
         <Title small>Komentarze</Title>
         <List>
@@ -91,7 +97,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
           </Button>
         </CardContent>
       )}
-    </div>
+    </Container>
   );
 };
 

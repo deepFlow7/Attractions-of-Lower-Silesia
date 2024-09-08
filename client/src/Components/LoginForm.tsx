@@ -41,7 +41,6 @@ const LoginForm: React.FC = () => {
   return (
     <FormContainer>
       <FormContent>
-
       <Title>Logowanie</Title>
         <InputContainer>
           <StyledTextField

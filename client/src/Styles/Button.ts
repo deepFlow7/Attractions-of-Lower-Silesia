@@ -18,7 +18,7 @@ export const StyledButton = styled(Button)<ButtonProps>`
   transition-property: all;
   transition-duration: ${transitions.default};
   ${bodyMixin};
-  color: ${props => (props.secondary ? colors.secondary : colors.dark)};
+  color: ${props => (props.secondary ? colors.secondary : colors.tertiary)};
 
   height: ${sizes.buttonHeight};
   padding: ${sizes.paddingVertical} ${sizes.paddingHorizontal};

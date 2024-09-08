@@ -10,30 +10,19 @@ import { useAuth } from '../Providers/AuthContext';
 import api from '../API/api';
 import { AttractionWithComments, Comment } from '../types';
 import { colors, shadows } from '../Styles/Themes';
-import { ViewContainer } from '../Styles/View';
+import {AttractionContainer } from '../Styles/View';
 
 export const PhotoContainer = styled.div`
-  width: 60vw;
   background-color: ${colors.primary};
   box-shadow: ${shadows.default};
-  @media (max-width: 920px) {
-    width: 100%;
-  }
+  align-self: start;
 `;
 
 export const InfoContainer = styled.div`
-  width: 37vw;
-  background-color: ${colors.primary};
   box-shadow: ${shadows.default};
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  @media (max-width: 1630px) {
-    width: 31%;
-  }
-  @media (max-width: 920px) {
-    width: 100%;
-  }
 `;
 
 const TileCard = styled(Card)`
@@ -160,7 +149,7 @@ const AttractionView: React.FC = () => {
   const { name, photos } = attraction;
 
   return (
-    <ViewContainer>
+    <AttractionContainer>
       <PhotoContainer>
         <Photos photos={photos} title={name} displayButton={photos.length > 1}/>
       </PhotoContainer>
@@ -208,11 +197,9 @@ const AttractionView: React.FC = () => {
             </CardContent>
           </TileCard>
         )}
-        <Grid item xs={12}>
           <Comments comments={comments} attractionId={attraction.id} addComment={addComment} />
-        </Grid>
       </InfoContainer>
-    </ViewContainer>
+    </AttractionContainer>
   );
 };
 

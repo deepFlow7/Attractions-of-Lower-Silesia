@@ -1,9 +1,7 @@
 import styled from "@emotion/styled";
-import { ViewContainer } from "../Styles/View";
 import background from "/backgrounds/login.png";
 import background2 from "/backgrounds/login2.jpeg";
-
-import { shadows, colors, sizes } from "./Themes";
+import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
 
 export const FormContainer = styled.div`

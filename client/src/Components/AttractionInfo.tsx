@@ -14,7 +14,6 @@ interface AttractionInfoProps {
 const Info = styled.div`
   display: grid;
   gap: 1rem;
-  background-color: ${colors.dark};
   & > * {
     background-color: ${colors.primary};
     box-shadow: ${shadows.default};
