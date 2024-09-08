@@ -26,11 +26,16 @@ interface ListProps {
 }
 
 const StyledList = styled(List)`
-  border-radius: 8px;
-  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px; /* Add gap between items */
 `;
 
 const StyledListItem = styled(ListItem)`
+  display: flex;
+  flex: 1 0 200px; /* Flex-grow, flex-shrink, and flex-basis */
+  min-width: 200px; /* Minimum width for wrapping */
   &:hover {
     background-color: #d0d0d0;
   }
@@ -65,47 +70,49 @@ const AttractionsList: React.FC<ListProps> = ({
   };
 
   return (
-    <StyledList>
+    <>
       <Title>Atrakcje</Title>
-      {attractions.map((attraction) => (
-        <StyledListItem key={attraction.id}>
-          {isAuthenticated && role === 'admin' && isManaging ? (
-            <>
-              <TextField
-                value={editedAttractions[attraction.id] || attraction.name}
-                onChange={(e) => handleInputChange(attraction.id, e.target.value)}
-                fullWidth
-              />
-              <IconButton
-                edge="end"
-                color="primary"
-                onClick={() => handleSave(attraction.id)}
-                aria-label="save"
+      <StyledList>
+        {attractions.map((attraction) => (
+          <StyledListItem key={attraction.id}>
+            {isAuthenticated && role === 'admin' && isManaging ? (
+              <>
+                <TextField
+                  value={editedAttractions[attraction.id] || attraction.name}
+                  onChange={(e) => handleInputChange(attraction.id, e.target.value)}
+                  fullWidth
+                />
+                <IconButton
+                  edge="end"
+                  color="primary"
+                  onClick={() => handleSave(attraction.id)}
+                  aria-label="save"
+                >
+                  <SaveIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  color="error"
+                  onClick={() => onDelete && onDelete(attraction.id)}
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </>
+            ) : (
+              <Button
+                component={Link}
+                to={`/attraction/${attraction.id}`}
+                color="inherit"
+                style={{ flexGrow: 1 }}
               >
-                <SaveIcon />
-              </IconButton>
-              <IconButton
-                edge="end"
-                color="error"
-                onClick={() => onDelete && onDelete(attraction.id)}
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </>
-          ) : (
-            <Button
-              component={Link}
-              to={`/attraction/${attraction.id}`}
-              color="inherit"
-              style={{ flexGrow: 1 }}
-            >
-              <StyledListItemText primary={attraction.name} />
-            </Button>
-          )}
-        </StyledListItem>
-      ))}
-    </StyledList>
+                <StyledListItemText primary={attraction.name} />
+              </Button>
+            )}
+          </StyledListItem>
+        ))}
+      </StyledList>
+    </>
   );
 };
 
