@@ -63,41 +63,41 @@ const AttractionsList: React.FC<ListProps> = ({ attractions, isManaging, onDelet
       <Title>Atrakcje</Title>
       {attractions.map((attraction) => (
         <StyledListItem key={attraction.id}>
-        {isAuthenticated && role === 'admin' && isManaging ? (
-          <>
-            <TextField
-              value={editedAttractions[attraction.id] || attraction.name}
-              onChange={(e) => handleInputChange(attraction.id, e.target.value)}
-              fullWidth
-            />
-            <IconButton
-              edge="end"
-              color="primary"
-              onClick={() => handleSave(attraction.id)}
-              aria-label="save"
+          {isAuthenticated && role === 'admin' && isManaging ? (
+            <>
+              <TextField
+                value={editedAttractions[attraction.id] || attraction.name}
+                onChange={(e) => handleInputChange(attraction.id, e.target.value)}
+                fullWidth
+              />
+              <IconButton
+                edge="end"
+                color="primary"
+                onClick={() => handleSave(attraction.id)}
+                aria-label="save"
+              >
+                <SaveIcon />
+              </IconButton>
+              <IconButton
+                edge="end"
+                color="error"
+                onClick={() => onDelete!(attraction.id)}
+                aria-label="delete"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to={`/attraction/${attraction.id}`}
+              color="inherit"
+              style={{ flexGrow: 1 }}
             >
-              <SaveIcon />
-            </IconButton>
-            <IconButton
-              edge="end"
-              color="error"
-              onClick={() => onDelete!(attraction.id)}
-              aria-label="delete"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </>
-        ) : (
-          <Button
-            component={Link}
-            to={`/attraction/${attraction.id}`}
-            color="inherit"
-            style={{ flexGrow: 1 }}
-          >
-            <StyledListItemText primary={attraction.name} />
-          </Button>
-        )}
-      </StyledListItem>
+              <StyledListItemText primary={attraction.name} />
+            </Button>
+          )}
+        </StyledListItem>
       ))}
     </StyledList>
   );

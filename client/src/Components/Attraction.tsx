@@ -58,40 +58,40 @@ const AttractionView = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (isAuthenticated && role == "user"){
-      api.get('/api/attraction/is_favourite/' + id + '/' + user!.id)
-      .then(response => {
-        setFavourite(response.data.favourite);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
+    if (isAuthenticated && role == "user") {
+      api.get('/api/attraction/is_favourite/' + id)
+        .then(response => {
+          setFavourite(response.data.favourite);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
 
-      api.get('/api/attraction/is_to_visit/' + id + '/' + user!.id)
-      .then(response => {
-        setToVisit(response.data.to_visit);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
+      api.get('/api/attraction/is_to_visit/' + id)
+        .then(response => {
+          setToVisit(response.data.to_visit);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
 
-      api.get('/api/attraction/rating/' + id + '/' + user!.id)
-      .then(response => {
-        setUserRating(response.data.rating);
-        setSavedUserRating(response.data.rating);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
+      api.get('/api/attraction/rating/' + id + (user ? '/user' : ''))
+        .then(response => {
+          setUserRating(response.data.rating);
+          setSavedUserRating(response.data.rating);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
     }
 
     api.get('/api/attraction/' + id)
-    .then(response => {
-      setAttractionInfo(response.data);
-    })
-    .catch(error => {
-      console.error('There was an error fetching the data!', error);
-    });
+      .then(response => {
+        setAttractionInfo(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
   }, [id]);
 
   const handleFavouriteToggle = async () => {
@@ -112,17 +112,18 @@ const AttractionView = () => {
     }
   };
 
-  const addComment = (new_comment : Comment) => {
+  const addComment = (new_comment: Comment) => {
     setAttractionInfo((prevState) => {
       if (!prevState) return null;
-  
+
       return {
         attraction: prevState.attraction,
         comments: [...prevState.comments, new_comment]
       };
-  })};
+    })
+  };
 
-  const handleAddRating = async (newRating : number|null) => {
+  const handleAddRating = async (newRating: number | null) => {
     if (isBlocked) {
       alert("Twoje konto jest zablokowane, nie możesz wystawiać ani zmieniać ocen.")
       setUserRating(savedUserRating);
@@ -135,21 +136,21 @@ const AttractionView = () => {
         await api.post(`/api/changeRating`, { userId: user?.id, attractionId: id, rating: newRating });
 
         await api.get('/api/attraction/rating/' + id)
-        .then(response => {
-          setAttractionInfo(prevInfo => ({
-            ...prevInfo!, 
-            attraction : {
-             ...prevInfo!.attraction,
-              rating: response.data.rating
-            }
-          }));
-          setSavedUserRating(newRating);
-        })
+          .then(response => {
+            setAttractionInfo(prevInfo => ({
+              ...prevInfo!,
+              attraction: {
+                ...prevInfo!.attraction,
+                rating: response.data.rating
+              }
+            }));
+            setSavedUserRating(newRating);
+          })
       } catch (error) {
         console.error('Error updating rating:', error);
-        setUserRating(savedUserRating);  
+        setUserRating(savedUserRating);
       }
-    } 
+    }
   };
 
   if (!attr_info) {
@@ -161,12 +162,12 @@ const AttractionView = () => {
 
   return (
     <ViewContainer>
-          <PhotoContainer>
-          <Photos photos={photos} title={name} />
-        </PhotoContainer>
-          <InfoContainer>
-            {isAuthenticated && role == "user" && (
-              <>
+      <PhotoContainer>
+        <Photos photos={photos} title={name} />
+      </PhotoContainer>
+      <InfoContainer>
+        {isAuthenticated && role == "user" && (
+          <>
             <Button
               variant="contained"
               sx={{
@@ -189,29 +190,29 @@ const AttractionView = () => {
             >
               {to_visit ? 'Do odwiedzenia' : 'Dodaj na listę do odwiedzenia'}
             </Button>
-            </>)}
-            <AttractionInfo attraction={attraction} />
-            {isAuthenticated && role == "user" && (
-              <TileCard>
-              <CardContent>
-                <Title 
-                  variant="h5" 
-                  gutterBottom>Twoja ocena
-                </Title>
-                <Rating
-                  key={refreshKey}
-                  name="user-rating"
-                  value={userRating}
-                  onChange={(event, newValue) => handleAddRating(newValue)}
-                  max={10} 
-                />
-              </CardContent>
-            </TileCard>
-            )}
-            <Grid item xs={12} >
-              <Comments comments={comments} attraction_id={attraction.id} addComment={addComment}/>
-            </Grid>
-          </InfoContainer>
+          </>)}
+        <AttractionInfo attraction={attraction} />
+        {isAuthenticated && role == "user" && (
+          <TileCard>
+            <CardContent>
+              <Title
+                variant="h5"
+                gutterBottom>Twoja ocena
+              </Title>
+              <Rating
+                key={refreshKey}
+                name="user-rating"
+                value={userRating}
+                onChange={(event, newValue) => handleAddRating(newValue)}
+                max={10}
+              />
+            </CardContent>
+          </TileCard>
+        )}
+        <Grid item xs={12} >
+          <Comments comments={comments} attraction_id={attraction.id} addComment={addComment} />
+        </Grid>
+      </InfoContainer>
     </ViewContainer>
   );
 };

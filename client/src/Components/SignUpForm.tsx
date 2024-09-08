@@ -27,7 +27,7 @@ const Registration = () => {
   if (isAuthenticated) navigate('/');
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordPattern = /^(?=.*[\p{Lowercase_Letter}])(?=.*[\p{Uppercase_Letter}])(?=.*\d)(?=.*[\W])[\p{Lowercase_Letter}\p{Uppercase_Letter}\d\W]{8,}$/u;  
+  const passwordPattern = /^(?=.*[\p{Lowercase_Letter}])(?=.*[\p{Uppercase_Letter}])(?=.*\d)(?=.*[\W])[\p{Lowercase_Letter}\p{Uppercase_Letter}\d\W]{8,}$/u;
   const nameSurnamePattern = /^[\p{Letter}\s-]+$/u;
 
   const validate = (): boolean => {
@@ -81,6 +81,7 @@ const Registration = () => {
       setLogin('');
       setMail('');
       setPassword('');
+      alert("Pomyślnie zarejestrowano użytkownika.")
       navigate('/login');
     } else {
       setRegisterError('Użytkownik o tym loginie lub adresie email już istnieje');
@@ -94,60 +95,60 @@ const Registration = () => {
         <Typography color="error" style={{ marginBottom: '1rem' }}>{registerError}</Typography>
       )}
       <FormContent>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Imię"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={!!errors.name}
-          helperText={errors.name}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Nazwisko"
-          value={surname}
-          onChange={(e) => setSurname(e.target.value)}
-          error={!!errors.surname}
-          helperText={errors.surname}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Login"
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-          error={!!errors.login}
-          helperText={errors.login}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Adres e-mail"
-          value={mail}
-          onChange={(e) => setMail(e.target.value)}
-          error={!!errors.mail}
-          helperText={errors.mail}
-        />
-      </InputContainer>
-      <InputContainer>
-        <StyledTextField
-          fullWidth
-          label="Hasło"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          error={!!errors.password}
-          helperText={errors.password}
-        />
-      </InputContainer>
-      <StyledButton  onClick={handleSubmit} fullWidth>
-        Zarejestruj się
-      </StyledButton>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Imię"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Nazwisko"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            error={!!errors.surname}
+            helperText={errors.surname}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Login"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            error={!!errors.login}
+            helperText={errors.login}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Adres e-mail"
+            value={mail}
+            onChange={(e) => setMail(e.target.value)}
+            error={!!errors.mail}
+            helperText={errors.mail}
+          />
+        </InputContainer>
+        <InputContainer>
+          <StyledTextField
+            fullWidth
+            label="Hasło"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
+          />
+        </InputContainer>
+        <StyledButton onClick={handleSubmit} fullWidth>
+          Zarejestruj się
+        </StyledButton>
       </FormContent>
     </FormContainer>
   );

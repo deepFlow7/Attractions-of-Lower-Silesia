@@ -1,9 +1,9 @@
 export interface Photo {
-    id: number;
-    attraction_id: number;
-    photo: string;
-    caption?: string;
-  }
+  id: number;
+  attraction_id: number;
+  photo: string;
+  caption?: string;
+}
 
 export interface Attraction extends NewAttraction {
   id: number;
@@ -38,11 +38,11 @@ interface UserData {
   mail: string;
 }
 
-export interface User extends UserData{
+export interface User extends UserData {
   id: number;
 }
 
-export interface UserWithLogin extends UserData{
+export interface UserWithLogin extends UserData {
   login: string;
   id: number;
 }
@@ -118,7 +118,7 @@ export interface Route {
 export type role = 'admin' | 'user';
 
 export type possible_type = "natura" | "urbanistyka";
-export type subtypes = 
+export type subtypes =
   | "zamek"
   | "kościół"
   | "muzeum"

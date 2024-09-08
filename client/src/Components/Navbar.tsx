@@ -25,10 +25,10 @@ const StyledAppBar = styled(AppBar)`
 `;
 
 const Navbar = () => {
-    const {isAuthenticated, isBlocked, logout, user, role, updateUser, username} = useAuth();
-    const location = useLocation();
-    const currentUrl = location.pathname + location.search; 
-    const navigate = useNavigate();
+  const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
+  const location = useLocation();
+  const currentUrl = location.pathname + location.search;
+  const navigate = useNavigate();
 
   const handleRedirectWithReturnUrl = (route: string) => {
     navigate(route, { state: { returnUrl: currentUrl } });

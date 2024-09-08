@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import React, { useState, useEffect } from 'react';
 import { Photo } from '../types';
 import { Grid, Card, CardContent, Button } from '@mui/material';
-import { Title, Body} from '../Styles/Typography';
+import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 
 interface PhotoProps {
@@ -37,11 +37,11 @@ const Photos: React.FC<PhotoProps> = ({ photos, title }) => {
           )}
         </Grid>
         <Grid item xs={6}>
-        <StyledButton>
+          <StyledButton>
 
-          <Button onClick={() => handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
+            <Button onClick={() => handlePreviousPhoto(photos)} variant="contained" color="primary" fullWidth>Poprzednie</Button>
           </StyledButton>
-      
+
         </Grid>
         <Grid item xs={6}>
           <StyledButton>

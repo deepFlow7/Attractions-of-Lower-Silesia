@@ -12,17 +12,17 @@ import {
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router-dom";
-import { Challenge } from "../types"; 
+import { Challenge } from "../types";
 import { useAuth } from "../Providers/AuthContext";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
-import { Title,  bodyMixin  } from "../Styles/Typography";
+import { Title, bodyMixin } from "../Styles/Typography";
 
 interface ListProps {
   challenges: Challenge[];
   isManaging?: boolean;
-  onDelete?: (id : number) => void; 
-  onSave?: (id : number, newName : string) => void; 
+  onDelete?: (id: number) => void;
+  onSave?: (id: number, newName: string) => void;
 }
 
 // Stylowany komponent List

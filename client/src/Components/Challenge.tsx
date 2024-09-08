@@ -12,7 +12,7 @@ import { useAuth } from "../Providers/AuthContext";
 import { ViewContainer } from '../Styles/View';
 import { MapContainer } from '../Styles/Map';
 import { DictionaryContainer } from '../Styles/Dictionary';
-import {Title, Body} from '../Styles/Typography';
+import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 
 function haversineDistanceBetweenPoints(
@@ -29,7 +29,7 @@ function haversineDistanceBetweenPoints(
   const d =
     Math.acos(
       Math.sin(p1) * Math.sin(p2) +
-        Math.cos(p1) * Math.cos(p2) * Math.cos(deltaLambda)
+      Math.cos(p1) * Math.cos(p2) * Math.cos(deltaLambda)
     ) * R;
   return d;
 }
@@ -63,12 +63,12 @@ const ChallengeView: React.FC = () => {
     get_challenge_data();
     if (user && role == "user") {
       api
-        .get(`/api/takes_part_in_challenge/${id}/${user.id}`)
+        .get(`/api/takes_part_in_challenge/${id}/`)
         .then((response) => {
           setTakesPart(response.data);
           if (response.data) {
             api
-              .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
+              .get(`/api/challenge/visited_attractions/${id}`)
               .then((response) => {
                 setVisitedAttractions(response.data);
               })
@@ -80,7 +80,7 @@ const ChallengeView: React.FC = () => {
         .catch((error) => {
           console.error("There was an error fetching the data!", error);
         });
-    } else console.log("nie zalogowoano");
+    }
   }, [id, user]);
 
   if (!challenge) {
@@ -174,9 +174,9 @@ const ChallengeView: React.FC = () => {
 
   return (
     <ViewContainer>
-    <MapContainer four challenge>
-      <Title>{challenge.name}</Title>
-      <Body margin>{challenge.description}</Body>
+      <MapContainer four challenge>
+        <Title>{challenge.name}</Title>
+        <Body margin>{challenge.description}</Body>
         <CardContent>
           <Map
             x={challenge.coords.x}
@@ -185,8 +185,8 @@ const ChallengeView: React.FC = () => {
             attractions={challenge.attractions}
           />
         </CardContent>
-    </MapContainer>
-    <DictionaryContainer>
+      </MapContainer>
+      <DictionaryContainer>
         <CardContent>
           <ChallengeAttractionsList
             attractions={challenge.attractions}
@@ -196,22 +196,22 @@ const ChallengeView: React.FC = () => {
             loadingAttractions={loadingAttractions}
           />
         </CardContent>
-    </DictionaryContainer>
-    <DictionaryContainer second>
+      </DictionaryContainer>
+      <DictionaryContainer second>
         <CardContent>
           <Title>Ranking</Title>
           <RankingTable key={refreshKey} challenge_id={id ? parseInt(id) : null} />
           {user && role == "user" && !takesPart && (
             <StyledButton
-          
+
               onClick={handleParticipation}
             >
               Weź udział
             </StyledButton>
           )}
         </CardContent>
-    </DictionaryContainer>
-  </ViewContainer>
+      </DictionaryContainer>
+    </ViewContainer>
   );
 };
 

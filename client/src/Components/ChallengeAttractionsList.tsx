@@ -84,40 +84,40 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
       <Title >Lista Atrakcji</Title>
       <Box
         sx={{
-          maxHeight: 400, 
+          maxHeight: 400,
           overflowY: "auto",
         }}
       >
         <Grid container spacing={2}>
           {attractions.map((attraction) => (
             <Grid item xs={12} key={attraction.id}>
-             
-                <Button
-                  component={Link}
-                  to={`/attraction/${attraction.id}`}
-                  color="inherit"
-                  key={attraction.id}
-                  fullWidth
-                  style={{ justifyContent: "flex-start" }}
-                >
-                  <StyledListItem>
-                    <StyledListItemText primary={attraction.name} />
-                    <StyledListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }}/>
-                  </StyledListItem>
-                </Button>
-                {showVisitButtons &&
-                  (isAttractionVisited(attraction.id) ? (
+
+              <Button
+                component={Link}
+                to={`/attraction/${attraction.id}`}
+                color="inherit"
+                key={attraction.id}
+                fullWidth
+                style={{ justifyContent: "flex-start" }}
+              >
+                <StyledListItem>
+                  <StyledListItemText primary={attraction.name} />
+                  <StyledListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }} />
+                </StyledListItem>
+              </Button>
+              {showVisitButtons &&
+                (isAttractionVisited(attraction.id) ? (
+                  <Body gray>
+                    Odwiedzone
+                  </Body>
+                ) : (
+                  isAttractionLoading(attraction.id) ? (
                     <Body gray>
-                      Odwiedzone 
+                      Sprawdzam lokalizację <CircularProgress size={15} />
                     </Body>
                   ) : (
-                    isAttractionLoading(attraction.id) ? (
-                      <Body gray>
-                         Sprawdzam lokalizację <CircularProgress size={15}/>
-                      </Body>
-                    ) : (
                     <VisitButton onClick={() => onClick(attraction)}>
-                      Odwiedź 
+                      Odwiedź
                     </VisitButton>
                   )))}
             </Grid>

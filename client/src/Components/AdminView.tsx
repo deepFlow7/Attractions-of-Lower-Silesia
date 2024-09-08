@@ -22,11 +22,11 @@ position: absolute;
 `
 
 const AdminView: React.FC = () => {
-  const [attractions, setAttractions] = useState<Attraction[]>([]); 
-  const [challenges, setChallenges] = useState<Challenge[]>([]); 
-  const [users, setUsers] = useState<UserWithLogin[]>([]); 
-  const [blockedUsers, setBlockedUsers] = useState<number[]>([]); 
-  const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true); 
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [users, setUsers] = useState<UserWithLogin[]>([]);
+  const [blockedUsers, setBlockedUsers] = useState<number[]>([]);
+  const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true);
   const [manageAttractions, setManageAttractions] = useState(false);
   const [manageChallenges, setManageChallenges] = useState(false);
   const [manageUsers, setManageUsers] = useState(false);
@@ -54,29 +54,29 @@ const AdminView: React.FC = () => {
 
     const fetchUsers = async () => {
       api.get('/api/users')
-      .then(response => {
-        setUsers(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
+        .then(response => {
+          setUsers(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
     };
 
     const fetchBlockedUsers = async () => {
       api.get('/api/users/blocked')
-      .then(response => {
-        setBlockedUsers(response.data.blocked_users);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
+        .then(response => {
+          setBlockedUsers(response.data.blocked_users);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the data!', error);
+        });
     };
 
-    fetchAttractions(); 
-    fetchChallenges(); 
-    fetchUsers(); 
+    fetchAttractions();
+    fetchChallenges();
+    fetchUsers();
     fetchBlockedUsers();
-  }, []); 
+  }, []);
 
   const toggleView = () => {
     setIsAdminPanel(!isAdminPanel);
@@ -96,11 +96,11 @@ const AdminView: React.FC = () => {
 
   const deleteAttraction = async (id: number) => {
     const isConfirmed = window.confirm("Czy na pewno chcesz usunąć tę atrakcję?");
-    if (!isConfirmed) return; 
-  
+    if (!isConfirmed) return;
+
     try {
       await api.post(`/api/attraction/delete`, { attractionId: id });
-      setAttractions(prevAttractions => 
+      setAttractions(prevAttractions =>
         prevAttractions.filter(attraction => attraction.id !== id)
       );
     } catch (error) {
@@ -108,7 +108,7 @@ const AdminView: React.FC = () => {
     }
   };
 
-  const changeAttractionName = async (id: number, newName : string) => {
+  const changeAttractionName = async (id: number, newName: string) => {
     try {
       await api.post(`/api/attraction/update`, { attractionId: id, newName: newName });
       setAttractions(prevAttractions =>
@@ -123,11 +123,11 @@ const AdminView: React.FC = () => {
 
   const deleteChallenge = async (id: number) => {
     const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wyzwanie?");
-    if (!isConfirmed) return; 
-  
+    if (!isConfirmed) return;
+
     try {
       await api.post(`/api/challenge/delete`, { challengeId: id });
-      setChallenges(prevChallenges => 
+      setChallenges(prevChallenges =>
         prevChallenges.filter(challenge => challenge.id !== id)
       );
     } catch (error) {
@@ -135,7 +135,7 @@ const AdminView: React.FC = () => {
     }
   };
 
-  const changeChallengeName = async (id: number, newName : string) => {
+  const changeChallengeName = async (id: number, newName: string) => {
     try {
       await api.post(`/api/challenge/update`, { challengeId: id, newName: newName });
       setChallenges(prevChallenges =>
@@ -150,11 +150,11 @@ const AdminView: React.FC = () => {
 
   const blockUser = async (id: number) => {
     const isConfirmed = window.confirm("Czy na pewno chcesz zablokować tego użytkownika?");
-    if (!isConfirmed) return; 
-  
+    if (!isConfirmed) return;
+
     try {
       await api.post(`/api/user/block`, { user_id: id });
-      setBlockedUsers(prevBlocked => 
+      setBlockedUsers(prevBlocked =>
         [...prevBlocked, id]
       );
     } catch (error) {
@@ -164,11 +164,11 @@ const AdminView: React.FC = () => {
 
   const unblockUser = async (id: number) => {
     const isConfirmed = window.confirm("Czy na pewno chcesz odblokować tego użytkownika?");
-    if (!isConfirmed) return; 
-  
+    if (!isConfirmed) return;
+
     try {
       await api.post(`/api/user/unblock`, { user_id: id });
-      setBlockedUsers(prevBlocked => 
+      setBlockedUsers(prevBlocked =>
         prevBlocked.filter(userId => userId !== id)
       );
     } catch (error) {
@@ -177,7 +177,7 @@ const AdminView: React.FC = () => {
   };
 
   const changeUserBlock = async (id: number) => {
-    if (blockedUsers?.includes(id)) 
+    if (blockedUsers?.includes(id))
       await unblockUser(id);
     else
       await blockUser(id);
@@ -190,62 +190,62 @@ const AdminView: React.FC = () => {
         {isAdminPanel ? "Przełącz na widok główny" : "Przełącz na panel administratora"}
       </StyledButton>
 
-    {isAdminPanel ? (
-      <ViewContainer  buttonOnTop>
-        <AdminContainer>
-          <Card>
-            <CardActions>
-              <StyledButton size="small" color="primary" onClick={toggleManageUsers}>
-              {manageUsers ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
-              </StyledButton>
-            </CardActions>
-            <CardContent>
-              <UsersList 
-                users={users}
-                isManaging={manageUsers} 
-                changeUserBlock={changeUserBlock}
-                blockedUsers={blockedUsers}
-              />
-            </CardContent>
-          </Card>
+      {isAdminPanel ? (
+        <ViewContainer buttonOnTop>
+          <AdminContainer>
+            <Card>
+              <CardActions>
+                <StyledButton size="small" color="primary" onClick={toggleManageUsers}>
+                  {manageUsers ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
+                </StyledButton>
+              </CardActions>
+              <CardContent>
+                <UsersList
+                  users={users}
+                  isManaging={manageUsers}
+                  changeUserBlock={changeUserBlock}
+                  blockedUsers={blockedUsers}
+                />
+              </CardContent>
+            </Card>
           </AdminContainer>
           <AdminContainer>
-          <Card>
-            <CardActions>
-              <StyledButton size="small" color="primary" onClick={toggleManageAttractions}>
-              {manageAttractions ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
-              </StyledButton>
-            </CardActions>
-            <CardContent>
-              <AttractionsList 
-                attractions={attractions} 
-                isManaging={manageAttractions} 
-                onDelete={deleteAttraction}
-                onSave={changeAttractionName}
-              />
-            </CardContent>
-          </Card>
+            <Card>
+              <CardActions>
+                <StyledButton size="small" color="primary" onClick={toggleManageAttractions}>
+                  {manageAttractions ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
+                </StyledButton>
+              </CardActions>
+              <CardContent>
+                <AttractionsList
+                  attractions={attractions}
+                  isManaging={manageAttractions}
+                  onDelete={deleteAttraction}
+                  onSave={changeAttractionName}
+                />
+              </CardContent>
+            </Card>
           </AdminContainer>
           <AdminContainer>
-          <Card>
-            <CardActions>
-              <StyledButton size="small" color="primary" onClick={toggleManageChallenges}>
-                {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
-              </StyledButton>
-            </CardActions>
-            <ChallengesList 
-              challenges={challenges} 
-              isManaging={manageChallenges} 
-              onDelete={deleteChallenge}
-              onSave={changeChallengeName}
-            />
-          </Card>
+            <Card>
+              <CardActions>
+                <StyledButton size="small" color="primary" onClick={toggleManageChallenges}>
+                  {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
+                </StyledButton>
+              </CardActions>
+              <ChallengesList
+                challenges={challenges}
+                isManaging={manageChallenges}
+                onDelete={deleteChallenge}
+                onSave={changeChallengeName}
+              />
+            </Card>
           </AdminContainer>
         </ViewContainer>
       ) : (
         <AdminContainer>
-        <Home /></AdminContainer>
-      )};
+          <Home /></AdminContainer>
+      )}
     </Container>
   );
 };

@@ -3,14 +3,14 @@ import { List, ListItem, ListItemText, Typography, Button } from "@mui/material"
 import styled from "@emotion/styled";
 import { UserWithLogin } from "../types";
 import { Title, bodyMixin } from "../Styles/Typography";
-import { shadows , colors} from "../Styles/Themes";
+import { shadows, colors } from "../Styles/Themes";
 import { useAuth } from "../Providers/AuthContext";
 
 interface UsersListProps {
   users: UserWithLogin[];
   isManaging?: boolean;
-  changeUserBlock?: (id : number) => void;
-  blockedUsers? : number [];
+  changeUserBlock?: (id: number) => void;
+  blockedUsers?: number[];
 }
 // Stylizacja Listy
 const StyledList = styled(List)`

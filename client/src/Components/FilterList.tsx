@@ -3,7 +3,7 @@ import React from 'react';
 import { Grid } from '@mui/material';
 import Filter from './Filter';
 import { possibleTypes, possibleSubtypes, possible_type, subtypes } from '../types';
-import  { Title } from '../Styles/Typography';
+import { Title } from '../Styles/Typography';
 interface FilterListProps {
   onChange: (selectedTypes: possible_type[], selectedSubtypes: subtypes[]) => void;
 }

@@ -15,7 +15,7 @@ import { FilterContainer } from '../Styles/Filter';
 import { Input } from '../Styles/Input';
 import { Body, Title } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
-import {colors } from '../Styles/Themes';
+import { colors } from '../Styles/Themes';
 const ScrollableBox = styled.div`
   overflow-y: auto;
 `;
@@ -271,7 +271,7 @@ const RoutePlanner = () => {
           {selectedAttractions.map((selected, index) => {
             const attraction = attractions.find(attr => attr.id === selected);
             return (
-              <div key={index} style={{ display: 'flex', alignItems: 'center'}}>
+              <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton onClick={() => handleMoveUp(index)} disabled={index === 0}>
                   <ArrowUpward />
                 </IconButton>
@@ -284,7 +284,7 @@ const RoutePlanner = () => {
                       {attraction.name}
                     </a>}
                 </Body>
-                
+
                 <StyledButton secondary onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
               </div>
             );
