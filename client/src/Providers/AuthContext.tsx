@@ -1,19 +1,20 @@
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
-import { User, role } from '../types';
+
 import { useSessionStorage } from '../Hooks/SessionStorage';
 import api from '../API/api';
+import { User, Role } from '../types';
 
 interface Context {
-  isAuthenticated: boolean,
-  isBlocked: boolean,
-  login: (username: string, password: string) => void,
-  logout: () => void,
-  user: User | null,
-  username: string,
-  role: role,
-  setRole: (r: role) => void,
-  updateUsername: (s: string) => void,
-  updateUser: (new_user: User | null) => void
+  isAuthenticated: boolean;
+  isBlocked: boolean;
+  login: (username: string, password: string) => void;
+  logout: () => void;
+  user: User | null;
+  username: string;
+  role: Role;
+  setRole: (r: Role) => void;
+  updateUsername: (s: string) => void;
+  updateUser: (new_user: User | null) => void;
 }
 
 const AuthContext = createContext({} as Context);
@@ -83,7 +84,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isBlocked, login, logout, user, username, role, updateUsername, setRole, updateUser } as Context}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        isBlocked,
+        login,
+        logout,
+        user,
+        username,
+        role,
+        updateUsername,
+        setRole,
+        updateUser
+      } as Context}
+    >
       {children}
     </AuthContext.Provider>
   );

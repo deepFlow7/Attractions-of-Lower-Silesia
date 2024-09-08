@@ -1,3 +1,8 @@
+--USAGE: psql -f inserty_bazowe.sql
+
+\c maps
+
+-- Inserting sample data into the attractions table
 INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) VALUES
 
     ('Zamek Książ', POINT(50.8418, 16.2902), 'urbanistyka', 'zamek', 9, 180, 7, 'Zamek Książ to jedna z największych atrakcji Dolnego Śląska, położona w malowniczym parku krajobrazowym. Zamek oferuje bogatą historię, piękną architekturę i możliwość eksploracji na długie godziny.'),
@@ -42,7 +47,6 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
     ('Zamek w Bystrzycy Kłodzkiej', POINT(50.3000, 16.6500), 'urbanistyka', 'zamek', 7, 90, 10, 'Zamek w Bystrzycy Kłodzkiej to malownicza warownia, która oferuje fascynującą podróż w przeszłość. Zamek jest doskonałym punktem widokowym na miasto i okolice.'),
     ('Zamek w Ścinawce Średniej', POINT(50.6167, 16.5167), 'urbanistyka', 'zamek', 6, 60, 2, 'Zamek w Ścinawce Średniej to malownicza warownia położona wśród górskich krajobrazów. Jest to miejsce o bogatej historii, idealne na spokojny spacer i poznanie lokalnej kultury.');
 
-
 INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_takes, rating, description) VALUES
     ('Papa Krasnal', POINT(51.1139, 17.0334), 'urbanistyka', 'krasnal', 2, 5, 3, 'Najstarszy i największy krasnal, znajduje się przy placu Dominikańskim. Upamiętnia ruch Pomarańczowej Alternatywy.'),
     ('Fechmistrz', POINT(51.1142, 17.0326), 'urbanistyka', 'krasnal', 2, 5, 3, 'Stoi obok Uniwersytetu Wrocławskiego.'),
@@ -68,27 +72,26 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
 -- Inserting sample data into the comments table
 INSERT INTO comments (author, content, votes, attraction) 
 VALUES 
-  (1, 'Great place!', 10, 1),
-  (2, 'I love this castle!', 8, 2),
-  (1, 'Amazing history here.', 5, 3);
+  (1, 'Robi wrażenie', 10, 1),
+  (2, 'Ciekawy budynek', 8, 2),
+  (1, 'Wspaniały obraz.', 5, 3);
 
+-- Inserting sample data into the challenges table
+INSERT INTO challenges (name, description, coords, zoom) VALUES
+    ('Dolnośląskie Zamki', 'Odwiedź wszystkie zamki na Dolnym Śląsku, aby odkryć bogatą historię regionu.', '(50.5, 15.0)', 8),
+    ('Górskie Wyprawy', 'Zdobądź najpiękniejsze szczyty i formacje skalne w Dolnym Śląsku.', '(50.0, 16.15)', 9),
+    ('Kulturalne Dziedzictwo', 'Zwiedź najważniejsze muzea, kościoły i zabytki architektury w regionie.', '(50.8, 17.15)', 9),
+    ('Krasnalowa przygoda', 'Zbierz wrocławskie krasnale.', '(51.109, 17.032)', 15);
 
--- Przykładowe wpisy do tabeli challenges
-INSERT INTO challenges (name, description, coords, zoom)
-VALUES 
-    ('Mountain Hike', 'A challenging hike up the mountain.', '(50.5, 15.0)', 12),
-    ('City Scavenger Hunt', 'Find hidden treasures in the city.', '(51.0, 16.0)', 14),
-    ('Beach Cleanup', 'Help clean up the beach and earn points.', '(51.5, 17.0)', 10);
-
--- Przykładowe wpisy do tabeli challenge_attractions
+-- Inserting sample data into the challenge_attractions table
 INSERT INTO challenge_attractions (challenge_id, attraction_id, points) VALUES
     -- Dolnośląskie Zamki
-    (1, 1, 50), -- Zamek Książ
-    (1, 7, 60), -- Zamek Czocha
+    (1,  1, 50), -- Zamek Książ
+    (1,  7, 60), -- Zamek Czocha
     (1, 10, 70), -- Twierdza Kłodzko
     (1, 11, 80), -- Zamek Grodno
     (1, 14, 90), -- Zamek Chojnik
-    (1, 26, 100), -- Zamek w Leśnicy
+    (1, 26, 10), -- Zamek w Leśnicy
     (1, 27, 40), -- Zamek w Świebodzicach
     (1, 28, 30), -- Zamek w Niemczy
     (1, 29, 20), -- Zamek w Siedlęcinie
@@ -97,7 +100,7 @@ INSERT INTO challenge_attractions (challenge_id, attraction_id, points) VALUES
     (1, 32, 70), -- Zamek w Grodźcu
     (1, 33, 80), -- Zamek w Pieskowej Skale
     (1, 34, 90), -- Zamek w Mosznej
-    (1, 35, 100), -- Zamek w Karpnikach
+    (1, 35, 10), -- Zamek w Karpnikach
     (1, 36, 40), -- Zamek w Starej Kamienicy
     (1, 37, 30), -- Zamek w Wojcieszowie
     (1, 38, 20), -- Zamek w Książęcej Górze
@@ -106,26 +109,48 @@ INSERT INTO challenge_attractions (challenge_id, attraction_id, points) VALUES
     (1, 41, 60), -- Zamek w Ścinawce Średniej
 
     -- Górskie Wyprawy
-    (2, 4, 70), -- Śnieżka
-    (2, 5, 80), -- Szczeliniec Wielki
-    (2, 6, 90), -- Błędne Skały
-    (2, 13, 100), -- Wodospad Kamieńczyka
+    (2,  4, 70), -- Śnieżka
+    (2,  5, 80), -- Szczeliniec Wielki
+    (2,  6, 90), -- Błędne Skały
+    (2, 13, 10), -- Wodospad Kamieńczyka
     (2, 24, 40), -- Kolorowe Jeziorka
 
     -- Kulturalne Dziedzictwo
-    (3, 2, 30), -- Kościół Pokoju w Świdnicy
-    (3, 3, 20), -- Panorama Racławicka
+    (3,  2, 30), -- Kościół Pokoju w Świdnicy
+    (3,  3, 20), -- Panorama Racławicka
     (3, 15, 10), -- Podziemne Miasta Riese
     (3, 16, 60), -- Arboretum Wojsławice
     (3, 17, 70), -- Hala Stulecia we Wrocławiu
     (3, 18, 80), -- Ogród Japoński we Wrocławiu
     (3, 19, 90), -- Kolejkowo we Wrocławiu
-    (3, 20, 100), -- Hydropolis we Wrocławiu
+    (3, 20, 10), -- Hydropolis we Wrocławiu
     (3, 21, 40), -- ZOO Wrocław
     (3, 22, 30), -- Bazylika w Bardzie
-    (3, 23, 20); -- Muzeum Papiernictwa w Dusznikach-Zdroju
+    (3, 23, 20), -- Muzeum Papiernictwa w Dusznikach-Zdroju
 
+    -- Krasnalowa przygoda
+    (4, 42, 30), -- Papa Krasnal
+    (4, 43, 20), -- Fechmistrz
+    (4, 44, 10), -- Rzeźnik
+    (4, 45, 60), -- Syzyfki
+    (4, 46, 70), -- Krasnal Pracz
+    (4, 47, 80), -- Niemowa i Niewidoma
+    (4, 48, 90), -- Marzenka
+    (4, 49, 10), -- Automator
+    (4, 50, 40), -- ATMers
+    (4, 51, 30), -- Chrapacz
+    (4, 52, 20), -- Programista
+    (4, 53, 20), -- Capgeminiusz
+    (4, 54, 22), -- Długi
+    (4, 55, 10), -- Printer
+    (4, 56,  4), -- Kacper Florianek
+    (4, 57, 20), -- Gazuś
+    (4, 58, 11), -- Wymieniacz
+    (4, 59, 20), -- Gołąbek
+    (4, 60, 23), -- Meloman
+    (4, 61,  1); -- Janinek
 
+-- Inserting sample data into the photos table
 INSERT INTO photos (attraction_id, photo, caption) VALUES
 (1, 'https://dolnyslask.travel/wp-content/uploads/2021/12/476_-Ksiaz_szer.jpg', 'zdjęcie z drona'),
 (1, 'https://images.zwierciadlo.pl/_resource/res/path/8a/0e/8a0ebfe6-802f-453d-b232-1a98a08b62a2_f750x750', ''),

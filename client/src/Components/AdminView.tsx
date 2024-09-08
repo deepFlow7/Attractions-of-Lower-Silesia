@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import styled from '@emotion/styled';
+import { Card, CardContent, CardActions } from '@mui/material';
+
 import api from '../API/api';
-import UsersList from "./UsersList";
-import ChallengesList from "./ChallengesList";
-import AttractionsList from "./AttractionsList";
-import { Card, CardContent, CardActions } from "@mui/material";
-import styled from "@emotion/styled";
-import Home from "./Home";
-import { UserWithLogin, Attraction, Challenge } from "../types";
-import { ViewContainer } from "../Styles/View";
-import { AdminContainer } from "../Styles/List";
-import { StyledButton } from "../Styles/Button";
-import { colors, sizes } from "../Styles/Themes";
+import UsersList from './UsersList';
+import ChallengesList from './ChallengesList';
+import AttractionsList from './AttractionsList';
+import Home from './Home';
+import { UserWithLogin, Attraction, Challenge } from '../types';
+import { ViewContainer } from '../Styles/View';
+import { AdminContainer } from '../Styles/List';
+import { StyledButton } from '../Styles/Button';
+import { colors, sizes } from '../Styles/Themes';
 
 const Container = styled.div`
-background-color: ${colors.secondary};
-position: absolute;
+  background-color: ${colors.secondary};
+  position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
   width: calc(100vw + 5px);
   height: calc(100vh - ${sizes.navbarHeight});
-`
+`;
 
 const AdminView: React.FC = () => {
   const [attractions, setAttractions] = useState<Attraction[]>([]);
@@ -27,29 +28,27 @@ const AdminView: React.FC = () => {
   const [users, setUsers] = useState<UserWithLogin[]>([]);
   const [blockedUsers, setBlockedUsers] = useState<number[]>([]);
   const [isAdminPanel, setIsAdminPanel] = useState<boolean>(true);
-  const [manageAttractions, setManageAttractions] = useState(false);
-  const [manageChallenges, setManageChallenges] = useState(false);
-  const [manageUsers, setManageUsers] = useState(false);
+  const [manageAttractions, setManageAttractions] = useState<boolean>(false);
+  const [manageChallenges, setManageChallenges] = useState<boolean>(false);
+  const [manageUsers, setManageUsers] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAttractions = async () => {
-      api.get('/api/attractions')
-        .then(response => {
-          setAttractions(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the data!', error);
-        });
+      try {
+        const response = await api.get('/api/attractions');
+        setAttractions(response.data);
+      } catch (error) {
+        console.error('There was an error fetching the attractions data!', error);
+      }
     };
 
     const fetchChallenges = async () => {
-      api.get('/api/challenges')
-        .then(response => {
-          setChallenges(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the data!', error);
-        });
+      try {
+        const response = await api.get('/api/challenges');
+        setChallenges(response.data);
+      } catch (error) {
+        console.error('There was an error fetching the challenges data!', error);
+      }
     };
 
     const fetchUsers = async () => {
@@ -68,7 +67,7 @@ const AdminView: React.FC = () => {
           setBlockedUsers(response.data.blocked_users);
         })
         .catch(error => {
-          console.error('There was an error fetching the data!', error);
+          console.error('There was an error fetching the blocked users data!', error);
         });
     };
 
@@ -79,7 +78,7 @@ const AdminView: React.FC = () => {
   }, []);
 
   const toggleView = () => {
-    setIsAdminPanel(!isAdminPanel);
+    setIsAdminPanel(prevState => !prevState);
   };
 
   const toggleManageAttractions = () => {
@@ -95,11 +94,11 @@ const AdminView: React.FC = () => {
   };
 
   const deleteAttraction = async (id: number) => {
-    const isConfirmed = window.confirm("Czy na pewno chcesz usunąć tę atrakcję?");
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć tę atrakcję?');
     if (!isConfirmed) return;
 
     try {
-      await api.post(`/api/attraction/delete`, { attractionId: id });
+      await api.post('/api/attraction/delete', { attractionId: id });
       setAttractions(prevAttractions =>
         prevAttractions.filter(attraction => attraction.id !== id)
       );
@@ -110,7 +109,7 @@ const AdminView: React.FC = () => {
 
   const changeAttractionName = async (id: number, newName: string) => {
     try {
-      await api.post(`/api/attraction/update`, { attractionId: id, newName: newName });
+      await api.post('/api/attraction/update', { attractionId: id, newName });
       setAttractions(prevAttractions =>
         prevAttractions.map(attraction =>
           attraction.id === id ? { ...attraction, name: newName } : attraction
@@ -122,22 +121,22 @@ const AdminView: React.FC = () => {
   };
 
   const deleteChallenge = async (id: number) => {
-    const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wyzwanie?");
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć to wyzwanie?');
     if (!isConfirmed) return;
 
     try {
-      await api.post(`/api/challenge/delete`, { challengeId: id });
+      await api.post('/api/challenge/delete', { challengeId: id });
       setChallenges(prevChallenges =>
         prevChallenges.filter(challenge => challenge.id !== id)
       );
     } catch (error) {
-      console.error('Error deleting challange:', error);
+      console.error('Error deleting challenge:', error);
     }
   };
 
   const changeChallengeName = async (id: number, newName: string) => {
     try {
-      await api.post(`/api/challenge/update`, { challengeId: id, newName: newName });
+      await api.post('/api/challenge/update', { challengeId: id, newName });
       setChallenges(prevChallenges =>
         prevChallenges.map(challenge =>
           challenge.id === id ? { ...challenge, name: newName } : challenge
@@ -149,11 +148,11 @@ const AdminView: React.FC = () => {
   };
 
   const blockUser = async (id: number) => {
-    const isConfirmed = window.confirm("Czy na pewno chcesz zablokować tego użytkownika?");
+    const isConfirmed = window.confirm('Czy na pewno chcesz zablokować tego użytkownika?');
     if (!isConfirmed) return;
 
     try {
-      await api.post(`/api/user/block`, { user_id: id });
+      await api.post('/api/user/block', { userId: id });
       setBlockedUsers(prevBlocked =>
         [...prevBlocked, id]
       );
@@ -163,11 +162,11 @@ const AdminView: React.FC = () => {
   };
 
   const unblockUser = async (id: number) => {
-    const isConfirmed = window.confirm("Czy na pewno chcesz odblokować tego użytkownika?");
+    const isConfirmed = window.confirm('Czy na pewno chcesz odblokować tego użytkownika?');
     if (!isConfirmed) return;
 
     try {
-      await api.post(`/api/user/unblock`, { user_id: id });
+      await api.post('/api/user/unblock', { userId: id });
       setBlockedUsers(prevBlocked =>
         prevBlocked.filter(userId => userId !== id)
       );
@@ -177,17 +176,17 @@ const AdminView: React.FC = () => {
   };
 
   const changeUserBlock = async (id: number) => {
-    if (blockedUsers?.includes(id))
+    if (blockedUsers.includes(id)) {
       await unblockUser(id);
-    else
+    } else {
       await blockUser(id);
-  }
-
+    }
+  };
 
   return (
     <Container>
       <StyledButton onClick={toggleView}>
-        {isAdminPanel ? "Przełącz na widok główny" : "Przełącz na panel administratora"}
+        {isAdminPanel ? 'Przełącz na widok główny' : 'Przełącz na panel administratora'}
       </StyledButton>
 
       {isAdminPanel ? (
@@ -209,6 +208,7 @@ const AdminView: React.FC = () => {
               </CardContent>
             </Card>
           </AdminContainer>
+
           <AdminContainer>
             <Card>
               <CardActions>
@@ -226,6 +226,7 @@ const AdminView: React.FC = () => {
               </CardContent>
             </Card>
           </AdminContainer>
+
           <AdminContainer>
             <Card>
               <CardActions>
@@ -233,18 +234,21 @@ const AdminView: React.FC = () => {
                   {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
-              <ChallengesList
-                challenges={challenges}
-                isManaging={manageChallenges}
-                onDelete={deleteChallenge}
-                onSave={changeChallengeName}
-              />
+              <CardContent>
+                <ChallengesList
+                  challenges={challenges}
+                  isManaging={manageChallenges}
+                  onDelete={deleteChallenge}
+                  onSave={changeChallengeName}
+                />
+              </CardContent>
             </Card>
           </AdminContainer>
         </ViewContainer>
       ) : (
         <AdminContainer>
-          <Home /></AdminContainer>
+          <Home />
+        </AdminContainer>
       )}
     </Container>
   );

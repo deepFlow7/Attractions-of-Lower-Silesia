@@ -1,7 +1,10 @@
+/** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
-import L, { LatLngExpression } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Attraction, possibleSubtypes, subtypes } from '../types';
+
+import { Attraction, possibleSubtypes, Subtypes } from '../types';
+import { colors } from '../Styles/Themes';
 
 interface MapProps {
   x: number;
@@ -26,28 +29,27 @@ const corgiIcon = L.icon({
   iconAnchor: [25, 25],
 });
 
-type Icons = Record<PropertyKey, L.Icon>;
-const icons = possibleSubtypes
-  .reduce((icons: Icons, subtype: subtypes) => {
-    icons[subtype] = createCustomIcon({
-      iconUrl: '/obrazki/' + subtype + '.png',
-    });
-    return icons;
-  }, {});
+type Icons = Record<string, L.Icon>;
+const icons = possibleSubtypes.reduce((icons: Icons, subtype: Subtypes) => {
+  icons[subtype] = createCustomIcon({
+    iconUrl: `/obrazki/${subtype}.png`,
+  });
+  return icons;
+}, {});
 
 export interface MapRef {
   getView: () => { center: L.LatLng, zoom: number };
   setUserLocation: (coords: { x: number; y: number }) => void;
 }
 
-const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMapClick }, ref) => {
+const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, onMapClick }, ref) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
 
   useEffect(() => {
     if (mapContainer.current && !mapInstance.current) {
-      mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], zoom ? zoom : 13);
+      mapInstance.current = L.map(mapContainer.current, { attributionControl: false }).setView([x, y], zoom);
 
       L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -58,7 +60,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMap
       const bounds = L.latLngBounds(southWest, northEast);
       mapInstance.current.setMaxBounds(bounds);
       mapInstance.current.setMinZoom(8);
-      mapInstance.current.on('drag', function () {
+      mapInstance.current.on('drag', () => {
         mapInstance.current!.panInsideBounds(bounds, { animate: false });
       });
 
@@ -77,8 +79,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMap
         });
       }
     }
-  }, [onMapClick, corgiIcon, markerInstance]);
-
+  }, [onMapClick, corgiIcon, markerInstance, x, y, zoom]);
 
   useEffect(() => {
     if (mapInstance.current) {
@@ -92,21 +93,28 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMap
         const marker = L.marker([attraction.coords.x, attraction.coords.y], { icon: icons[attraction.subtype] }).addTo(mapInstance.current!);
         const link = `<a href="/attraction/${attraction.id}" target="_blank" style="color: black; text-decoration: underline;">${attraction.name}</a>`;
         marker.bindPopup(link).closePopup();
-
       });
 
-      if (path) {
-        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {}).addTo(mapInstance.current!);
+      
+      const zoomLevel = mapInstance.current!.getZoom();
+      const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
+      if (mapContainer.current) {
+          $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
       }
 
+      if (path) {
+        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {color:colors.secondary}).addTo(mapInstance.current!);
+      }
 
-      mapInstance.current.on('zoomend', function () {
-        var zoom = mapInstance.current!.getZoom();
-        var newzoom = 7 / 2 * (zoom - 1) + 'px';
-        $('#' + mapContainer.current!.id + ' .ikona').css({ 'width': newzoom, 'height': newzoom });
+      mapInstance.current.on('zoomend', () => {
+        const zoomLevel = mapInstance.current!.getZoom();
+        const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
+        if (mapContainer.current) {
+            $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
+        }
       });
     }
-  }, [attractions, icons, x, y]);
+  }, [attractions, icons, path, markerInstance]);
 
   useImperativeHandle(ref, () => ({
     getView: () => {
@@ -116,7 +124,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMap
           zoom: mapInstance.current.getZoom(),
         };
       }
-      return { center: L.latLng(x, y), zoom: zoom || 13 };
+      return { center: L.latLng(x, y), zoom };
     },
     setUserLocation: (coords) => {
       if (mapInstance.current) {
@@ -133,7 +141,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom, path, attractions, onMap
   }));
 
   return (
-    <div id="MapContainer" style={{ padding: 0, margin: 0, width: "100%", height: "80vh" }} ref={mapContainer}></div>
+    <div id="MapContainer" style={{ padding: 0, margin: 0, width: '100%', height: '80vh' }} ref={mapContainer}></div>
   );
 });
 

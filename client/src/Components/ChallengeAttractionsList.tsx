@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
 import React from "react";
+import { Link } from "react-router-dom";
+import styled from "@emotion/styled";
 import {
   Button,
   List,
@@ -10,33 +11,22 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import { ChallengeAttraction } from "../types";
-import { bodyMixin, Title, Body } from '../Styles/Typography'; // Importowanie bodyMixin
-import { shadows } from "../Styles/Themes";
-interface ListProps {
-  attractions: ChallengeAttraction[];
-  onClick: (attraction: ChallengeAttraction) => void;
-  showVisitButtons: boolean;
-  visitedAttractions: { attraction_id: number }[];
-  loadingAttractions: { attraction_id: number }[];
-}
 
-// Stylowany komponent List
+import { ChallengeAttraction } from "../types";
+import { bodyMixin, Title, Body } from '../Styles/Typography';
+import { shadows } from "../Styles/Themes";
+
 const StyledList = styled(List)`
   border-radius: 8px;
   padding: 16px;
 `;
 
-// Stylowany komponent ListItem
 const StyledListItem = styled(ListItem)`
   &:hover {
-    shadow: ${shadows.active};
+    box-shadow: ${shadows.active};
   }
 `;
 
-
-// Stylowany komponent VisitButton
 const VisitButton = styled(Button)`
   && {
     background-color: #42a5f5;
@@ -45,43 +35,43 @@ const VisitButton = styled(Button)`
     margin: 8px auto 0 auto;
     display: block;
     width: 90%;
-    padding: 5px 0px;
+    padding: 5px 0;
     &:hover {
       background-color: #1976d2;
     }
   }
 `;
 
-
-// Stylowany komponent ListItemText
 const StyledListItemText = styled(ListItemText)`
   .MuiListItemText-primary {
     ${bodyMixin}
   }
 `;
 
+interface ListProps {
+  attractions: ChallengeAttraction[];
+  onClick: (attraction: ChallengeAttraction) => void;
+  showVisitButtons: boolean;
+  visitedAttractions: { attraction_id: number }[];
+  loadingAttractions: { attraction_id: number }[];
+}
+
 const ChallengeAttractionsList: React.FC<ListProps> = ({
   attractions,
   onClick,
   showVisitButtons,
   visitedAttractions,
-  loadingAttractions
+  loadingAttractions,
 }) => {
-  const isAttractionVisited = (attractionId: number) => {
-    return visitedAttractions.some(
-      (attraction) => attraction.attraction_id === attractionId
-    );
-  };
+  const isAttractionVisited = (attractionId: number) => 
+    visitedAttractions.some((attraction) => attraction.attraction_id === attractionId);
 
-  const isAttractionLoading = (attractionId: number) => {
-    return loadingAttractions.some(
-      (attraction) => attraction.attraction_id === attractionId
-    );
-  };
+  const isAttractionLoading = (attractionId: number) => 
+    loadingAttractions.some((attraction) => attraction.attraction_id === attractionId);
 
   return (
     <StyledList>
-      <Title >Lista Atrakcji</Title>
+      <Title>Lista Atrakcji</Title>
       <Box
         sx={{
           maxHeight: 400,
@@ -91,22 +81,23 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
         <Grid container spacing={2}>
           {attractions.map((attraction) => (
             <Grid item xs={12} key={attraction.id}>
-
               <Button
                 component={Link}
                 to={`/attraction/${attraction.id}`}
                 color="inherit"
-                key={attraction.id}
                 fullWidth
                 style={{ justifyContent: "flex-start" }}
               >
                 <StyledListItem>
                   <StyledListItemText primary={attraction.name} />
-                  <StyledListItemText primary={`${attraction.points} punktów`} style={{ textAlign: 'right' }} />
+                  <StyledListItemText
+                    primary={`${attraction.points} punktów`}
+                    style={{ textAlign: 'right' }}
+                  />
                 </StyledListItem>
               </Button>
-              {showVisitButtons &&
-                (isAttractionVisited(attraction.id) ? (
+              {showVisitButtons && (
+                isAttractionVisited(attraction.id) ? (
                   <Body gray>
                     Odwiedzone
                   </Body>
@@ -119,7 +110,9 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                     <VisitButton onClick={() => onClick(attraction)}>
                       Odwiedź
                     </VisitButton>
-                  )))}
+                  )
+                )
+              )}
             </Grid>
           ))}
         </Grid>

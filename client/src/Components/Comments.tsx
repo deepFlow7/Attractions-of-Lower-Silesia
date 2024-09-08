@@ -1,28 +1,29 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { CardContent, List, ListItem, TextField, Button } from '@mui/material';
-/** @jsxImportSource @emotion/react */
-import { Title, Body } from '../Styles/Typography';
+
 import { Comment } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
+import { Title, Body } from '../Styles/Typography';
 
 interface CommentsProps {
   comments: Comment[];
-  attraction_id: number;
-  addComment: (new_comment: Comment) => void;
+  attractionId: number;
+  addComment: (newComment: Comment) => void;
 }
 
-const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
+const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment }) => {
   const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
-  const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(event.target.value);
   };
 
   const handleAddComment = async () => {
     if (isBlocked) {
-      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.")
+      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.");
       return;
     }
 
@@ -32,7 +33,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
       author: user!.id,
       content: newComment,
       votes: 0,
-      attraction: attraction_id,
+      attraction: attractionId,
       parent: null
     };
 
@@ -53,14 +54,14 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
       <CardContent>
         <Title small>Komentarze</Title>
         <List>
-          {comments.map(comment => (
+          {comments.map((comment) => (
             <ListItem key={comment.id}>
               <div>
                 <Body>{comment.content}</Body>
                 <Body gray>
                   {comment.parent ? (
                     <>
-                      Autor: {comment.author}, Głosy: {comment.votes}, Odpowiedz na: {comment.parent}
+                      Autor: {comment.author}, Głosy: {comment.votes}, Odpowiedź na: {comment.parent}
                     </>
                   ) : (
                     <>

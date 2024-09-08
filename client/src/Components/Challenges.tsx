@@ -1,16 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Card, CardContent, List, ListItem, ListItemText, Button } from '@mui/material';
-import { Challenge, completedChallenge } from '../types';
+import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
+import { List, ListItem, ListItemText, Button } from '@mui/material';
+
 import ChallengesList from './ChallengesList';
 import api from '../API/api';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
+import { Challenge, CompletedChallenge } from '../types'; 
 import { ViewContainer } from '../Styles/View';
 import { Title } from '../Styles/Typography';
 import { ChallengesContainer } from '../Styles/List';
-import { bodyMixin } from '../Styles/Typography'; // Importowanie bodyMixin
+import { bodyMixin } from '../Styles/Typography';
 
 const StyledList = styled(List)`
   border-radius: 8px;
@@ -31,7 +32,7 @@ const StyledListItemText = styled(ListItemText)`
 
 const Challenges = () => {
   const [allChallenges, setAllChallenges] = useState<Challenge[] | null>(null);
-  const [completedChallenges, setCompletedChallenges] = useState<completedChallenge[]>([]);
+  const [completedChallenges, setCompletedChallenges] = useState<CompletedChallenge[]>([]);
   const { isAuthenticated, user, role } = useAuth();
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const Challenges = () => {
   }, [user]);
 
   if (!allChallenges) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
@@ -63,7 +64,7 @@ const Challenges = () => {
       <ChallengesContainer>
         <ChallengesList challenges={allChallenges} />
       </ChallengesContainer>
-      {isAuthenticated && role === "user" && (
+      {isAuthenticated && role === 'user' && (
         <ChallengesContainer>
           <Title>Ukończone wyzwania</Title>
           <StyledList>
@@ -73,10 +74,14 @@ const Challenges = () => {
                 component={Link}
                 to={`/challenge/${challenge.id}`}
                 color="inherit"
+                fullWidth
               >
                 <StyledListItem>
                   <StyledListItemText primary={challenge.name} />
-                  <StyledListItemText primary={challenge.points} sx={{ marginLeft: 2 }} />
+                  <StyledListItemText
+                    primary={challenge.points.toString()}
+                    sx={{ marginLeft: 2 }}
+                  />
                 </StyledListItem>
               </Button>
             ))}

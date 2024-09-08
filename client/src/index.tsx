@@ -16,7 +16,7 @@ import AdminView from './Components/AdminView';
 
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated, role } = useAuth();
-  return isAuthenticated && role == "admin" ? element : <Navigate to="/" replace />;
+  return isAuthenticated && role === "admin" ? element : <Navigate to="/" replace />;
 };
 
 const ProtectedRouteForUnblocked = ({ element }: { element: JSX.Element }) => {
@@ -30,7 +30,7 @@ const RootRedirect = () => {
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
-root!.render(
+root.render(
   <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
@@ -48,6 +48,5 @@ root!.render(
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-
   </React.StrictMode>
 );
