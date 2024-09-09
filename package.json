@@ -7,7 +7,10 @@
         "install": "cd client && npm install && cd ../server && npm install",
         "start": "concurrently --handle-input -n \"SERVER,CLIENT\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"npm run start:server\" \"npm run start:client\" ",
         "start:server": "cd server && npm run dev",
-        "start:client": "cd client && npm start"
+        "start:client": "cd client && npm start",
+        "deploy": "npm run deploy:server && npm run deploy:client",
+        "deploy:server": "cd server && gcloud app deploy -q",
+        "deploy:client": "cd client && npm run build && gcloud app deploy -q"
     },
     "devDependencies": {
         "concurrently": "^8.2.2"
