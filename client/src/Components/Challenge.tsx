@@ -174,14 +174,14 @@ const ChallengeView: React.FC = () => {
       <MapContainer four challenge>
         <Title>{challenge.name}</Title>
         <Body margin>{challenge.description}</Body>
-        <CardContent>
+
           <Map
             x={challenge.coords.x}
             y={challenge.coords.y}
             zoom={challenge.zoom}
             attractions={challenge.attractions}
           />
-        </CardContent>
+        
       </MapContainer>
       <DictionaryContainer>
         <CardContent>

@@ -34,6 +34,8 @@ export const DropListContainer = styled.div<DropListContainerProps>`
 
 
 export const MapContainer = styled.div<MapContainerProps>`
+  display: flex;
+  flex-direction: column;
   height: 85vh;
   width: ${props => (props.four ? '47%' : '58%')};
   overflow: hidden;
