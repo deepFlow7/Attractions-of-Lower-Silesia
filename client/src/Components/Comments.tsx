@@ -1,28 +1,41 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { CardContent, List, ListItem, TextField, Button } from '@mui/material';
-/** @jsxImportSource @emotion/react */
-import { Title, Body } from '../Styles/Typography';
 import { Comment } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
+import { Title, Body } from '../Styles/Typography';
+import styled from '@emotion/styled';
+import { colors, shadows } from '../Styles/Themes';
+import { StyledButton } from '../Styles/Button';
+import StyledTextField from '../Styles/TextField';
+export const Container = styled.div`
+display: flex;
+gap: 1rem;
+flex-direction: column;
+& > * {
+  background-color: ${colors.primary};
+  box-shadow: ${shadows.default};
+}
+`;
 
 interface CommentsProps {
   comments: Comment[];
-  attraction_id: number;
-  addComment: (new_comment: Comment) => void;
+  attractionId: number;
+  addComment: (newComment: Comment) => void;
 }
 
-const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment }) => {
+const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment }) => {
   const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
-  const handleCommentChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(event.target.value);
   };
 
   const handleAddComment = async () => {
     if (isBlocked) {
-      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.")
+      alert("Twoje konto jest zablokowane, nie możesz dodawać komentarzy.");
       return;
     }
 
@@ -32,14 +45,14 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
       author: user!.id,
       content: newComment,
       votes: 0,
-      attraction: attraction_id, 
+      attraction: attractionId,
       parent: null
     };
 
     try {
       const response = await api.post('/api/addComment', commentData);
       if (response.data.success) {
-        addComment({...commentData, id:response.data.id});
+        addComment({ ...commentData, id: response.data.id });
         console.log('New comment added successfully:', response.data);
         setNewComment('');
       }
@@ -49,18 +62,18 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
   };
 
   return (
-    <div>
-      <CardContent>
+    <Container>
+      <div>
         <Title small>Komentarze</Title>
         <List>
-          {comments.map(comment => (
+          {comments.map((comment) => (
             <ListItem key={comment.id}>
               <div>
                 <Body>{comment.content}</Body>
                 <Body gray>
                   {comment.parent ? (
                     <>
-                      Autor: {comment.author}, Głosy: {comment.votes}, Odpowiedz na: {comment.parent}
+                      Autor: {comment.author}, Głosy: {comment.votes}, Odpowiedź na: {comment.parent}
                     </>
                   ) : (
                     <>
@@ -72,12 +85,11 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
             </ListItem>
           ))}
         </List>
-      </CardContent>
-
+        </div>
       {isAuthenticated && role === "user" && (
         <CardContent>
           <Title small>Dodaj komentarz</Title>
-          <TextField
+          <StyledTextField
             label="Treść komentarza"
             multiline
             rows={4}
@@ -85,12 +97,12 @@ const Comments: React.FC<CommentsProps> = ({ comments, attraction_id, addComment
             onChange={handleCommentChange}
             fullWidth
           />
-          <Button variant="contained" color="primary" onClick={handleAddComment} fullWidth>
+          <StyledButton  onClick={handleAddComment} >
             Dodaj
-          </Button>
+          </StyledButton>
         </CardContent>
       )}
-    </div>
+    </Container>
   );
 };
 
