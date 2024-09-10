@@ -28,7 +28,7 @@ export const FormContainer = styled.div`
   @media (min-width: 1450px) {
     background-image: url(${background2}); /* Zmiana tła powyżej 1300px szerokości */
   }
-  @media (max-width: 800px) {
+  @media (max-width: 1000px) {
     background-image: url(${background}); /* Ustawienie tła */
     background-size: cover; /* Dopasowanie tła do rozmiaru kontenera */
     background-position: center; /* Wyśrodkowanie tła */
@@ -41,6 +41,11 @@ export const FormContent = styled.div`
 
   @media (max-width: 700px) {
     width: 26rem;
+    margin-top: -6%;
+
+  }
+  @media (max-width: 450px) {
+    width: 90%;
     margin-top: -6%;
 
   }
