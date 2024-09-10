@@ -22,7 +22,7 @@ export interface NewAttraction {
   type: PossibleType;
   subtype: Subtypes;
   interactivity: number;
-  time_it_takes: number;
+  timeItTakes: number;
   description: string;
   photos: NewPhoto[];
 }

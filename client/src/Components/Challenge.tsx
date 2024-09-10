@@ -90,7 +90,7 @@ const ChallengeView: React.FC = () => {
   const handleParticipation = () => {
     if (!user || role !== "user") return;
     api
-      .post(`/api/start_challenge/${challenge.id}/${user.id}`)
+      .post(`/api/start_challenge/${challenge.id}`)
       .then(() => {
         setTakesPart(true);
         getChallengeData();
@@ -100,7 +100,7 @@ const ChallengeView: React.FC = () => {
         console.error("There was an error starting the challenge:", error);
       });
     api
-      .get(`/api/challenge/visited_attractions/${id}/${user.id}`)
+      .get(`/api/challenge/visited_attractions/${id}`)
       .then((response) => {
         setVisitedAttractions(response.data);
       })

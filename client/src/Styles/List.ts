@@ -42,11 +42,13 @@ export const AdminContainer = styled.div`
   width: 32%;
   height: calc(98vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
   overflow: auto;
-  background-color: ${colors.primary};
+  background-color: transparent;
 
   & > * {
+    & > * {
   background-color: ${colors.primary};
   box-shadow: none;
+    }
   }
   @media (max-width: 900px) {
     width: 48%;

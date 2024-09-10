@@ -234,14 +234,13 @@ const NewChallengeForm = () => {
                   <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1 }}>
                     {attraction.name}
                   </a>
-                  <Button
+                  <StyledButton
                     variant="contained"
-                    color="primary"
-                    size="small"
+                    big={true}
                     onClick={() => selectAttraction(attraction)}
                   >
                     +
-                  </Button>
+                  </StyledButton>
                 </div>
               ) : (
                 <div
