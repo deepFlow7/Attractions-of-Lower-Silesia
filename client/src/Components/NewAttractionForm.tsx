@@ -85,9 +85,9 @@ const NewAttractionForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const submitNewAttraction = (newAttraction: NewAttraction) => {
-    api.post('/api/new_attraction', { newAttraction })
-      .then(response => { })
+  const submitNewAttraction = async (newAttraction: NewAttraction) => {
+    return await api.post('/api/new_attraction', { newAttraction })
+      .then(response => { return response.data})
       .catch(error => {
         console.error('There was an error sending the data!', error);
       });
@@ -108,18 +108,25 @@ const NewAttractionForm = () => {
       type: attractionType,
       subtype: attractionSubtype,
       interactivity: attractionInteractivity,
-      time_it_takes: attractionTime,
+      timeItTakes: attractionTime,
       description: attractionDescription,
       photos: attractionPhotos,
     };
+    try{
+      let result = await submitNewAttraction(newAttraction)
+      if(!result.success){
+        throw "Błąd podczas dodawania atrakcji: "+result.error;
+      }
 
-    await submitNewAttraction(newAttraction);
-
-    alert("Dodano atrakcję.");
-    if (returnUrl)
-      navigate(returnUrl);
-    else
-      navigate('/');
+      alert("Dodano atrakcję.");
+      if (returnUrl)
+        navigate(returnUrl);
+      else
+        navigate('/');
+    }
+    catch (error){
+      alert("Błąd dodawania atrakcji:"+error);
+    }
   };
 
   const handleUseMyLocation = () => {
