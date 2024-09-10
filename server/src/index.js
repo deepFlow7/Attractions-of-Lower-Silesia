@@ -303,15 +303,26 @@ app.get('/attraction/:id', async (req, res) => {
 });
 
 app.post('/new_attraction', async (req, res) => {
-    const { newAttraction } = req.body;
-    const { name, description, coords } = newAttraction;
-    try {
-        await db.newAttraction(name, description, coords);
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Error while saving attraction:', error);
-        res.json({ success: false, error: error.message });
+  const { newAttraction } = req.body;
+  const { name, coords, type, subtype, interactivity, timeItTakes, description, photos } = newAttraction;
+  try {
+    const attrId = await db.newAttraction(name, coords, type, subtype, interactivity, 
+        timeItTakes, 0.0, description);
+
+    for (const photo of photos) {
+      try {
+        await db.newPhoto(attrId, photo.photo, photo.caption);
+      } catch (error) {
+        let message = 'Error while saving photo:' + error;
+        console.error(message);
+        throw message;
+      }
     }
+    res.json({success:true});
+  } catch (error) {
+      console.error('Error while saving attraction:', error);
+      res.json({ success: false, error: error });
+  }
 });
 
 app.get('/attraction/is_favourite/:attrId', async (req, res) => {
