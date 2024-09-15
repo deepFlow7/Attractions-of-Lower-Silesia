@@ -417,9 +417,9 @@ app.post('/attraction/delete', async (req, res) => {
 });
 
 app.post('/attraction/update', async (req, res) => {
-    const { attractionId, newName, newDescription } = req.body;
+    const { attractionId, newName } = req.body;
     try {
-        await db.updateAttraction(attractionId, newName, newDescription);
+        await db.changeAttractionName(attractionId, newName);
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });

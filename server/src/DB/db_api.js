@@ -81,7 +81,7 @@ class DbApi {
     try {
       const { rows } = await pool.query('SELECT role FROM logins WHERE user_id = $1', [id]);
       if (rows.role == 'admin')
-        throw "Cannot blcok admin";
+        throw "Cannot block admin";
       await pool.query('INSERT INTO blocked_users VALUES ($1, NOW())', [id]);
     } catch (error) {
       console.error('Error blocking user:', error);
