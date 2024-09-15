@@ -43,7 +43,7 @@ const AttractionView: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && role === 'user') {
-      api.get(`/api/attraction/is_favourite/${id}/user`)
+      api.get(`/api/attraction/is_favourite/${id}`)
         .then(response => {
           setIsFavourite(response.data.favourite);
         })
@@ -136,6 +136,72 @@ const AttractionView: React.FC = () => {
     }
   };
 
+  const onApprove = async (commentId : number) => {
+    try {
+      await api.post('/approveComment', { commentId });
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+  
+        const updatedComments = prevState.comments.map(comment => 
+          comment.id === commentId
+            ? { ...comment, approval_status: 'approve' } 
+            : comment
+        );
+  
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error approving comment:', error);
+    }
+  };
+  
+  const onDisapprove = async (commentId : number) => {
+    try {
+      await api.post('/disapproveComment', { commentId });
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+  
+        const updatedComments = prevState.comments.map(comment => 
+          comment.id === commentId
+            ? { ...comment, approval_status: 'disapprove' } 
+            : comment
+        );
+  
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error disapproving comment:', error);
+    }
+  };
+
+  const onApprovalRemove = async (commentId : number) => {
+    try {
+      await api.post('/removeApproval', { commentId });
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+  
+        const updatedComments = prevState.comments.map(comment => 
+          comment.id === commentId
+            ? { ...comment, approval_status: null } 
+            : comment
+        );
+  
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error removing approval:', error);
+    }
+  };
+
   if (!attractionInfo) {
     return <div>Loading...</div>;
   }
@@ -183,7 +249,14 @@ const AttractionView: React.FC = () => {
             </CardContent>
           </TileCard>
         )}
-          <Comments comments={comments} attractionId={attraction.id} addComment={addComment} />
+          <Comments 
+            comments={comments} 
+            attractionId={attraction.id} 
+            addComment={addComment} 
+            onApprove={onApprove}
+            onDisapprove={onDisapprove}
+            onApprovalRemove={onApprovalRemove}
+          />
       </InfoContainer>
     </AttractionContainer>
   );

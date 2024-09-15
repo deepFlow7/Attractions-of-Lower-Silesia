@@ -9,23 +9,27 @@ import styled from '@emotion/styled';
 import { colors, shadows } from '../Styles/Themes';
 import { StyledButton } from '../Styles/Button';
 import StyledTextField from '../Styles/TextField';
+
 export const Container = styled.div`
-display: flex;
-gap: 1rem;
-flex-direction: column;
-& > * {
-  background-color: ${colors.primary};
-  box-shadow: ${shadows.default};
-}
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  & > * {
+    background-color: ${colors.primary};
+    box-shadow: ${shadows.default};
+  }
 `;
 
 interface CommentsProps {
   comments: Comment[];
   attractionId: number;
   addComment: (newComment: Comment) => void;
+  onApprove: (commentId: number) => void;
+  onDisapprove: (commentId: number) => void;
+  onApprovalRemove: (commentId: number) => void;
 }
 
-const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment }) => {
+const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment, onApprove, onDisapprove, onApprovalRemove }) => {
   const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState('');
 
@@ -44,15 +48,13 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
     const commentData = {
       author: user!.id,
       content: newComment,
-      votes: 0,
       attraction: attractionId,
-      parent: null
     };
 
     try {
       const response = await api.post('/api/addComment', commentData);
       if (response.data.success) {
-        addComment({ ...commentData, id: response.data.id });
+        addComment({ ...commentData, id: response.data.id, vote_sum: 0 });
         console.log('New comment added successfully:', response.data);
         setNewComment('');
       }
@@ -60,6 +62,22 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
       console.error('Error adding new comment:', error);
     }
   };
+
+  const handleApprove = async (comment : Comment) => {
+    if (comment.approval_status === 'approve') {
+      onApprovalRemove(comment.id);
+    } else {
+      onApprove(comment.id);
+    }
+  }
+
+  const handleDispprove = async (comment : Comment) => {
+    if (comment.approval_status === 'disapprove') {
+      onApprovalRemove(comment.id);
+    } else {
+      onDisapprove(comment.id);
+    }
+  }
 
   return (
     <Container>
@@ -71,16 +89,26 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment 
               <div>
                 <Body>{comment.content}</Body>
                 <Body gray>
-                  {comment.parent ? (
-                    <>
-                      Autor: {comment.author}, Głosy: {comment.votes}, Odpowiedź na: {comment.parent}
-                    </>
-                  ) : (
-                    <>
-                      Autor: {comment.author}, Głosy: {comment.votes}
-                    </>
-                  )}
+                  Autor: {comment.author}, Głosy: {comment.vote_sum}
                 </Body>
+                {isAuthenticated && role == 'user' && (
+                  <div>
+                    <button 
+                      style={ {backgroundColor: comment.approval_status === 'approve'?  '#4caf50' : '#f0f0f0'}}
+                      onClick={() => handleApprove(comment)} 
+                      aria-label="Approve"
+                    >
+                      👍
+                    </button>
+                    <button 
+                      style={ {backgroundColor: comment.approval_status === 'disapprove'?  '#4caf50' : '#f0f0f0'}}
+                      onClick={() => handleDispprove(comment)} 
+                      aria-label="Disapprove"
+                    >
+                      👎
+                    </button>
+                  </div>
+              )}
               </div>
             </ListItem>
           ))}

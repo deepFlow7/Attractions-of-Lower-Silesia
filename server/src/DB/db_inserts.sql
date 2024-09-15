@@ -1,4 +1,4 @@
---USAGE: psql -f inserty_bazowe.sql
+--USAGE: psql -f db_inserts.sql
 
 \c maps
 
@@ -70,11 +70,11 @@ INSERT INTO attractions (name, coords, type, subtype, interactivity, time_it_tak
     ('Janinek', POINT(51.1103, 17.0325), 'urbanistyka', 'krasnal', 2, 5, 3, 'Przy stacji pocztowej.');
 
 -- Inserting sample data into the comments table
-INSERT INTO comments (author, content, votes, attraction) 
+INSERT INTO comments (author, content, attraction, vote_sum) 
 VALUES 
-  (1, 'Robi wrażenie', 10, 1),
-  (2, 'Ciekawy budynek', 8, 2),
-  (1, 'Wspaniały obraz.', 5, 3);
+  (1, 'Robi wrażenie', 1, 0),
+  (2, 'Ciekawy budynek', 2, 0),
+  (1, 'Wspaniały obraz.', 3, 0);
 
 -- Inserting sample data into the challenges table
 INSERT INTO challenges (name, description, coords, zoom) VALUES

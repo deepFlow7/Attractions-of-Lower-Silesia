@@ -21,7 +21,7 @@ const Info = styled.div`
 `;
 
 const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
-  const { type, subtype, description, interactivity, time_it_takes, rating } = attraction;
+  const { type, subtype, description, interactivity, timeItTakes, rating } = attraction;
 
   return (
     <Info>
@@ -41,7 +41,7 @@ const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
             <Body>Interaktywność: {interactivity}/10</Body>
           </ListItem>
           <ListItem>
-            <Body>Czas zwiedzania: {time_it_takes} minut</Body>
+            <Body>Czas zwiedzania: {timeItTakes} minut</Body>
           </ListItem>
           <ListItem>
             <Body>Ocena: {rating ? rating.toFixed(1) : 'Brak oceny'}</Body>

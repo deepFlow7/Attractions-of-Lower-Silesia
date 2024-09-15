@@ -180,6 +180,17 @@ app.get('/completed_challenges', async (req, res) => {
   }
 })
 
+app.get('/in_progress_challenges', async (req, res) => {
+  try {
+    var challenges = await db.getInProgressChallenges(req.session.user.id);
+    res.json(challenges);
+  } catch (error) {
+    console.log('Error fetching in-progress challenges: ' + error);
+    res.status(500).json({ error: 'Error fetching in-progress challenges: ' + error });
+  }
+});
+
+
 app.get('/challenge/:id', async (req, res) => {
     try {
         var challenge = await db.getChallenge(req.params["id"]);
@@ -294,7 +305,7 @@ app.get('/attraction/:id', async (req, res) => {
     try {
         var attraction = await db.getAttraction(req.params["id"]);
         var photos = await db.getPhotosByAttraction(req.params["id"]);
-        var comments = await db.getCommentsByAttraction(req.params["id"]);
+        var comments = await db.getCommentsByAttraction(req.params["id"], req.session.user? req.session.user.id : null);
         res.json({attraction:{...attraction,photos},comments:comments});
     } catch (error) {
         console.log('Error fetching attraction: ' + error);
@@ -395,17 +406,6 @@ app.post('/changeWantsToVisit', async (req, res) => {
   }
 });
 
-app.post('/addComment', async (req, res) => {
-  const { author, content, votes, attraction, parent } = req.body;
-  try {
-      const id = await db.newComment(author, content, votes, attraction, parent);
-      res.json({ success: true, id: id });
-  } catch (error) {
-      console.error('Error adding new comment:', error);
-      res.status(500).json({ error: error.message });
-  }
-});
-
 app.post('/attraction/delete', async (req, res) => {
     const { attractionId } = req.body;
     try {
@@ -424,6 +424,51 @@ app.post('/attraction/update', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+//---COMMENTS---
+app.post('/addComment', async (req, res) => {
+  const { author, content, attraction } = req.body;
+  try {
+      const id = await db.newComment(author, content, attraction);
+      res.json({ success: true, id: id });
+  } catch (error) {
+      console.error('Error adding new comment:', error);
+      res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/approveComment', async (req, res) => {
+  const { commentId } = req.body;
+  try {
+    const result = await db.approveComment(commentId, req.session.user.id);
+    res.json({ success: true, result: result });
+  } catch (error) {
+    console.error('Error approving comment:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/disapproveComment', async (req, res) => {
+  const { commentId } = req.body;
+  try {
+    const result = await db.disapproveComment(commentId, req.session.user.id);
+    res.json({ success: true, result: result });
+  } catch (error) {
+    console.error('Error disapproving comment:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/removeApproval', async (req, res) => {
+  const { commentId } = req.body;
+  try {
+    const result = await db.removeApproval(commentId, req.session.user.id);
+    res.json({ success: true, result: result });
+  } catch (error) {
+    console.error('Error removing approval:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 //---START SERVER---

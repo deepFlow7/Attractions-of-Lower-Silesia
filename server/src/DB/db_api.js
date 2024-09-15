@@ -335,11 +335,11 @@ class DbApi {
   }
 
   //------COMMENTS--------
-  async newComment(author, content, votes, attraction, parent) {
+  async newComment(author, content, attraction) {
     try {
-      const { rows } = await pool.query('INSERT INTO comments (author, content, votes, attraction, parent) \
-                VALUES ($1, $2, $3, $4, $5) RETURNING id',
-        [author, content, votes, attraction, parent]);
+      const { rows } = await pool.query('INSERT INTO comments (author, content, attraction) \
+                VALUES ($1, $2, $3) RETURNING id',
+        [author, content, attraction]);
       return rows[0].id;
     } catch (error) {
       console.error('Error creating new comment:', error);
@@ -347,27 +347,17 @@ class DbApi {
     }
   }
 
-  async getComment(id) {
+  async getCommentsByAttraction(attractionId, userId) {
     try {
-      const { rows } = await pool.query('SELECT * FROM comments WHERE id = $1', [id]);
-      return rows[0];
-    } catch (error) {
-      console.error('Error fetching comment:', error);
-      throw error;
-    }
-  }
-
-  async getCommentsByAttraction(attractionId) {
-    try {
-      const { rows } = await pool.query('SELECT * FROM comments WHERE attraction = $1', 
-                [attractionId]);
+      const { rows } = await pool.query('SELECT id, logins.login AS author, content, attraction, vote_sum, comment_approvals.approval_status \
+         FROM comments JOIN logins ON comments.author = logins.user_id \
+         LEFT JOIN comment_approvals ON comment_approvals.comment_id = comments.id AND comment_approvals.voter = $2 \
+         WHERE attraction = $1', [attractionId, userId]);
       return rows;
-    }
-    catch (error) {
-      console.error('Error fetching comments:' + error);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
       throw error;
     }
-
   }
 
   async getCommentsByUser(author) {
@@ -395,6 +385,49 @@ class DbApi {
     } catch (error) {
       console.error('Error deleting comment:', error);
       throw error;
+    }
+  }
+
+  async approveComment(commentId, voterId) {
+    try {
+      await pool.query(`
+        INSERT INTO comment_approvals (comment_id, voter, approval_status)
+        VALUES ($1, $2, 'approve')
+        ON CONFLICT (comment_id, voter)
+        DO UPDATE SET approval_status = 'approve'`,
+        [commentId, voterId]
+      );
+    } catch (error) {
+      console.error('Error approving comment:', error);
+      throw error; 
+    }
+  }
+  
+  async disapproveComment(commentId, voterId) {
+    try {
+      await pool.query(`
+        INSERT INTO comment_approvals (comment_id, voter, approval_status)
+        VALUES ($1, $2, 'disapprove')
+        ON CONFLICT (comment_id, voter)
+        DO UPDATE SET approval_status = 'disapprove'`,
+        [commentId, voterId]
+      );
+    } catch (error) {
+      console.error('Error disapproving comment:', error);
+      throw error;
+    }
+  }
+  
+  async removeApproval(commentId, voterId) {
+    try {
+      await pool.query(`
+        DELETE FROM comment_approvals
+        WHERE comment_id = $1 AND voter = $2`,
+        [commentId, voterId]
+      );
+    } catch (error) {
+      console.error('Error removing approval:', error);
+      throw error; 
     }
   }
 
@@ -618,6 +651,20 @@ class DbApi {
                 FROM challenges, challenges_started \
                 WHERE challenges.id = challenges_started.challenge_id \
                 AND user_id = $1 AND finished_date IS NOT NULL', [userId]);
+      return rows;
+    } catch (error) {
+      console.error('Error getting completed challenges:', error);
+      throw error;
+    }
+  }
+
+  async getInProgressChallenges(userId) {
+    try {
+      const { rows } = await pool.query('SELECT challenges.id, challenges.name, \
+                (challenges_started.points + challenges_started.bonus_points) AS points  \
+                FROM challenges, challenges_started \
+                WHERE challenges.id = challenges_started.challenge_id \
+                AND user_id = $1 AND finished_date IS NULL', [userId]);
       return rows;
     } catch (error) {
       console.error('Error getting completed challenges:', error);

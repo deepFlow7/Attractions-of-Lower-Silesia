@@ -66,9 +66,9 @@ export interface Comment {
   id: number;
   author: User['id'];
   content: string;
-  votes: number;
   attraction: number;
-  parent?: number | null;
+  vote_sum: number;
+  approval_status?: string | null;
 }
 
 export interface ChallengeRanking {
