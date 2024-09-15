@@ -356,6 +356,24 @@ app.get('/attraction/is_to_visit/:attrId', async (req, res) => {
   }
 });
 
+app.get('/attractions/favourites', async (req, res) => {
+  try {
+    const favourites = await db.getFavouriteAttractions(req.session.user.id);
+    res.json(favourites);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching favourite attractions' });
+  }
+});
+
+app.get('/attractions/wants_to_visit', async (req, res) => {
+  try {
+    const wantsToVisit = await db.getWantsToVisitAttractions(req.session.user.id);
+    res.json(wantsToVisit);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching wants to visit attractions' });
+  }
+});
+
 app.get('/attraction/rating/:attrId', async (req, res) => {
   try {
       const rating = await db.getRating(req.params['attrId']);

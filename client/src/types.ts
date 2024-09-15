@@ -89,7 +89,7 @@ export interface Challenge {
   attractions: ChallengeAttraction[];
 }
 
-export interface CompletedChallenge {
+export interface BasicChallengeInfo {
   id: number;
   name: string;
   points: number;
@@ -166,3 +166,7 @@ export const possibleSubtypes: Subtypes[] = [
   "krasnal",
   "bazylika",
 ];
+
+export type Preferences = "wszystkie" | "ulubione" | "do odwiedzenia";
+export const possiblePreferences = ["wszystkie", "ulubione", "do odwiedzenia"];
+

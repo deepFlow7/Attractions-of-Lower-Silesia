@@ -202,6 +202,16 @@ class DbApi {
     }
   }
 
+  async getFavouriteAttractions(userId) {
+    try {
+      const { rows } = await pool.query('SELECT attraction_id FROM favourites WHERE user_id = $1', [userId]);
+      return rows.map(row => row.attraction_id);
+    } catch (error) {
+      console.error('Error fetching favourite attractions:', error);
+      throw error;
+    }
+  }
+
   //---- WANTS TO VISIT -----------
   async isToVisit(attractionId, userId) {
     try {
@@ -223,6 +233,16 @@ class DbApi {
       }
     } catch (error) {
       console.error('Error changing wants_to_visit:', error);
+      throw error;
+    }
+  }
+
+  async getWantsToVisitAttractions(userId) {
+    try {
+      const { rows } = await pool.query('SELECT attraction_id FROM wants_to_visit WHERE user_id = $1', [userId]);
+      return rows.map(row => row.attraction_id);
+    } catch (error) {
+      console.error('Error fetching wants to visit attractions:', error);
       throw error;
     }
   }

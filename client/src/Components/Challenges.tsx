@@ -7,7 +7,7 @@ import { List, ListItem, ListItemText, Button } from '@mui/material';
 import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import { Challenge, CompletedChallenge } from '../types'; 
+import { Challenge, BasicChallengeInfo } from '../types'; 
 import { ViewContainer } from '../Styles/View';
 import { Title } from '../Styles/Typography';
 import { ChallengesContainer } from '../Styles/List';
@@ -32,7 +32,8 @@ const StyledListItemText = styled(ListItemText)`
 
 const Challenges = () => {
   const [allChallenges, setAllChallenges] = useState<Challenge[] | null>(null);
-  const [completedChallenges, setCompletedChallenges] = useState<CompletedChallenge[]>([]);
+  const [completedChallenges, setCompletedChallenges] = useState<BasicChallengeInfo[]>([]);
+  const [challengesInProgress, setChallengesInProgress] = useState<BasicChallengeInfo[]>([]);
   const { isAuthenticated, user, role } = useAuth();
 
   useEffect(() => {
@@ -52,6 +53,14 @@ const Challenges = () => {
         .catch(error => {
           console.error('There was an error fetching completed challenges:', error);
         });
+      
+        api.get(`/api/in_progress_challenges`)
+        .then(response => {
+          setChallengesInProgress(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching challenges in progress:', error);
+        });
     }
   }, [user]);
 
@@ -65,6 +74,29 @@ const Challenges = () => {
         <ChallengesList challenges={allChallenges} />
       </ChallengesContainer>
       {isAuthenticated && role === 'user' && (
+        <>
+          <ChallengesContainer>
+            <Title>Podjęte wyzwania</Title>
+            <StyledList>
+              {challengesInProgress.map(challenge => (
+                <Button
+                  key={challenge.id}
+                  component={Link}
+                  to={`/challenge/${challenge.id}`}
+                  color="inherit"
+                  fullWidth
+                >
+                  <StyledListItem>
+                    <StyledListItemText primary={challenge.name} />
+                    <StyledListItemText
+                      primary={challenge.points.toString()}
+                      sx={{ marginLeft: 2 }}
+                    />
+                  </StyledListItem>
+                </Button>
+              ))}
+            </StyledList>
+        </ChallengesContainer>
         <ChallengesContainer>
           <Title>Ukończone wyzwania</Title>
           <StyledList>
@@ -87,7 +119,9 @@ const Challenges = () => {
             ))}
           </StyledList>
         </ChallengesContainer>
-      )}
+        </>
+      )
+    }
     </ViewContainer>
   );
 };
