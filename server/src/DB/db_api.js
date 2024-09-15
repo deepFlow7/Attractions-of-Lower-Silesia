@@ -11,9 +11,25 @@ const pool = new pg.Pool({
 
 class DbApi {
   //------USERS---------
-  async newUser(name, surname, mail) {
+  async signUp(newUser) {
+    const { name, surname, mail, login, password } = newUser;
+    const client = await pool.connect();
     try {
-      const { rows } = await pool.query('INSERT INTO users (name, surname, mail) VALUES ($1, $2, $3) RETURNING id', [name, surname, mail]);
+        client.query('BEGIN')
+        const userId = await this.newUser(client, name, surname, mail);
+        await this.newLogin(client, userId, login, password, 'user');
+        client.query('COMMIT')
+    } catch (error) {
+        client.query('ROLLBACK')
+        throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async newUser(client, name, surname, mail) {
+    try {
+      const { rows } = await client.query('INSERT INTO users (name, surname, mail) VALUES ($1, $2, $3) RETURNING id', [name, surname, mail]);
       return rows[0].id;
     } catch (error) {
       console.error('Error creating new user:', error);
@@ -119,10 +135,10 @@ class DbApi {
   }
 
   //------LOGINS---------
-  async newLogin(userId, login, password, role) {
+  async newLogin(client, userId, login, password, role) {
     try {
       const hash = await argon2.hash(password);
-      await pool.query('INSERT INTO logins (user_id, login, password, role) VALUES ($1, $2, $3, $4)', [userId, login, hash, role]);
+      await client.query('INSERT INTO logins (user_id, login, password, role) VALUES ($1, $2, $3, $4)', [userId, login, hash, role]);
     } catch (error) {
       console.error('Error creating new login:', error);
       throw error;
@@ -516,9 +532,30 @@ class DbApi {
   }
 
   //---CHALLENGES----
-  async newChallenge(name, description, coords, zoom) {
+  async addChallenge(newChallenge) {
+    const { name, description, coords, zoom, attractions } = newChallenge;
+    const client = await pool.connect();
+
     try {
-      const { rows } = await pool.query('INSERT INTO challenges (name, description, coords, zoom) \
+      await client.query('BEGIN');
+
+      const challengeId = await this.newChallenge(client, name, description, coords, zoom);
+      for (const attraction of attractions) {
+          await this.addChallengeAttraction(client, challengeId, attraction.id, attraction.points);
+      }
+
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release(); 
+    }
+  }
+
+  async newChallenge(client, name, description, coords, zoom) {
+    try {
+      const { rows } = await client.query('INSERT INTO challenges (name, description, coords, zoom) \
             VALUES ($1, $2, POINT($3, $4), $5) RETURNING id', [name, description, coords.x, coords.y, zoom]);
       return rows[0].id;
     } catch (error) {
@@ -547,9 +584,9 @@ class DbApi {
     }
   }
 
-  async addChallengeAttraction(challengeId, attractionId, points) {
+  async addChallengeAttraction(client, challengeId, attractionId, points) {
     try {
-      await pool.query('INSERT INTO challenge_attractions (challenge_id, attraction_id, points) \
+      await client.query('INSERT INTO challenge_attractions (challenge_id, attraction_id, points) \
             VALUES ($1, $2, $3)', [challengeId, attractionId, points]);
     } catch (error) {
       console.error("Error adding challenge attraction:", error);
@@ -628,28 +665,41 @@ class DbApi {
   }
 
   async visitChallengeAttraction(userId, challengeId, attractionId) {
+    const client = await pool.connect();
     try {
-      const result = await pool.query('SELECT * FROM visited_challenge_attractions \
+      await client.query('BEGIN');
+      const result = await client.query('SELECT * FROM visited_challenge_attractions \
                 WHERE user_id = $1 AND challenge_id = $2 AND attraction_id = $3',
         [userId, challengeId, attractionId]);
-      if (result.rowCount > 0)
+      
+      if (result.rowCount > 0) {
+        await client.query('COMMIT');
         return;
+      }
 
-
-      await pool.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)',
+      await client.query('INSERT INTO visited_challenge_attractions VALUES ($1, $2, $3)',
         [challengeId, attractionId, userId]);
-      const userRes = await pool.query('SELECT points FROM challenges_started \
+
+      const userRes = await client.query('SELECT points FROM challenges_started \
                  WHERE user_id = $1 AND challenge_id = $2', [userId, challengeId]);
-      const challengeRes = await pool.query('SELECT points FROM challenges \
+
+      const challengeRes = await client.query('SELECT points FROM challenges \
                 WHERE id = $1', [challengeId]);
+
       const userPoints = userRes.rows[0].points;
       const challengePoints = challengeRes.rows[0].points;
 
-      if (userPoints >= challengePoints)
+      if (userPoints >= challengePoints) {
         await this.finish_challenge(challengeId, userId);
+      }
+
+      await client.query('COMMIT');
     } catch (error) {
+      await client.query('ROLLBACK'); 
       console.error('Error completing challenge attraction:', error);
       throw error;
+    } finally {
+      client.release(); 
     }
   }
 

@@ -76,8 +76,6 @@ const Home: React.FC = () => {
 
   const handleFilterChange = (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[], selectedPreferences?: Preferences) => {
     if (attractions) {
-      console.log("preferuje", selectedPreferences);
-
       setFilteredAttractions(attractions.filter(attraction => {
         if (!selectedSubtypes.includes(attraction.subtype) || !selectedTypes.includes(attraction.type)) {
           return false;

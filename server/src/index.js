@@ -5,6 +5,7 @@ const cors = require('cors');
 const session = require('express-session');
 const { Firestore } = require('@google-cloud/firestore');
 const { FirestoreStore } = require('@google-cloud/connect-firestore');
+const db_api = require('./DB/db_api.js');
 const app = express();
 
 const normalizePort = val => {
@@ -85,10 +86,8 @@ app.get('/logout', (req, res) => {
 
 app.post('/signup', async (req, res) => {
   const { newUser } = req.body;
-  const { name, surname, mail, login, password } = newUser;
   try {
-      const userId = await db.newUser(name, surname, mail);
-      await db.newLogin(userId, login, password, 'user');
+      await db.signUp(newUser);
       res.json({ success: true });
   } catch (error) {
       res.json({ success: false, error: error });
@@ -204,18 +203,8 @@ app.get('/challenge/:id', async (req, res) => {
 
 app.post('/new_challenge', async (req, res) => {
   const { newChallenge } = req.body;
-  const { name, description, coords, zoom, attractions } = newChallenge;
   try {
-    const challengeId = await db.newChallenge(name, description, coords, zoom);
-    for (const attraction of attractions) {
-      try {
-        await db.addChallengeAttraction(challengeId, attraction.id, attraction.points);
-      } catch (error) {
-        let message = 'Error while adding attraction to challenge:' + error;
-        console.error(message);
-        throw message;
-      }
-    }
+    db_api.addChallenge(newChallenge);
     res.json({ success: true });
   } catch (error) {
     console.error('Error while saving challenge:', error);
