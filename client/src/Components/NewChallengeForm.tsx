@@ -82,8 +82,8 @@ const NewChallengeForm = () => {
 
   const mapRef = useRef<MapRef>(null);
 
-  const onSubmit = (newChallenge: ChallengeForm) => {
-    api.post('/api/new_challenge', { newChallenge })
+  const onSubmit = async (newChallenge: ChallengeForm) => {
+    await api.post('/api/new_challenge', { newChallenge })
       .then(response => {
       })
       .catch(error => {
@@ -104,7 +104,7 @@ const NewChallengeForm = () => {
     return mapView;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: { name?: string; description?: string; attractions?: string } = {};
 
     if (!name) newErrors.name = 'Nazwa jest wymagana';
@@ -125,7 +125,7 @@ const NewChallengeForm = () => {
       attractions: selectedAttractions
     };
 
-    onSubmit(newChallenge);
+    await onSubmit(newChallenge);
     alert('Dodano wyzwanie.');
     navigate(returnUrl || '/');
   };
