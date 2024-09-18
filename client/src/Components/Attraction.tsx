@@ -39,11 +39,11 @@ const AttractionView: React.FC = () => {
   const [savedUserRating, setSavedUserRating] = useState(0);
   const { user, isBlocked, role, isAuthenticated } = useAuth();
   const [refreshKey, setRefreshKey] = useState(1);
-  const { id } = useParams();
+  const { attractionId } = useParams();
 
   useEffect(() => {
     if (isAuthenticated && role === 'user') {
-      api.get(`/api/attraction/is_favourite/${id}`)
+      api.get(`/api/attractions/${attractionId}/isFavourite`)
         .then(response => {
           setIsFavourite(response.data.favourite);
         })
@@ -51,15 +51,15 @@ const AttractionView: React.FC = () => {
           console.error('There was an error fetching the data!', error);
         });
 
-      api.get(`/api/attraction/is_to_visit/${id}`)
+      api.get(`/api/attractions/${attractionId}/toVisit`)
         .then(response => {
-          setToVisit(response.data.to_visit);
+          setToVisit(response.data.toVisit);
         })
         .catch(error => {
           console.error('There was an error fetching the data!', error);
         });
 
-      api.get(`/api/attraction/rating/${id}`)
+      api.get(`/api/attractions/${attractionId}/rating`)
         .then(response => {
           setUserRating(response.data.rating);
           setSavedUserRating(response.data.rating);
@@ -69,18 +69,18 @@ const AttractionView: React.FC = () => {
         });
     }
 
-    api.get(`/api/attraction/${id}`)
+    api.get(`/api/attractions/${attractionId}`)
       .then(response => {
         setAttractionInfo(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the data!', error);
       });
-  }, [id]);
+  }, [attractionId]);
 
   const handleFavouriteToggle = async () => {
     try {
-      await api.post('/api/changeFavourites', { userId: user?.id, attractionId: id });
+      await api.post(`/api/attractions/${attractionId}/changeFavourite`);
       setIsFavourite(prev => !prev);
     } catch (error) {
       console.error('Error updating favourite status:', error);
@@ -89,10 +89,10 @@ const AttractionView: React.FC = () => {
 
   const handleToVisitToggle = async () => {
     try {
-      await api.post('/api/changeWantsToVisit', { userId: user?.id, attractionId: id });
+      await api.post(`/api/attractions/${attractionId}/changeToVisit`);
       setToVisit(prev => !prev);
     } catch (error) {
-      console.error('Error updating to_visit status:', error);
+      console.error('Error updating to visit status:', error);
     }
   };
 
@@ -116,9 +116,9 @@ const AttractionView: React.FC = () => {
     if (newRating) {
       try {
         setUserRating(newRating);
-        await api.post('/api/changeRating', { userId: user?.id, attractionId: id, rating: newRating });
+        await api.post(`/api/attractions/${attractionId}/changeRating`, { newRating });
 
-        await api.get('/api/attraction/rating/' + id)
+        await api.get(`/api/attractions/${attractionId}/rating/`)
           .then(response => {
             setAttractionInfo(prevInfo => ({
               ...prevInfo!,
@@ -138,7 +138,7 @@ const AttractionView: React.FC = () => {
 
   const onApprove = async (commentId : number) => {
     try {
-      await api.post('/approveComment', { commentId });
+      await api.post(`/api/comments/${commentId}/approve`);
       setAttractionInfo(prevState => {
         if (!prevState) return null;
   
@@ -160,7 +160,7 @@ const AttractionView: React.FC = () => {
   
   const onDisapprove = async (commentId : number) => {
     try {
-      await api.post('/disapproveComment', { commentId });
+      await api.post(`/api/comments/${commentId}/disapprove`);
       setAttractionInfo(prevState => {
         if (!prevState) return null;
   
@@ -182,7 +182,7 @@ const AttractionView: React.FC = () => {
 
   const onApprovalRemove = async (commentId : number) => {
     try {
-      await api.post('/removeApproval', { commentId });
+      await api.post(`/api/comments/${commentId}/removeApproval`);
       setAttractionInfo(prevState => {
         if (!prevState) return null;
   

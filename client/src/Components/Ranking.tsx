@@ -30,7 +30,7 @@ const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
 
   useEffect(() => {
     if (challengeId) {
-      api.get(`/api/ranking/${challengeId}`)
+      api.get(`/api/challenges/${challengeId}/ranking`)
         .then((response) => {
           setRankings(response.data);
         })

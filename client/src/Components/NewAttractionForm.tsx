@@ -86,7 +86,7 @@ const NewAttractionForm = () => {
   };
 
   const submitNewAttraction = async (newAttraction: NewAttraction) => {
-    return await api.post('/api/new_attraction', { newAttraction })
+    return await api.post('/api/attractions/new', { newAttraction })
       .then(response => { return response.data})
       .catch(error => {
         console.error('There was an error sending the data!', error);

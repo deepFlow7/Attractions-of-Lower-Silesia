@@ -94,26 +94,26 @@ const AdminView: React.FC = () => {
     setManageUsers(prevState => !prevState);
   };
 
-  const deleteAttraction = async (id: number) => {
+  const deleteAttraction = async (attractionId: number) => {
     const isConfirmed = window.confirm('Czy na pewno chcesz usunąć tę atrakcję?');
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/attraction/delete', { attractionId: id });
+      await api.post(`/api/attractions/${attractionId}/delete`);
       setAttractions(prevAttractions =>
-        prevAttractions.filter(attraction => attraction.id !== id)
+        prevAttractions.filter(attraction => attraction.id !== attractionId)
       );
     } catch (error) {
       console.error('Error deleting attraction:', error);
     }
   };
 
-  const changeAttractionName = async (id: number, newName: string) => {
+  const changeAttractionName = async (attractionId: number, newName: string) => {
     try {
-      await api.post('/api/attraction/update', { attractionId: id, newName });
+      await api.post(`/api/attractions/${attractionId}/update`, { newName });
       setAttractions(prevAttractions =>
         prevAttractions.map(attraction =>
-          attraction.id === id ? { ...attraction, name: newName } : attraction
+          attraction.id === attractionId ? { ...attraction, name: newName } : attraction
         )
       );
     } catch (error) {
@@ -121,26 +121,26 @@ const AdminView: React.FC = () => {
     }
   };
 
-  const deleteChallenge = async (id: number) => {
+  const deleteChallenge = async (challengeId: number) => {
     const isConfirmed = window.confirm('Czy na pewno chcesz usunąć to wyzwanie?');
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/challenge/delete', { challengeId: id });
+      await api.post(`/api/challenges/${challengeId}/delete`);
       setChallenges(prevChallenges =>
-        prevChallenges.filter(challenge => challenge.id !== id)
+        prevChallenges.filter(challenge => challenge.id !== challengeId)
       );
     } catch (error) {
       console.error('Error deleting challenge:', error);
     }
   };
 
-  const changeChallengeName = async (id: number, newName: string) => {
+  const changeChallengeName = async (challengeId: number, newName: string) => {
     try {
-      await api.post('/api/challenge/update', { challengeId: id, newName });
+      await api.post(`/api/challenges/${challengeId}/update`, { newName });
       setChallenges(prevChallenges =>
         prevChallenges.map(challenge =>
-          challenge.id === id ? { ...challenge, name: newName } : challenge
+          challenge.id === challengeId ? { ...challenge, name: newName } : challenge
         )
       );
     } catch (error) {
@@ -148,39 +148,39 @@ const AdminView: React.FC = () => {
     }
   };
 
-  const blockUser = async (id: number) => {
+  const blockUser = async (userId: number) => {
     const isConfirmed = window.confirm('Czy na pewno chcesz zablokować tego użytkownika?');
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/user/block', { userId: id });
+      await api.post(`/api/users/${userId}/block`);
       setBlockedUsers(prevBlocked =>
-        [...prevBlocked, id]
+        [...prevBlocked, userId]
       );
     } catch (error) {
       console.error('Error blocking user:', error);
     }
   };
 
-  const unblockUser = async (id: number) => {
+  const unblockUser = async (userId: number) => {
     const isConfirmed = window.confirm('Czy na pewno chcesz odblokować tego użytkownika?');
     if (!isConfirmed) return;
 
     try {
-      await api.post('/api/user/unblock', { userId: id });
+      await api.post(`/api/users/${userId}/unblock`);
       setBlockedUsers(prevBlocked =>
-        prevBlocked.filter(userId => userId !== id)
+        prevBlocked.filter(userId => userId !== userId)
       );
     } catch (error) {
       console.error('Error unblocking user:', error);
     }
   };
 
-  const changeUserBlock = async (id: number) => {
-    if (blockedUsers.includes(id)) {
-      await unblockUser(id);
+  const changeUserBlock = async (userId: number) => {
+    if (blockedUsers.includes(userId)) {
+      await unblockUser(userId);
     } else {
-      await blockUser(id);
+      await blockUser(userId);
     }
   };
 

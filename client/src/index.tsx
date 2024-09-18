@@ -37,8 +37,8 @@ root.render(
         <StyledNavbar />
         <Routes>
           <Route path="/" element={<RootRedirect />} />
-          <Route path="/attraction/:id" element={<Attraction />} />
-          <Route path="/challenge/:id" element={<ChallengeView />} />
+          <Route path="/attraction/:attractionId" element={<Attraction />} />
+          <Route path="/challenge/:challengeId" element={<ChallengeView />} />
           <Route path="/challenges" element={<Challenges />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/new_attraction" element={<ProtectedRouteForUnblocked element={<NewAttractionForm />} />} />

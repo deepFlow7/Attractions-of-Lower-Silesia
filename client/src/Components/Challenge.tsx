@@ -46,11 +46,11 @@ const ChallengeView: React.FC = () => {
   >([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { id } = useParams();
+  const { challengeId } = useParams();
 
   const getChallengeData = () => {
     api
-      .get(`/api/challenge/${id}`)
+      .get(`/api/challenges/${challengeId}`)
       .then((response) => {
         setChallenge(response.data);
       })
@@ -63,12 +63,12 @@ const ChallengeView: React.FC = () => {
     getChallengeData();
     if (user && role === "user") {
       api
-        .get(`/api/takes_part_in_challenge/${id}/`)
+        .get(`/api/challenges/${challengeId}/userParticipates`)
         .then((response) => {
           setTakesPart(response.data);
           if (response.data) {
             api
-              .get(`/api/challenge/visited_attractions/${id}`)
+              .get(`/api/challenges/${challengeId}/visited`)
               .then((response) => {
                 setVisitedAttractions(response.data);
               })
@@ -81,7 +81,7 @@ const ChallengeView: React.FC = () => {
           console.error("There was an error fetching the data!", error);
         });
     }
-  }, [id, user]);
+  }, [challengeId, user]);
 
   if (!challenge) {
     return <div>Loading...</div>;
@@ -90,7 +90,7 @@ const ChallengeView: React.FC = () => {
   const handleParticipation = () => {
     if (!user || role !== "user") return;
     api
-      .post(`/api/start_challenge/${challenge.id}`)
+      .post(`/api/challenges/${challengeId}/start`)
       .then(() => {
         setTakesPart(true);
         getChallengeData();
@@ -100,7 +100,7 @@ const ChallengeView: React.FC = () => {
         console.error("There was an error starting the challenge:", error);
       });
     api
-      .get(`/api/challenge/visited_attractions/${id}`)
+      .get(`/api/challenges/${challengeId}/visited`)
       .then((response) => {
         setVisitedAttractions(response.data);
       })
@@ -146,7 +146,7 @@ const ChallengeView: React.FC = () => {
 
         api
           .post(
-            `/api/visit_challenge_attraction/${challenge.id}/${attraction.id}/${user.id}`
+            `/api/challenges/${challengeId}/visit/${attraction.id}`
           )
           .then(() => {
             setVisitedAttractions((prev) => [
@@ -175,13 +175,13 @@ const ChallengeView: React.FC = () => {
         <Title>{challenge.name}</Title>
         <Body margin>{challenge.description}</Body>
 
-          <Map
-            x={challenge.coords.x}
-            y={challenge.coords.y}
-            zoom={challenge.zoom}
-            attractions={challenge.attractions}
-          />
-        
+        <Map
+          x={challenge.coords.x}
+          y={challenge.coords.y}
+          zoom={challenge.zoom}
+          attractions={challenge.attractions}
+        />
+
       </MapContainer>
       <DictionaryContainer>
         <CardContent>
@@ -197,7 +197,7 @@ const ChallengeView: React.FC = () => {
       <DictionaryContainer second>
         <CardContent>
           <Title>Ranking</Title>
-          <RankingTable key={refreshKey} challengeId={id ? parseInt(id) : null} />
+          <RankingTable key={refreshKey} challengeId={challengeId ? parseInt(challengeId) : null} />
           {user && role === "user" && !takesPart && (
             <StyledButton onClick={handleParticipation}>
               Weź udział

@@ -60,7 +60,7 @@ const Home: React.FC = () => {
           console.error('There was an error fetching favourite attractions:', error);
         });
 
-        api.get('/api/attractions/wants_to_visit')
+        api.get('/api/attractions/toVisit')
         .then(response => {
           setWantsToVisitAttractions(response.data); 
         })

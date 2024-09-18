@@ -83,7 +83,7 @@ const NewChallengeForm = () => {
   const mapRef = useRef<MapRef>(null);
 
   const onSubmit = async (newChallenge: ChallengeForm) => {
-    await api.post('/api/new_challenge', { newChallenge })
+    await api.post('/api/challenges/new', { newChallenge })
       .then(response => {
       })
       .catch(error => {

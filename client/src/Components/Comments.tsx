@@ -52,7 +52,7 @@ const Comments: React.FC<CommentsProps> = ({ comments, attractionId, addComment,
     };
 
     try {
-      const response = await api.post('/api/addComment', commentData);
+      const response = await api.post('/api/comments/add', commentData);
       if (response.data.success) {
         addComment({ ...commentData, id: response.data.id, vote_sum: 0 });
         console.log('New comment added successfully:', response.data);

@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchSession = async () => {
     try {
-      const response = await api.get('/profile');
+      const response = await api.get('/api/user/profile');
       if (response.data.authenticated) {
         setIsAuthenticated(true);
         setIsBlocked(response.data.blocked);
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await api.post('/login', { login: username, password });
+      const response = await api.post('/api/user/login', { login: username, password });
       if (response.data.authenticated) {
         setIsAuthenticated(true);
         fetchSession();
@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      await api.get('/logout');
+      await api.get('/api/user/logout');
       setIsAuthenticated(false);
       setUser(null);
       updateUsername('');

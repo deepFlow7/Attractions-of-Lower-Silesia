@@ -46,7 +46,7 @@ const Challenges = () => {
       });
 
     if (user) {
-      api.get(`/api/completed_challenges`)
+      api.get('/api/challenges/completed')
         .then(response => {
           setCompletedChallenges(response.data);
         })
@@ -54,7 +54,7 @@ const Challenges = () => {
           console.error('There was an error fetching completed challenges:', error);
         });
       
-        api.get(`/api/in_progress_challenges`)
+        api.get('/api/challenges/inProgress')
         .then(response => {
           setChallengesInProgress(response.data);
         })
