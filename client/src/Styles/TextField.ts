@@ -4,10 +4,10 @@ import { bodyMixin } from './Typography';
 import { colors } from './Themes'; // Importuj kolory, jeśli są w osobnym pliku
 
 export interface TextProps {
-  slim?: boolean;
+    slim?: boolean;
 }
 
-const StyledTextField = styled(TextField)<TextProps>`
+const StyledTextField = styled(TextField) <TextProps>`
   width: 95%;
   margin: 0.7rem 2.5%;
 

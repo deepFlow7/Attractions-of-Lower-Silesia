@@ -3,7 +3,7 @@ import { shadows, colors, sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
 import background from "/backgrounds/attraction.png";
 export interface ViewContainerProps {
-  buttonOnTop?: boolean;
+    buttonOnTop?: boolean;
 }
 
 export const ViewContainer = styled.div<ViewContainerProps>`
@@ -20,9 +20,9 @@ export const ViewContainer = styled.div<ViewContainerProps>`
   top: ${props => (props.buttonOnTop ? sizes.navbarHeight + sizes.buttonHeightPadded : sizes.navbarHeight)};
   ${bodyMixin}
   padding: 1rem;
-  min-height: ${(props) => props.buttonOnTop 
-    ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeightPadded})` 
-    : `calc(100vh - ${sizes.navbarHeight})`};
+  min-height: ${(props) => props.buttonOnTop
+        ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeightPadded})`
+        : `calc(100vh - ${sizes.navbarHeight})`};
   & > * {
     box-shadow: ${shadows.default};
     background-color: ${colors.primary};

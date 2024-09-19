@@ -6,6 +6,6 @@ const userRoutes = require('../User/userRoutes');
 router.get('/', users.users);
 router.get('/blocked', users.blocked);
 
-router.use('/:userId',userRoutes);
+router.use('/:userId', userRoutes);
 
 module.exports = router;

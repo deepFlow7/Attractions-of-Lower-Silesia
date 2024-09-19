@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export interface FilterContainerProps {
-  three?: boolean;
-  four?: boolean;
+    three?: boolean;
+    four?: boolean;
 }
 
 export const FilterContainer = styled.div<FilterContainerProps>`

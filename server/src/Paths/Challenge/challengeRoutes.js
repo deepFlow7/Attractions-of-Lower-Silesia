@@ -5,7 +5,7 @@ const challenge = require('./challenge');
 router.get('/', challenge.info);
 router.get('/ranking', challenge.ranking);
 router.post('/start', challenge.start);
-router.get('/userParticipates', challenge.user_participates);
+router.get('/userParticipates', challenge.userParticipates);
 router.post('/visit/:attractionId', challenge.visit);
 router.get('/visited', challenge.visited);
 router.post('/delete', challenge.delete);

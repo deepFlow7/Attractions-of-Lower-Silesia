@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { colors, sizes} from "../Styles/Themes";
+import { colors, sizes } from "../Styles/Themes";
 export interface ListContainerProps {
-  three?: boolean;
-  four?: boolean;
+    three?: boolean;
+    four?: boolean;
 }
 
 export const ListContainer = styled.div<ListContainerProps>`
