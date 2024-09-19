@@ -26,7 +26,7 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
       ...initial_colors,
       primary: '#fff',
       secondary: '#000',
-      tertiary: '#444',
+      tertiary: '#888',
       is_contrast: true,
     });
   };
