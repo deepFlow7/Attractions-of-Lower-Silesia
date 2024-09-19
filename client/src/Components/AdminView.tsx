@@ -11,12 +11,13 @@ import { UserWithLogin, Attraction, Challenge } from '../types';
 import { ViewContainer } from '../Styles/View';
 import { AdminContainer } from '../Styles/List';
 import { StyledButton } from '../Styles/Button';
-import { colors, sizes } from '../Styles/Themes';
+import { sizes } from '../Styles/Themes';
+import { useColors, ContrastProps } from '../Providers/Colors';
 
-const Container = styled.div`
+const Container = styled.div<ContrastProps>`
   box-sizing: border-box;
   padding: 1rem;
-  background-color: ${colors.secondary};
+  background-color: ${props => props.colors.secondary};
   position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
@@ -32,6 +33,7 @@ const AdminView: React.FC = () => {
   const [manageAttractions, setManageAttractions] = useState<boolean>(false);
   const [manageChallenges, setManageChallenges] = useState<boolean>(false);
   const [manageUsers, setManageUsers] = useState<boolean>(false);
+  const { toggleTheme, colors } = useColors();
 
   useEffect(() => {
     const fetchAttractions = async () => {
@@ -185,17 +187,17 @@ const AdminView: React.FC = () => {
   };
 
   return (
-    <Container>
-      <StyledButton onClick={toggleView} background={true}>
+    <Container colors={colors}>
+      <StyledButton colors={colors} onClick={toggleView} background={true}>
         {isAdminPanel ? 'Przełącz na widok główny' : 'Przełącz na panel administratora'}
       </StyledButton>
 
       {isAdminPanel ? (
-        <ViewContainer buttonOnTop>
-          <AdminContainer>
+        <ViewContainer buttonOnTop colors={colors}>
+          <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton size="small" color="primary" onClick={toggleManageUsers}>
+                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageUsers}>
                   {manageUsers ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
@@ -210,10 +212,10 @@ const AdminView: React.FC = () => {
             </Card>
           </AdminContainer>
 
-          <AdminContainer>
+          <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton size="small" color="primary" onClick={toggleManageAttractions}>
+                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageAttractions}>
                   {manageAttractions ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
@@ -228,10 +230,10 @@ const AdminView: React.FC = () => {
             </Card>
           </AdminContainer>
 
-          <AdminContainer>
+          <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton size="small" color="primary" onClick={toggleManageChallenges}>
+                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageChallenges}>
                   {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
@@ -247,7 +249,7 @@ const AdminView: React.FC = () => {
           </AdminContainer>
         </ViewContainer>
       ) : (
-        <AdminContainer>
+        <AdminContainer colors={colors} >
           <Home />
         </AdminContainer>
       )}

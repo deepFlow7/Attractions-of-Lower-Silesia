@@ -3,8 +3,9 @@ import background from "/backgrounds/login.png";
 import background2 from "/backgrounds/login2.jpeg";
 import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
-export const FormContainer = styled.div`
+export const FormContainer = styled.div<ContrastProps>`
   box-sizing: border-box;
   width: calc(100vw + 5px);
   display: flex;
@@ -14,7 +15,7 @@ export const FormContainer = styled.div`
   position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
-  ${bodyMixin}
+  ${({ colors }) => bodyMixin(colors)} 
   padding: 1rem;
   min-height: calc(100vh - ${sizes.navbarHeight});
   display: flex; /* Ustawienie flexboxa */

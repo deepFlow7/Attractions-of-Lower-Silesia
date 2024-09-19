@@ -15,6 +15,7 @@ import { StyledButton } from "../Styles/Button";
 import { ChallengeAttraction } from "../types";
 import { bodyMixin, Title, Body } from '../Styles/Typography';
 import { shadows } from "../Styles/Themes";
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 const StyledList = styled(List)`
   border-radius: 8px;
@@ -27,9 +28,9 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)`
+const StyledListItemText = styled(ListItemText)<ContrastProps>`
   .MuiListItemText-primary {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
   }
 `;
 
@@ -53,10 +54,11 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
 
   const isAttractionLoading = (attractionId: number) =>
     loadingAttractions.some((attraction) => attraction.attraction_id === attractionId);
+  const { toggleTheme, colors } = useColors();
 
   return (
     <StyledList>
-      <Title>Lista Atrakcji</Title>
+      <Title colors={colors}>Lista Atrakcji</Title>
       <Box
         sx={{
           maxHeight: 400,
@@ -74,8 +76,8 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                 style={{ justifyContent: "flex-start" }}
               >
                 <StyledListItem>
-                  <StyledListItemText primary={attraction.name} />
-                  <StyledListItemText
+                  <StyledListItemText colors={colors} primary={attraction.name} />
+                  <StyledListItemText colors={colors}
                     primary={`${attraction.points} punktów`}
                     style={{ textAlign: 'right' }}
                   />
@@ -83,16 +85,16 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
               </Button>
               {showVisitButtons && (
                 isAttractionVisited(attraction.id) ? (
-                  <Body gray>
+                  <Body colors={colors} gray>
                     Odwiedzone
                   </Body>
                 ) : (
                   isAttractionLoading(attraction.id) ? (
-                    <Body gray>
+                    <Body  colors={colors} gray>
                       Sprawdzam lokalizację <CircularProgress size={15} />
                     </Body>
                   ) : (
-                    <StyledButton onClick={() => onClick(attraction)}>
+                    <StyledButton  colors={colors} onClick={() => onClick(attraction)}>
                       Odwiedź
                     </StyledButton>
                   )

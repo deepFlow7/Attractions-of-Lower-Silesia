@@ -9,12 +9,13 @@ import AttractionInfo from './AttractionInfo';
 import { useAuth } from '../Providers/AuthContext';
 import api from '../API/api';
 import { AttractionWithComments, Comment } from '../types';
-import { colors, shadows } from '../Styles/Themes';
-import { AttractionContainer } from '../Styles/View';
+import { shadows } from '../Styles/Themes';
+import {AttractionContainer } from '../Styles/View';
 import { StyledButton } from '../Styles/Button';
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
-export const PhotoContainer = styled.div`
-  background-color: ${colors.primary};
+export const PhotoContainer = styled.div<ContrastProps>`
+  background-color: ${props => props.colors.primary}; 
   box-shadow: ${shadows.default};
   align-self: start;
 `;
@@ -26,8 +27,8 @@ export const InfoContainer = styled.div`
   gap: 1rem;
 `;
 
-const TileCard = styled(Card)`
-background-color: ${colors.primary};
+const TileCard = styled(Card)<ContrastProps>`
+background-color: ${props => props.colors.primary};
 `;
 
 
@@ -40,6 +41,7 @@ const AttractionView: React.FC = () => {
   const { isBlocked, role, isAuthenticated } = useAuth();
   const [refreshKey, setRefreshKey] = useState(1);
   const { attractionId } = useParams();
+  const { toggleTheme, colors } = useColors();
 
   useEffect(() => {
     if (isAuthenticated && role === 'user') {
@@ -210,21 +212,21 @@ const AttractionView: React.FC = () => {
   const { name, photos } = attraction;
 
   return (
-    <AttractionContainer>
-      <PhotoContainer>
+    <AttractionContainer colors={colors}>
+      <PhotoContainer colors={colors}> 
         <Photos photos={photos} title={name} displayButton={photos.length > 1} />
       </PhotoContainer>
       <InfoContainer>
         {isAuthenticated && role === 'user' && (
           <>
-            <StyledButton
+            <StyledButton colors={colors} 
               background={true}
 
               onClick={handleFavouriteToggle}
             >
               {isFavourite ? 'Ulubione' : 'Dodaj do ulubionych'}
             </StyledButton>
-            <StyledButton
+            <StyledButton colors={colors} 
               background={true}
               onClick={handleToVisitToggle}
             >
@@ -234,9 +236,9 @@ const AttractionView: React.FC = () => {
         )}
         <AttractionInfo attraction={attraction} />
         {isAuthenticated && role === 'user' && (
-          <TileCard>
+          <TileCard colors={colors}>
             <CardContent>
-              <Title>
+              <Title colors={colors}>
                 Twoja ocena
               </Title>
               <Rating

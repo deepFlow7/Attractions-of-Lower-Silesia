@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
-import { shadows, colors, sizes } from "./Themes";
+import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
 import background from "/backgrounds/attraction.png";
+
 export interface ViewContainerProps {
   buttonOnTop?: boolean;
+  colors: { [key: string]: string | boolean };
 }
 
 export const ViewContainer = styled.div<ViewContainerProps>`
@@ -14,31 +16,32 @@ export const ViewContainer = styled.div<ViewContainerProps>`
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  background-color: ${colors.secondary};
+  background-color: ${props => props.colors.secondary};
   position: absolute;
   left: -5px;
   top: ${props => (props.buttonOnTop ? sizes.navbarHeight + sizes.buttonHeightPadded : sizes.navbarHeight)};
-  ${bodyMixin}
+  ${({ colors }) => bodyMixin(colors)}; 
+
   padding: 1rem;
   min-height: ${(props) => props.buttonOnTop
     ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeightPadded})`
     : `calc(100vh - ${sizes.navbarHeight})`};
   & > * {
-    box-shadow: ${shadows.default};
-    background-color: ${colors.primary};
+    background-color: ${props => props.colors.primary};
   }
   @media (max-width: 500px) {
     padding-right: 2rem;
   }
 `;
-export const AttractionContainer = styled.div`
+export const AttractionContainer = styled.div<ViewContainerProps>`
   box-sizing: border-box;
   width: calc(100vw + 5px);
   position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
   min-height: calc(100vh - ${sizes.navbarHeight});
-  ${bodyMixin}
+  ${({ colors }) => bodyMixin(colors)}; 
+
   padding: 1rem;
   display: grid;
   grid-template-columns: 3fr 2fr;
@@ -50,7 +53,6 @@ export const AttractionContainer = styled.div`
   & > * {
     z-index: 3;
   }
-  /* Pseudo-element do dodania koloru */
   &::before {
     content: '';
     position: absolute;
@@ -58,10 +60,10 @@ export const AttractionContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${colors.secondary}; /* Kolor nakładki */
-    opacity: 0.8; /* Przezroczystość */
-    z-index: 1; /* Nakładka na tło, ale pod zawartością */
-    pointer-events: none; /* Blokuje interakcję z nakładką */
+    background-color: ${props => props.colors.secondary};
+    opacity: 0.8; 
+    z-index: 1;
+    pointer-events: none;
   }
 
   z-index: 2;

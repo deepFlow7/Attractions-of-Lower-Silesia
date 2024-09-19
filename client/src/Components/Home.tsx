@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import { Input as MUIInput } from '@mui/material';
 import styled from '@emotion/styled';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import api from '../API/api';
 import Map from './Map';
 import AttractionsList from './AttractionsList';
@@ -25,9 +25,10 @@ const InputContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const StyledInput = styled(MUIInput)`
+const StyledInput = styled(MUIInput)<ContrastProps>`
   & .MuiInputBase-input::placeholder {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
+
   }
 `;
 
@@ -40,6 +41,7 @@ const Home: React.FC = () => {
   const [favouriteAttractions, setFavouriteAttractions] = useState<number[]>([]);
   const [wantsToVisitAttractions, setWantsToVisitAttractions] = useState<number[]>([]);
   const { isAuthenticated, role } = useAuth();
+  const { toggleTheme, colors } = useColors();
 
   useEffect(() => {
     api.get('/api/attractions')
@@ -109,7 +111,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors}>
       <MapContainer>
         <Map
           x={initialLat}
@@ -122,7 +124,7 @@ const Home: React.FC = () => {
       </FilterContainer>
       <ListContainer>
         <InputContainer>
-          <StyledInput
+          <StyledInput  colors={colors}
             placeholder="Wyszukaj..."
             inputProps={{ 'aria-label': 'search' }}
             onChange={handleSearchChange}

@@ -2,49 +2,51 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { CardContent, List, ListItem } from '@mui/material';
-
-import { Attraction } from '../types';
-import { colors, shadows } from '../Styles/Themes';
 import { Title, Body } from '../Styles/Typography';
+import { Attraction } from '../types';
+import { ContrastProps, useColors } from '../Providers/Colors'; // Importuj useColors
+import { shadows } from '../Styles/Themes';
 
 interface AttractionInfoProps {
   attraction: Attraction;
 }
 
-const Info = styled.div`
+const Info = styled.div<ContrastProps>`
   display: grid;
   gap: 1rem;
   & > * {
-    background-color: ${colors.primary};
+    background-color: ${props => props.colors.primary};
     box-shadow: ${shadows.default};
   }
 `;
 
 const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
+  const { colors } = useColors(); // Pobierz colors z kontekstu
+
   const { type, subtype, description, interactivity, timeItTakes, rating } = attraction;
 
   return (
-    <Info>
+    <Info colors={colors}>
       <CardContent>
-        <Title small>Opis</Title>
-        <Body>{description}</Body>
+        <Title colors={colors} small>Opis</Title>
+        <Body colors={colors} >{description}</Body>
       </CardContent>
       <CardContent>
-        <Title small>Typy i Podtypy</Title>
-        <Body>Typ: {type}</Body>
-        <Body>Podtyp: {subtype}</Body>
+        <Title  colors={colors} small>Typy i Podtypy</Title>
+        <Body colors={colors} >Typ: {type}</Body>
+        <Body colors={colors} >Podtyp: {subtype}</Body>
       </CardContent>
       <CardContent>
-        <Title small>Statystyki</Title>
+        <Title colors={colors}  small>Statystyki</Title>
         <List>
           <ListItem>
-            <Body>Interaktywność: {interactivity}/10</Body>
+            <Body colors={colors} >Interaktywność: {interactivity}/10</Body>
           </ListItem>
           <ListItem>
-            <Body>Czas zwiedzania: {timeItTakes} minut</Body>
+            <Body colors={colors} >Czas zwiedzania: {timeItTakes} minut</Body>
           </ListItem>
           <ListItem>
-            <Body>Ocena: {rating ? rating.toFixed(1) : 'Brak oceny'}</Body>
+            <Body colors={colors} >Ocena: {rating ? rating.toFixed(1) : 'Brak oceny'}</Body>
           </ListItem>
         </List>
       </CardContent>
