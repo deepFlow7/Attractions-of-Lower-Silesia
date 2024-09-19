@@ -7,8 +7,8 @@ import { User, Role } from '../types';
 interface Context {
   isAuthenticated: boolean;
   isBlocked: boolean;
-  login: (username: string, password: string) => void;
-  logout: () => void;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   user: User | null;
   username: string;
   role: Role;
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await api.post('/api/user/login', { login: username, password });
       if (response.data.authenticated) {
         setIsAuthenticated(true);
-        fetchSession();
+        await fetchSession();
       }
       else {
         throw response.data.error;

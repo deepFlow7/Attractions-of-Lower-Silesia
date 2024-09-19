@@ -49,9 +49,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await api.get('/api/user/logout');
-      updateUser(null);
-      logout();
+      await logout();
       navigate('/');
     } catch (error) {
       alert('Error logging out');
