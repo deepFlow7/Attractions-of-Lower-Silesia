@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { sizes} from "../Styles/Themes";
-import { ContrastProps } from '../Providers/Colors'; 
+import { ContrastProps } from '../Providers/Colors';
+import { sizes } from "../Styles/Themes";
 
 export interface ListContainerProps {
   three?: boolean;

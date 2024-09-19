@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { sizes, transitions, shadows } from './Themes';
+import { shadows, sizes, transitions } from './Themes';
 
 export interface TitleProps {
   small?: boolean;
@@ -14,7 +14,7 @@ export interface BodyProps {
   colors: { [key: string]: string | boolean };
 }
 
-export const titleMixin = (colors: { [key: string]: string | boolean}) => `
+export const titleMixin = (colors: { [key: string]: string | boolean }) => `
   color: ${colors.secondary};  
   font-size: ${sizes.titleSize};
   @media (max-width: 600px) {
@@ -32,7 +32,7 @@ export const titleMixin = (colors: { [key: string]: string | boolean}) => `
   margin: 1rem;
 `;
 
-export const bodyMixin = (colors: { [key: string]: string | boolean}) => `
+export const bodyMixin = (colors: { [key: string]: string | boolean }) => `
   color: ${colors.dark};
   line-height: 1.5;
   font-family: 'Englebert', sans-serif;

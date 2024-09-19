@@ -1,17 +1,17 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Grid, Typography, MenuItem, CircularProgress } from '@mui/material';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
-import { NewAttraction, NewPhoto, PossibleType, Subtypes, possibleTypes, possibleSubtypes } from '../types';
-import Map, { MapRef } from './Map';
+import { CircularProgress, Grid, MenuItem, Typography } from '@mui/material';
+import React, { useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import { ChallengesContainer } from '../Styles/List';
-import { ViewContainer } from '../Styles/View';
-import { Title } from '../Styles/Typography';
-import StyledTextField from '../Styles/TextField';
+import { useColors } from '../Providers/Colors';
 import { StyledButton } from '../Styles/Button';
+import { ChallengesContainer } from '../Styles/List';
+import StyledTextField from '../Styles/TextField';
+import { Title } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { NewAttraction, NewPhoto, PossibleType, Subtypes, possibleSubtypes, possibleTypes } from '../types';
+import Map, { MapRef } from './Map';
 
 const MapContainer = styled.div`
   height: 40vh;
@@ -33,7 +33,7 @@ const NewAttractionForm = () => {
   const [isLocalizationLoading, setIsLocalizationLoading] = useState<boolean>(false);
   const mapRef = useRef<MapRef>(null);
   const { isBlocked } = useAuth();
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
   const navigate = useNavigate();
   const location = useLocation();
   const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
@@ -184,7 +184,7 @@ const NewAttractionForm = () => {
         </StyledTextField>
         {formErrors.type && <Typography variant="body2" color="error">{formErrors.type}</Typography>}
 
-        <StyledTextField colors={colors} 
+        <StyledTextField colors={colors}
           select
           fullWidth
           label="Podtyp"

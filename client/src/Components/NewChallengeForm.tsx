@@ -1,22 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Box, IconButton, InputBase, Button, useMediaQuery } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
-import { ChallengeForm, Attraction, ChallengeAttractionInput, PossibleType, 
-  Subtypes, possibleSubtypes, possibleTypes } from '../types';
-import FilterList from './FilterList';
+import { Box, IconButton, InputBase, useMediaQuery } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../API/api';
-import Map, { MapRef } from './Map';
-import { ViewContainer } from '../Styles/View';
-import { MapContainer, DropListContainer } from '../Styles/Map';
-import { ListContainer } from '../Styles/List';
-import { FilterContainer } from '../Styles/Filter';
-import { InputContainer } from '../Styles/TextField';
-import StyledTextField from '../Styles/TextField';
-import { Title, Body, bodyMixin } from '../Styles/Typography';
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from '../Styles/Button';
+import { FilterContainer } from '../Styles/Filter';
+import { ListContainer } from '../Styles/List';
+import { DropListContainer, MapContainer } from '../Styles/Map';
+import StyledTextField, { InputContainer } from '../Styles/TextField';
+import { Body, Title, bodyMixin } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import {
+  Attraction, ChallengeAttractionInput,
+  ChallengeForm,
+  PossibleType,
+  Subtypes, possibleSubtypes, possibleTypes
+} from '../types';
+import FilterList from './FilterList';
+import Map, { MapRef } from './Map';
 
 const FormContainer = styled(ViewContainer)`
   width: 100vw;
@@ -30,7 +33,7 @@ const FormContainer = styled(ViewContainer)`
   }
 `;
 
-const StyledInputBase = styled(InputBase)<ContrastProps>`
+const StyledInputBase = styled(InputBase) <ContrastProps>`
   flex-grow: 1;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -65,7 +68,7 @@ const NewChallengeForm = () => {
   const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(initialMapView);
   const [search, setSearch] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   const navigate = useNavigate();
   const location = useLocation();

@@ -1,7 +1,7 @@
-import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import api from '../API/api';
-import { User, Role } from '../types';
+import { Role, User } from '../types';
 
 interface Context {
   isAuthenticated: boolean;

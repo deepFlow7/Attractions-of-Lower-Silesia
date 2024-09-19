@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { styled } from '@mui/system';
-import { sizes, transitions, shadows, animations } from './Themes';
-import { bodyMixin } from './Typography';
 import Button, { ButtonProps as MUIButtonProps } from '@mui/material/Button';
+import { styled } from '@mui/system';
+import { animations, shadows, sizes, transitions } from './Themes';
+import { bodyMixin } from './Typography';
 
 export interface ButtonProps extends MUIButtonProps {
   secondary?: boolean;
@@ -72,7 +72,7 @@ export const ButtonMixin = (colors: { [key: string]: string | boolean }) => `
   }
 `;
 
-export const StyledButton = styled(Button)<ButtonProps>`
+export const StyledButton = styled(Button) <ButtonProps>`
   ${({ colors }) => ButtonMixin(colors)}; // Przekazanie colors do ButtonMixin
   display: ${props => (props.hidden ? 'none' : 'inline-block')};
   color: ${props => (props.secondary ? props.colors.secondary : props.colors.tertiary)};

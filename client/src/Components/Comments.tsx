@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
+import styled from "@emotion/styled";
+import { CardContent, List, ListItem } from "@mui/material";
 import React, { useState } from "react";
-import { CardContent, List, ListItem, TextField, Button } from "@mui/material";
-import { Comment } from "../types";
 import api from "../API/api";
 import { useAuth } from "../Providers/AuthContext";
-import { Title, Body } from "../Styles/Typography";
-import styled from "@emotion/styled";
-import { shadows } from "../Styles/Themes";
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from "../Styles/Button";
 import StyledTextField from "../Styles/TextField";
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import { shadows } from "../Styles/Themes";
+import { Body, Title } from "../Styles/Typography";
+import { Comment } from "../types";
 
 export const Container = styled.div<ContrastProps>`
   display: flex;
@@ -38,7 +38,7 @@ const Comments: React.FC<CommentsProps> = ({
   onDisapprove,
   onApprovalRemove,
 }) => {
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
   const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState("");
 
@@ -97,7 +97,7 @@ const Comments: React.FC<CommentsProps> = ({
             <ListItem key={comment.id}>
               <div>
                 <Body colors={colors} >{comment.content}</Body>
-                <Body  colors={colors} gray>
+                <Body colors={colors} gray>
                   Autor: {comment.author}, Głosy: {comment.vote_sum}
                 </Body>
                 {isAuthenticated && role == "user" && (
@@ -105,8 +105,8 @@ const Comments: React.FC<CommentsProps> = ({
                     <button
                       style={{
                         backgroundColor:
-                         'transparent',
-                         border: "none"
+                          'transparent',
+                        border: "none"
                       }}
                       onClick={() => handleApprove(comment)}
                       aria-label="Approve"
@@ -115,7 +115,7 @@ const Comments: React.FC<CommentsProps> = ({
                         xmlns="http://www.w3.org/2000/svg"
                         fill={comment.approval_status === "approve"
                           ? colors.tertiary as string
-                          :colors.dark as string}
+                          : colors.dark as string}
                         width="1.5rem"
                         height="1.5rem"
                         viewBox="0 0 24 24"
@@ -124,11 +124,11 @@ const Comments: React.FC<CommentsProps> = ({
                       </svg>
                     </button>
                     <button
-                    style={{
-                      backgroundColor:
-                       'transparent',
-                       border: "none"
-                    }}
+                      style={{
+                        backgroundColor:
+                          'transparent',
+                        border: "none"
+                      }}
                       onClick={() => handleDispprove(comment)}
                       aria-label="Disapprove"
                     >
@@ -136,7 +136,7 @@ const Comments: React.FC<CommentsProps> = ({
                         xmlns="http://www.w3.org/2000/svg"
                         fill={comment.approval_status === "disapprove"
                           ? colors.tertiary as string
-                          :colors.dark as string}
+                          : colors.dark as string}
                         width="1.5rem"
                         height="1.5rem"
                         viewBox="0 0 24 24"
@@ -162,8 +162,8 @@ const Comments: React.FC<CommentsProps> = ({
       </div>
       {isAuthenticated && role === "user" && (
         <CardContent>
-          <Title  colors={colors} small>Dodaj komentarz</Title>
-          <StyledTextField colors={colors} 
+          <Title colors={colors} small>Dodaj komentarz</Title>
+          <StyledTextField colors={colors}
             label="Treść komentarza"
             multiline
             rows={4}
@@ -171,7 +171,7 @@ const Comments: React.FC<CommentsProps> = ({
             onChange={handleCommentChange}
             fullWidth
           />
-          <StyledButton  colors={colors} onClick={handleAddComment}>Dodaj</StyledButton>
+          <StyledButton colors={colors} onClick={handleAddComment}>Dodaj</StyledButton>
         </CardContent>
       )}
     </Container>

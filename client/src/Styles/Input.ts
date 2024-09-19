@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
 import { InputBase } from "@mui/material";
 import { bodyMixin } from "./Typography";
-import { ContrastProps } from '../Providers/Colors'; 
 
 export interface InputProps {
-  slim? : boolean;
+  slim?: boolean;
   colors: { [key: string]: string | boolean };
 };
 export const Input = styled(InputBase) <InputProps>`

@@ -1,21 +1,21 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
-import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
+  Box,
   Button,
+  CircularProgress,
+  Grid,
   List,
   ListItem,
   ListItemText,
-  Grid,
-  Box,
-  CircularProgress,
 } from "@mui/material";
+import React from "react";
+import { Link } from "react-router-dom";
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from "../Styles/Button";
-import { ChallengeAttraction } from "../types";
-import { bodyMixin, Title, Body } from '../Styles/Typography';
 import { shadows } from "../Styles/Themes";
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import { Body, bodyMixin, Title } from '../Styles/Typography';
+import { ChallengeAttraction } from "../types";
 
 const StyledList = styled(List)`
   border-radius: 8px;
@@ -28,7 +28,7 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)<ContrastProps>`
+const StyledListItemText = styled(ListItemText) <ContrastProps>`
   .MuiListItemText-primary {
     ${({ colors }) => bodyMixin(colors)} 
   }
@@ -54,7 +54,7 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
 
   const isAttractionLoading = (attractionId: number) =>
     loadingAttractions.some((attraction) => attraction.attraction_id === attractionId);
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   return (
     <StyledList>
@@ -90,11 +90,11 @@ const ChallengeAttractionsList: React.FC<ListProps> = ({
                   </Body>
                 ) : (
                   isAttractionLoading(attraction.id) ? (
-                    <Body  colors={colors} gray>
+                    <Body colors={colors} gray>
                       Sprawdzam lokalizację <CircularProgress size={15} />
                     </Body>
                   ) : (
-                    <StyledButton  colors={colors} onClick={() => onClick(attraction)}>
+                    <StyledButton colors={colors} onClick={() => onClick(attraction)}>
                       Odwiedź
                     </StyledButton>
                   )

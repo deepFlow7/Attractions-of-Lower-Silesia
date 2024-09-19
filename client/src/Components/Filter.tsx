@@ -1,23 +1,23 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { FormControlLabel, Checkbox, CardContent } from '@mui/material';
+import { CardContent, Checkbox, FormControlLabel } from '@mui/material';
+import React, { useState } from 'react';
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { bodyMixin } from '../Styles/Typography';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 interface FilterProps {
   options: string[];
   onChange: (selectedOptions: string[]) => void;
 }
 
-const StyledFormControlLabel = styled(FormControlLabel)<ContrastProps>`
+const StyledFormControlLabel = styled(FormControlLabel) <ContrastProps>`
   display: block;
   .MuiFormControlLabel-label {
     ${({ colors }) => bodyMixin(colors)} 
   }
 `;
 
-const CustomCheckbox = styled(Checkbox)<ContrastProps>`
+const CustomCheckbox = styled(Checkbox) <ContrastProps>`
   &.Mui-checked {
     color: ${props => props.colors.secondary}
   }
@@ -53,11 +53,11 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
 
   return (
     <CardContent >
-      <StyledFormControlLabel colors={colors} 
+      <StyledFormControlLabel colors={colors}
         key="all"
         control={
           <CustomCheckbox
-          colors={colors}
+            colors={colors}
             checked={selectAll}
             onChange={handleSelectAllChange}
             name="all"
@@ -66,11 +66,11 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
         label="wszystkie"
       />
       {options.map((option) => (
-        <StyledFormControlLabel colors={colors} 
+        <StyledFormControlLabel colors={colors}
           key={option}
           control={
             <CustomCheckbox
-            colors={colors}
+              colors={colors}
               checked={selectedOptions.includes(option)}
               onChange={() => handleCheckboxChange(option)}
               name={option}

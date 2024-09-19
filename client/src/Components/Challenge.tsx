@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { CardContent } from "@mui/material";
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import api from '../API/api';
-import Map from "./Map";
-import ChallengeAttractionsList from "./ChallengeAttractionsList";
-import RankingTable from "./Ranking";
 import { useAuth } from "../Providers/AuthContext";
-import { Challenge, ChallengeAttraction } from "../types";
-import { ViewContainer } from '../Styles/View';
-import { MapContainer } from '../Styles/Map';
-import { DictionaryContainer } from '../Styles/Dictionary';
-import { Title, Body } from '../Styles/Typography';
+import { useColors } from '../Providers/Colors';
 import { StyledButton } from '../Styles/Button';
+import { DictionaryContainer } from '../Styles/Dictionary';
+import { MapContainer } from '../Styles/Map';
+import { Body, Title } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { Challenge, ChallengeAttraction } from "../types";
+import ChallengeAttractionsList from "./ChallengeAttractionsList";
+import Map from "./Map";
+import RankingTable from "./Ranking";
 
 function haversineDistanceBetweenPoints(
   lat1: number,
@@ -35,7 +35,7 @@ function haversineDistanceBetweenPoints(
 }
 
 const ChallengeView: React.FC = () => {
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const { isAuthenticated, user, role } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
@@ -174,7 +174,7 @@ const ChallengeView: React.FC = () => {
     <ViewContainer colors={colors} >
       <MapContainer four challenge>
         <Title colors={colors} >{challenge.name}</Title>
-        <Body  colors={colors} margin>{challenge.description}</Body>
+        <Body colors={colors} margin>{challenge.description}</Body>
 
         <Map
           x={challenge.coords.x}
@@ -200,7 +200,7 @@ const ChallengeView: React.FC = () => {
           <Title colors={colors} >Ranking</Title>
           <RankingTable key={refreshKey} challengeId={challengeId ? parseInt(challengeId) : null} />
           {user && role === "user" && !takesPart && (
-            <StyledButton colors={colors}  onClick={handleParticipation}>
+            <StyledButton colors={colors} onClick={handleParticipation}>
               Weź udział
             </StyledButton>
           )}

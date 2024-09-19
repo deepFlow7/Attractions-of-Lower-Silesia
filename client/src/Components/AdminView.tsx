@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { Card, CardContent, CardActions } from '@mui/material';
+import { Card, CardActions, CardContent } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 import api from '../API/api';
-import UsersList from './UsersList';
-import ChallengesList from './ChallengesList';
-import AttractionsList from './AttractionsList';
-import Home from './Home';
-import { UserWithLogin, Attraction, Challenge } from '../types';
-import { ViewContainer } from '../Styles/View';
-import { AdminContainer } from '../Styles/List';
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from '../Styles/Button';
+import { AdminContainer } from '../Styles/List';
 import { sizes } from '../Styles/Themes';
-import { useColors, ContrastProps } from '../Providers/Colors';
+import { ViewContainer } from '../Styles/View';
+import { Attraction, Challenge, UserWithLogin } from '../types';
+import AttractionsList from './AttractionsList';
+import ChallengesList from './ChallengesList';
+import Home from './Home';
+import UsersList from './UsersList';
 
 const Container = styled.div<ContrastProps>`
   box-sizing: border-box;
@@ -197,7 +197,7 @@ const AdminView: React.FC = () => {
           <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageUsers}>
+                <StyledButton colors={colors} size="small" color="primary" onClick={toggleManageUsers}>
                   {manageUsers ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
@@ -215,7 +215,7 @@ const AdminView: React.FC = () => {
           <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageAttractions}>
+                <StyledButton colors={colors} size="small" color="primary" onClick={toggleManageAttractions}>
                   {manageAttractions ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>
@@ -233,7 +233,7 @@ const AdminView: React.FC = () => {
           <AdminContainer colors={colors} >
             <Card>
               <CardActions>
-                <StyledButton  colors={colors} size="small" color="primary" onClick={toggleManageChallenges}>
+                <StyledButton colors={colors} size="small" color="primary" onClick={toggleManageChallenges}>
                   {manageChallenges ? 'Wyjdź z trybu zarządzania' : 'Tryb zarządzania'}
                 </StyledButton>
               </CardActions>

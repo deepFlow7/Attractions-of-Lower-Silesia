@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
 interface ColorContextInterface {
   toggleTheme: () => void;
@@ -54,6 +54,5 @@ export const useColors = () => {
   return context;
 };
 export interface ContrastProps {
-    colors: { [key: string]: string | boolean };
-  }
-  
+  colors: { [key: string]: string | boolean };
+}

@@ -1,17 +1,16 @@
 /** @jsxImportSource @emotion/react */
+import styled from '@emotion/styled';
+import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
-import { List, ListItem, ListItemText, Button } from '@mui/material';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
-import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import { Challenge, BasicChallengeInfo } from '../types';
-import { ViewContainer } from '../Styles/View';
-import { Title } from '../Styles/Typography';
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { ChallengesContainer } from '../Styles/List';
-import { bodyMixin } from '../Styles/Typography';
+import { bodyMixin, Title } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { BasicChallengeInfo, Challenge } from '../types';
+import ChallengesList from './ChallengesList';
 
 const StyledList = styled(List)`
   border-radius: 8px;
@@ -24,7 +23,7 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)<ContrastProps>`
+const StyledListItemText = styled(ListItemText) <ContrastProps>`
   .MuiListItemText-primary {
     ${({ colors }) => bodyMixin(colors)} 
   }
@@ -36,7 +35,7 @@ const Challenges = () => {
   const [completedChallenges, setCompletedChallenges] = useState<BasicChallengeInfo[]>([]);
   const [challengesInProgress, setChallengesInProgress] = useState<BasicChallengeInfo[]>([]);
   const { isAuthenticated, user, role } = useAuth();
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   useEffect(() => {
     api.get('/api/challenges')

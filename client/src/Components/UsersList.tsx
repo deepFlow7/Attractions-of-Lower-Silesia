@@ -1,14 +1,13 @@
-import React from "react";
 import styled from "@emotion/styled";
-import { List, ListItem, ListItemText, Typography, Button } from "@mui/material";
+import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import React from "react";
 
-import { UserWithLogin } from "../types";
 import { useAuth } from "../Providers/AuthContext";
-import { Title, bodyMixin } from "../Styles/Typography";
-import { shadows } from "../Styles/Themes";
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from "../Styles/Button";
-import { useColors, ContrastProps } from '../Providers/Colors'; 
-import { Contrast } from "@mui/icons-material";
+import { shadows } from "../Styles/Themes";
+import { Title, bodyMixin } from "../Styles/Typography";
+import { UserWithLogin } from "../types";
 
 interface UsersListProps {
   users: UserWithLogin[];
@@ -28,7 +27,7 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledPrimaryTypography = styled(Typography)<ContrastProps>`
+const StyledPrimaryTypography = styled(Typography) <ContrastProps>`
    ${({ colors }) => bodyMixin(colors)} 
   color: ${props => props.colors.gray};
 `;
@@ -48,7 +47,7 @@ const UsersList: React.FC<UsersListProps> = ({
   const isUserBlocked = (id: number) => {
     return blockedUsers?.includes(id);
   };
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   return (
     <StyledList>
@@ -68,7 +67,7 @@ const UsersList: React.FC<UsersListProps> = ({
             }
           />
           {isAuthenticated && role === "admin" && isManaging && (
-            <StyledButton colors={colors} 
+            <StyledButton colors={colors}
               color={isUserBlocked(user.id) ? "secondary" : "primary"}
               onClick={() => changeUserBlock?.(user.id)}
             >

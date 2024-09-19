@@ -1,10 +1,10 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import StyledNavbar from './Components/Navbar';
 import { AuthProvider, useAuth } from './Providers/AuthContext';
+import { ColorProvider } from './Providers/Colors';
 
-const paths = ["Home",]
 const Home = lazy(() => import('./Components/Home'));
 const Attraction = lazy(() => import('./Components/Attraction'));
 const ChallengeView = lazy(() => import('./Components/Challenge'));
@@ -43,27 +43,27 @@ root.render(
         <BrowserRouter>
           <StyledNavbar />
           <Suspense fallback={<>loading...</>}>
-          <Routes>
+            <Routes>
               <Route path="/" element={<RootRedirect />} />
               <Route path="/attraction/:attractionId" element={<Attraction />} />
               <Route path="/challenge/:challengeId" element={<ChallengeView />} />
               <Route path="/challenges" element={<Challenges />} />
               <Route path="/login" element={<LoginForm />} />
               <Route
-              path="/new_attraction"
-              element={
-                <ProtectedRouteForUnblocked element={<NewAttractionForm />} />
-              }
-            />
+                path="/new_attraction"
+                element={
+                  <ProtectedRouteForUnblocked element={<NewAttractionForm />} />
+                }
+              />
               <Route
-              path="/new_challenge"
-              element={<ProtectedRoute element={<NewChallengeForm />} />}
-            />
+                path="/new_challenge"
+                element={<ProtectedRoute element={<NewChallengeForm />} />}
+              />
               <Route path="/signup" element={<SignUpForm />} />
               <Route path="/route_planner" element={<RoutePlanner />} />
             </Routes>
           </Suspense>
-      </BrowserRouter>
+        </BrowserRouter>
       </ColorProvider>
     </AuthProvider>
   </React.StrictMode>

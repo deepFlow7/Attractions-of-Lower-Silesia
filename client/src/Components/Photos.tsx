@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { Grid, CardContent } from '@mui/material';
-import { Photo } from '../types';
-import { Title, Body } from '../Styles/Typography';
-import { StyledButton } from '../Styles/Button';
 import styled from '@emotion/styled';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import { CardContent, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
+import { Body, Title } from '../Styles/Typography';
+import { Photo } from '../types';
 
 interface PhotoProps {
   photos: Photo[];
@@ -29,13 +29,13 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton = true }) =
   const handlePreviousPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
   };
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
 
   return (
     <CardContent>
       <Grid item xs={12}>
-        <Title  colors={colors}small>{title}</Title>
+        <Title colors={colors} small>{title}</Title>
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -51,12 +51,12 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton = true }) =
           )}
         </Grid>
         <ButtonContainer display={displayButton}>
-            <StyledButton colors={colors} onClick={handlePreviousPhoto} >
-              Poprzednie
-            </StyledButton>
-            <StyledButton colors={colors}  onClick={handleNextPhoto}>
-              Następne
-            </StyledButton>
+          <StyledButton colors={colors} onClick={handlePreviousPhoto} >
+            Poprzednie
+          </StyledButton>
+          <StyledButton colors={colors} onClick={handleNextPhoto}>
+            Następne
+          </StyledButton>
         </ButtonContainer>
       </Grid>
     </CardContent>

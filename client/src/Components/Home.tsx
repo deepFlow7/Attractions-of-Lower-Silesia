@@ -1,21 +1,21 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import IconButton from '@mui/material/IconButton';
-import { Input as MUIInput } from '@mui/material';
 import styled from '@emotion/styled';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import SearchIcon from '@mui/icons-material/Search';
+import { Input as MUIInput } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import React, { useEffect, useState } from 'react';
 import api from '../API/api';
-import Map from './Map';
+import { useAuth } from '../Providers/AuthContext';
+import { ContrastProps, useColors } from '../Providers/Colors';
+import { FilterContainer } from '../Styles/Filter';
+import { ListContainer } from '../Styles/List';
+import { MapContainer } from '../Styles/Map';
+import { bodyMixin } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { Attraction, PossibleType, Preferences, Subtypes } from '../types';
 import AttractionsList from './AttractionsList';
 import FilterList from './FilterList';
-import { Attraction, PossibleType, Preferences, Subtypes } from '../types';
-import { useAuth } from '../Providers/AuthContext';
-import { ViewContainer } from '../Styles/View';
-import { MapContainer } from '../Styles/Map';
-import { ListContainer } from '../Styles/List';
-import { FilterContainer } from '../Styles/Filter';
-import { bodyMixin } from '../Styles/Typography';
+import Map from './Map';
 
 const InputContainer = styled.div`
   display: flex;
@@ -25,7 +25,7 @@ const InputContainer = styled.div`
   margin-top: 1rem;
 `;
 
-const StyledInput = styled(MUIInput)<ContrastProps>`
+const StyledInput = styled(MUIInput) <ContrastProps>`
   & .MuiInputBase-input::placeholder {
     ${({ colors }) => bodyMixin(colors)} 
 
@@ -41,7 +41,7 @@ const Home: React.FC = () => {
   const [favouriteAttractions, setFavouriteAttractions] = useState<number[]>([]);
   const [wantsToVisitAttractions, setWantsToVisitAttractions] = useState<number[]>([]);
   const { isAuthenticated, role } = useAuth();
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   useEffect(() => {
     api.get('/api/attractions')
@@ -124,7 +124,7 @@ const Home: React.FC = () => {
       </FilterContainer>
       <ListContainer>
         <InputContainer>
-          <StyledInput  colors={colors}
+          <StyledInput colors={colors}
             placeholder="Wyszukaj..."
             inputProps={{ 'aria-label': 'search' }}
             onChange={handleSearchChange}

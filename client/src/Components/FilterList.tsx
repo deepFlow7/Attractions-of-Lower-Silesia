@@ -1,31 +1,27 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
 import {
-  Grid,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Collapse,
   Button,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import Filter from "./Filter";
+import React from "react";
+import { useColors } from '../Providers/Colors';
+import { Body, Title } from "../Styles/Typography";
 import {
-  possibleTypes,
+  possiblePreferences,
   possibleSubtypes,
   PossibleType,
-  Subtypes,
-  possiblePreferences,
+  possibleTypes,
   Preferences,
+  Subtypes,
 } from "../types";
-import { Body, Title } from "../Styles/Typography";
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import Filter from "./Filter";
 
 interface FilterListProps {
   onChange: (
@@ -51,7 +47,9 @@ const FilterList: React.FC<FilterListProps> = ({
   const [openSubtypes, setOpenSubtypes] = React.useState<boolean>(
     !isSmallScreen
   );
-  const [openTypes, setOpenTypes] = React.useState<boolean>(!isSmallScreen);
+  const [openTypes, setOpenTypes] = React.useState<boolean>(
+    !isSmallScreen
+  );
   const [openPreferences, setOpenPreferences] = React.useState<boolean>(
     !isSmallScreen
   );
@@ -71,14 +69,14 @@ const FilterList: React.FC<FilterListProps> = ({
     setSelectedPreferences(preferences);
     onChange(selectedTypes, selectedSubtypes, preferences);
   };
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   return (
     <Grid container spacing={3}>
       {showPreferences && (
         <Grid item xs={12}>
           <Button onClick={() => setOpenPreferences(!openPreferences)}>
-            <Title  colors={colors}>
+            <Title colors={colors}>
               Moje{" "}
               {isSmallScreen ? (
                 <svg
@@ -116,17 +114,17 @@ const FilterList: React.FC<FilterListProps> = ({
                     value={preference}
                     control={
                       <Radio
-                      sx={{
-                        color: colors.secondary as string, 
-                        "&.Mui-checked": {
-                          color: typeof colors.secondary === 'string' ? colors.secondary : '', // Sprawdzenie czy color jest stringiem
-                        },
-                        "&:hover": {
-                          color: typeof colors.tertiary === 'string' ? colors.tertiary : '', // Sprawdzenie czy color jest stringiem
-                        },
-                      }}
-                    />
-                    
+                        sx={{
+                          color: colors.secondary as string,
+                          "&.Mui-checked": {
+                            color: typeof colors.secondary === 'string' ? colors.secondary : '', // Sprawdzenie czy color jest stringiem
+                          },
+                          "&:hover": {
+                            color: typeof colors.tertiary === 'string' ? colors.tertiary : '', // Sprawdzenie czy color jest stringiem
+                          },
+                        }}
+                      />
+
                     }
                     label={<Body colors={colors}>{preference}</Body>}
                     sx={{
@@ -141,7 +139,7 @@ const FilterList: React.FC<FilterListProps> = ({
       )}
       <Grid item xs={12}>
         <Button onClick={() => setOpenTypes(!openTypes)}>
-          <Title  colors={colors}>
+          <Title colors={colors}>
             Typy{" "}
             {isSmallScreen ? (
               <svg

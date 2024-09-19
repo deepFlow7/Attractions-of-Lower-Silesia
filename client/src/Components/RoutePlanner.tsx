@@ -1,21 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { Button, IconButton, useMediaQuery } from '@mui/material';
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
-import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
+import { IconButton, useMediaQuery } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
 import api from '../API/api';
-import { Attraction, PossibleType, Subtypes, possibleSubtypes, possibleTypes } from '../types';
-import Map, { MapRef } from './Map';
-import FilterList from './FilterList';
-import { ViewContainer } from '../Styles/View';
-import { MapContainer, DropListContainer } from '../Styles/Map';
-import { ListContainer } from '../Styles/List';
+import { useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
 import { FilterContainer } from '../Styles/Filter';
 import { Input } from '../Styles/Input';
+import { ListContainer } from '../Styles/List';
+import { DropListContainer, MapContainer } from '../Styles/Map';
 import { Body, Title } from '../Styles/Typography';
-import { StyledButton } from '../Styles/Button';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
+import { ViewContainer } from '../Styles/View';
+import { Attraction, PossibleType, Subtypes, possibleSubtypes, possibleTypes } from '../types';
+import FilterList from './FilterList';
+import Map, { MapRef } from './Map';
 
 const ScrollableBox = styled.div`
   overflow-y: auto;
@@ -28,7 +28,7 @@ const RoutePlanner: React.FC = () => {
   const [selectedSubtypes, setSelectedSubtypes] = useState<Subtypes[]>(possibleSubtypes);
   const [search, setSearch] = useState<string>('');
   const [refreshKey, setRefreshKey] = useState(0);
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   const mapRef = useRef<MapRef>(null);
   const isMobile = useMediaQuery('(max-width:1300px)');
@@ -183,7 +183,7 @@ const RoutePlanner: React.FC = () => {
   return (
     <ViewContainer colors={colors}>
       <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
-        <Title  colors={colors} small>Zaplanuj trasę</Title>
+        <Title colors={colors} small>Zaplanuj trasę</Title>
         <Map
           key={refreshKey}
           ref={mapRef}
@@ -218,7 +218,7 @@ const RoutePlanner: React.FC = () => {
                   <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1, textDecoration: 'none' }}>
                     {attraction.name}
                   </a>
-                  <StyledButton colors={colors} 
+                  <StyledButton colors={colors}
                     variant="contained"
                     big={true}
                     onClick={() => setSelectedAttractions((prevSelected) => [...prevSelected, attraction.id])}
@@ -227,17 +227,17 @@ const RoutePlanner: React.FC = () => {
                   </StyledButton>
                 </div>
               ) : (
-              <div
-                key={index}
-                draggable
-                onDragStart={(event) => handleDragStart(event, attraction)}
-                style={{ padding: '.5rem', cursor: 'move' }}
-              >
-                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark as string, textDecoration: 'none' }}>
-                  {attraction.name}
-                </a>
-              </div>
-            ))))}
+                <div
+                  key={index}
+                  draggable
+                  onDragStart={(event) => handleDragStart(event, attraction)}
+                  style={{ padding: '.5rem', cursor: 'move' }}
+                >
+                  <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark as string, textDecoration: 'none' }}>
+                    {attraction.name}
+                  </a>
+                </div>
+              ))))}
         </ScrollableBox>
       </DropListContainer>
 
@@ -246,12 +246,12 @@ const RoutePlanner: React.FC = () => {
       </FilterContainer>
 
       <ListContainer four>
-        <Title  colors={colors} small>Długość trasy: {calculateTotalDistance()} km</Title>
-          <StyledButton  colors={colors} onClick={reset}>
-            Zresetuj trasę
-          </StyledButton>
-        <StyledButton colors={colors}  onClick={calculateShortestPath}>
-            Sprawdź najkrótszą trasę
+        <Title colors={colors} small>Długość trasy: {calculateTotalDistance()} km</Title>
+        <StyledButton colors={colors} onClick={reset}>
+          Zresetuj trasę
+        </StyledButton>
+        <StyledButton colors={colors} onClick={calculateShortestPath}>
+          Sprawdź najkrótszą trasę
         </StyledButton>
         <Title colors={colors} small>Wybrane atrakcje (dostosuj kolejność)</Title>
         <ScrollableBox>
@@ -271,8 +271,8 @@ const RoutePlanner: React.FC = () => {
                       {attraction.name}
                     </a>}
                 </Body>
-                
-                <StyledButton colors={colors}  onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
+
+                <StyledButton colors={colors} onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
               </div>
             );
           })}

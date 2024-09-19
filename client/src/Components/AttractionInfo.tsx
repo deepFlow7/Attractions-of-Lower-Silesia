@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
 import styled from '@emotion/styled';
 import { CardContent, List, ListItem } from '@mui/material';
-import { Title, Body } from '../Styles/Typography';
-import { Attraction } from '../types';
+import React from 'react';
 import { ContrastProps, useColors } from '../Providers/Colors'; // Importuj useColors
 import { shadows } from '../Styles/Themes';
+import { Body, Title } from '../Styles/Typography';
+import { Attraction } from '../types';
 
 interface AttractionInfoProps {
   attraction: Attraction;
@@ -32,12 +32,12 @@ const AttractionInfo: React.FC<AttractionInfoProps> = ({ attraction }) => {
         <Body colors={colors} >{description}</Body>
       </CardContent>
       <CardContent>
-        <Title  colors={colors} small>Typy i Podtypy</Title>
+        <Title colors={colors} small>Typy i Podtypy</Title>
         <Body colors={colors} >Typ: {type}</Body>
         <Body colors={colors} >Podtyp: {subtype}</Body>
       </CardContent>
       <CardContent>
-        <Title colors={colors}  small>Statystyki</Title>
+        <Title colors={colors} small>Statystyki</Title>
         <List>
           <ListItem>
             <Body colors={colors} >Interaktywność: {interactivity}/10</Body>

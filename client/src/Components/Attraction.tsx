@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Card, CardContent, Rating } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import api from '../API/api';
+import { useAuth } from '../Providers/AuthContext';
+import { ContrastProps, useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
+import { shadows } from '../Styles/Themes';
 import { Title } from '../Styles/Typography';
+import { AttractionContainer } from '../Styles/View';
+import { AttractionWithComments, Comment } from '../types';
+import AttractionInfo from './AttractionInfo';
 import Comments from './Comments';
 import Photos from './Photos';
-import AttractionInfo from './AttractionInfo';
-import { useAuth } from '../Providers/AuthContext';
-import api from '../API/api';
-import { AttractionWithComments, Comment } from '../types';
-import { shadows } from '../Styles/Themes';
-import {AttractionContainer } from '../Styles/View';
-import { StyledButton } from '../Styles/Button';
-import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 export const PhotoContainer = styled.div<ContrastProps>`
   background-color: ${props => props.colors.primary}; 
@@ -27,7 +27,7 @@ export const InfoContainer = styled.div`
   gap: 1rem;
 `;
 
-const TileCard = styled(Card)<ContrastProps>`
+const TileCard = styled(Card) <ContrastProps>`
 background-color: ${props => props.colors.primary};
 `;
 
@@ -41,7 +41,7 @@ const AttractionView: React.FC = () => {
   const { isBlocked, role, isAuthenticated } = useAuth();
   const [refreshKey, setRefreshKey] = useState(1);
   const { attractionId } = useParams();
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   useEffect(() => {
     if (isAuthenticated && role === 'user') {
@@ -213,20 +213,20 @@ const AttractionView: React.FC = () => {
 
   return (
     <AttractionContainer colors={colors}>
-      <PhotoContainer colors={colors}> 
+      <PhotoContainer colors={colors}>
         <Photos photos={photos} title={name} displayButton={photos.length > 1} />
       </PhotoContainer>
       <InfoContainer>
         {isAuthenticated && role === 'user' && (
           <>
-            <StyledButton colors={colors} 
+            <StyledButton colors={colors}
               background={true}
 
               onClick={handleFavouriteToggle}
             >
               {isFavourite ? 'Ulubione' : 'Dodaj do ulubionych'}
             </StyledButton>
-            <StyledButton colors={colors} 
+            <StyledButton colors={colors}
               background={true}
               onClick={handleToVisitToggle}
             >
