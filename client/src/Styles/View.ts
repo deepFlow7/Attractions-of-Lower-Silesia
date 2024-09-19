@@ -24,7 +24,6 @@ export const ViewContainer = styled.div<ViewContainerProps>`
     ? `calc(100vh - ${sizes.navbarHeight} - ${sizes.buttonHeightPadded})` 
     : `calc(100vh - ${sizes.navbarHeight})`};
   & > * {
-    box-shadow: ${shadows.default};
     background-color: ${colors.primary};
   }
   @media (max-width: 500px) {

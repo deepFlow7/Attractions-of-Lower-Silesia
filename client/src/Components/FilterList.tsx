@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
-import { Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-
+import { Grid, MenuItem, Select, InputLabel, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { colors } from '../Styles/Themes';
 import Filter from './Filter';
 import { possibleTypes, possibleSubtypes, PossibleType, Subtypes, possiblePreferences, Preferences } from '../types';
-import { Title } from '../Styles/Typography';
+import { Body, Title } from '../Styles/Typography';
 
 interface FilterListProps {
   onChange: (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[], selectedPreferences?: Preferences) => void;
@@ -37,22 +37,42 @@ const FilterList: React.FC<FilterListProps> = ({ onChange, showPreferences }) =>
     <Grid container spacing={3}>
       {showPreferences && (
           <Grid item xs={12}>
-            <Title>Preferencje</Title>
-            <FormControl fullWidth>
-              <InputLabel id="preference-label">Preferencje</InputLabel>
-              <Select
-                labelId="preference-label"
-                value={selectedPreferences}  
-                onChange={(event) => handlePreferencesChange(event.target.value as Preferences)}
-              >
-                {possiblePreferences.map((preference) => (
-                  <MenuItem key={preference} value={preference}>
-                    {preference}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          <Title>Moje</Title>
+          <FormControl fullWidth component="fieldset">
+            <RadioGroup
+              aria-label="preferences"
+              name="preferences"
+              value={selectedPreferences}
+              onChange={(event) => handlePreferencesChange(event.target.value as Preferences)}
+            >
+              {possiblePreferences.map((preference) => (
+                <FormControlLabel
+                  key={preference}
+                  value={preference}
+                  control={
+                    <Radio 
+                      sx={{
+                        color: colors.secondary,  
+                        '&.Mui-checked': {
+                          color: colors.secondary, 
+                        },
+                        '&:hover': {
+                          color: colors.tertiary, 
+                        },
+                      }}
+                    />
+                  }
+                  label={<Body>{preference}</Body>}
+                  sx={{
+                    marginLeft: 1,  
+                  }}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        
+         
         )
       }
       <Grid item xs={12}>

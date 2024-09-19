@@ -62,7 +62,7 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
             name="all"
           />
         }
-        label="Wybierz wszystkie"
+        label="wszystkie"
       />
       {options.map((option) => (
         <StyledFormControlLabel
