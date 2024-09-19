@@ -15,22 +15,9 @@ interface Context {
   setRole: (r: Role) => void;
   updateUsername: (s: string) => void;
   updateUser: (new_user: User | null) => void;
-  toggleTheme: () => void;
-  colors: Object;
 }
 
 const AuthContext = createContext({} as Context);
-
-const initial_colors = {
-  is_contrast: false,
-  primary: '#e9cbb0',
-  secondary: '#4d6e6d',
-  tertiary: '#B45834',
-  white: '#fff',
-  dark: '#2a2b2a',
-  gray: '#949494',
-  light_gray: '#d7c8cb',
-};
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?', false);
@@ -38,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useSessionStorage('user', null);
   const [role, setRole] = useSessionStorage('role', null);
   const [username, updateUsername] = useSessionStorage('username', null);
-  const [colors, setColors] = useState(initial_colors);
 
   const fetchSession = async () => {
     try {
@@ -96,20 +82,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const setContrastTheme = () => {
-    let contrastColors = initial_colors;
-    contrastColors.primary = 'fff';
-    contrastColors.secondary = '000';
-    contrastColors.is_contrast = true;
-    setColors(contrastColors);
-  }
-
-  const toggleTheme = () => {
-    if (colors.is_contrast)
-      setColors(initial_colors);
-    else
-      setContrastTheme();
-  }
 
   return (
     <AuthContext.Provider
@@ -124,8 +96,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updateUsername,
         setRole,
         updateUser,
-        toggleTheme,
-        colors
       } as Context}
     >
       {children}
