@@ -33,7 +33,7 @@ const AdminView: React.FC = () => {
   const [manageAttractions, setManageAttractions] = useState<boolean>(false);
   const [manageChallenges, setManageChallenges] = useState<boolean>(false);
   const [manageUsers, setManageUsers] = useState<boolean>(false);
-  const { toggleTheme, colors } = useColors();
+  const { colors } = useColors();
 
   useEffect(() => {
     const fetchAttractions = async () => {

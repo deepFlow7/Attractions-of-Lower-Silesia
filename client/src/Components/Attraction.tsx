@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Grid, Button, Card, CardContent, Typography, Rating } from '@mui/material';
+import { Card, CardContent, Rating } from '@mui/material';
 import { Title } from '../Styles/Typography';
 import Comments from './Comments';
 import Photos from './Photos';
