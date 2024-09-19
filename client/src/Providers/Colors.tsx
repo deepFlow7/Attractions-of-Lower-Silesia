@@ -7,8 +7,8 @@ interface ColorContextInterface {
 
 const ColorContext = createContext<ColorContextInterface | undefined>(undefined);
 
-const initial_colors = {
-  is_contrast: false,
+const initialColor = {
+  isContast: false,
   primary: '#e9cbb0',
   secondary: '#4d6e6d',
   tertiary: '#B45834',
@@ -19,21 +19,21 @@ const initial_colors = {
 };
 
 export const ColorProvider = ({ children }: { children: ReactNode }) => {
-  const [colors, setColors] = useState(initial_colors);
+  const [colors, setColors] = useState(initialColor);
 
   const setContrastTheme = () => {
     setColors({
-      ...initial_colors,
+      ...initialColor,
       primary: '#fff',
       secondary: '#000',
-      tertiary: '#444',
-      is_contrast: true,
+      tertiary: '#888',
+      isContast: true,
     });
   };
 
   const toggleTheme = () => {
-    if (colors.is_contrast) {
-      setColors(initial_colors);
+    if (colors.isContast) {
+      setColors(initialColor);
     } else {
       setContrastTheme();
     }
