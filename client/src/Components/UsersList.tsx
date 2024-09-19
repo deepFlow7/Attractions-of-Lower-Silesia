@@ -68,7 +68,8 @@ const UsersList: React.FC<UsersListProps> = ({
           />
           {isAuthenticated && role === "admin" && isManaging && (
             <StyledButton colors={colors}
-              color={isUserBlocked(user.id) ? "secondary" : "primary"}
+              highlight={isUserBlocked(user.id)}
+              secondary={isUserBlocked(user.id)}
               onClick={() => changeUserBlock?.(user.id)}
             >
               {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}

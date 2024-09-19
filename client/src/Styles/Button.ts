@@ -8,6 +8,7 @@ export interface ButtonProps extends MUIButtonProps {
   secondary?: boolean;
   hidden?: boolean;
   background?: boolean;
+  highlight?: boolean;
   big?: boolean;
   colors: { [key: string]: string | boolean }; // Dodano colors jako props
 }
@@ -76,7 +77,7 @@ export const StyledButton = styled(Button) <ButtonProps>`
   ${({ colors }) => ButtonMixin(colors)}; // Przekazanie colors do ButtonMixin
   display: ${props => (props.hidden ? 'none' : 'inline-block')};
   color: ${props => (props.secondary ? props.colors.secondary : props.colors.tertiary)};
-  background-color: ${props => (props.background ? props.colors.primary : 'transparent')};
+  background-color: ${props => (props.highlight ? props.colors.tertiary : props.background ? props.colors.primary : 'transparent')};
   
   &:hover {
     background-color: ${props => (props.background ? props.colors.primary : 'transparent')};
