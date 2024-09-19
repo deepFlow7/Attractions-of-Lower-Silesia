@@ -56,8 +56,8 @@ const Navbar = () => {
     }
   };
 
-  const isMediumScreen = useMediaQuery('(max-width:1300px)');
-  const isVerySmallScreen = useMediaQuery('(max-width:750px)');
+  const isMediumScreen = useMediaQuery('(max-width:1400px)');
+  const isVerySmallScreen = useMediaQuery('(max-width:800px)');
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
