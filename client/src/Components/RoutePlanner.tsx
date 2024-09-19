@@ -198,7 +198,7 @@ const RoutePlanner: React.FC = () => {
       <DropListContainer four>
         <Title colors={colors} small>Atrakcje</Title>
         <Body colors={colors} margin>(przeciągnij wybrane na mapkę)</Body>
-        <Input
+        <Input colors={colors}
           placeholder="Wyszukaj..."
           inputProps={{ 'aria-label': 'search' }}
           onChange={onSearchChange}

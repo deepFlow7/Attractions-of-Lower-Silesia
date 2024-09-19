@@ -15,8 +15,8 @@ export interface BodyProps {
 }
 
 export const titleMixin = (colors: { [key: string]: string | boolean}) => `
-  color: ${colors.secondary}; // Użycie colors z argumentów
-  font-size: ${sizes.titleSize}; // Użycie sizes z argumentów
+  color: ${colors.secondary};  
+  font-size: ${sizes.titleSize};
   @media (max-width: 600px) {
     font-size: 2.5rem;
   }
@@ -33,11 +33,11 @@ export const titleMixin = (colors: { [key: string]: string | boolean}) => `
 `;
 
 export const bodyMixin = (colors: { [key: string]: string | boolean}) => `
-  color: ${colors.dark}; // Użycie colors z argumentów
+  color: ${colors.dark};
   line-height: 1.5;
   font-family: 'Englebert', sans-serif;
   text-decoration: none;
-  font-size: ${sizes.fontSize}; // Użycie sizes z argumentów
+  font-size: ${sizes.fontSize};
 `;
 
 export const Title = styled.div<TitleProps & { colors: { [key: string]: string | boolean } }>`
@@ -49,7 +49,7 @@ export const Body = styled.div<BodyProps>`
   ${({ colors }) => bodyMixin(colors)} 
 
   margin-left: ${props => (props.margin ? '1rem' : '0')};
-  color: ${props => props.gray ? props.colors.gray : props.colors.dark}; // Priorytetowe kolory
+  color: ${props => props.gray ? props.colors.gray : props.colors.dark}; 
   color: ${props => props.secondary ? props.colors.secondary : props.colors.dark}; 
   color: ${props => props.error ? 'red' : props.colors.dark}; 
 

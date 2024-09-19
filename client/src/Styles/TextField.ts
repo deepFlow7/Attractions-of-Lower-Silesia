@@ -17,16 +17,16 @@ const StyledTextField = styled(TextField)<TextProps>`
 
   & .MuiInputBase-input {
     ${({ colors }) => bodyMixin(colors)}; 
-    height: ${(props) => (props.slim ? '2rem' : 'auto')}; /* Warunkowa wysokość */
-    padding: ${(props) => (props.slim ? '0.25rem' : 'auto')}; /* Zmniejszenie paddingu dla slim */
+    height: ${(props) => (props.slim ? '2rem' : 'auto')}; 
+    padding: ${(props) => (props.slim ? '0.25rem' : 'auto')}; 
     padding-left: 1rem;
   }
   
   & .MuiFormHelperText-root {
-    margin-top: 0.25rem; /* Zmniejszenie marginesu dla tekstu pomocy */
-    font-size: 0.75rem; /* Opcjonalnie: Zmniejszenie rozmiaru czcionki */
-    position: absolute; /* Zapobiega rozciąganiu kontenera przez tekst błędu */
-    bottom: -1.25rem; /* Pozycjonowanie tekstu błędu poniżej pola */
+    margin-top: 0.25rem; 
+    font-size: 0.75rem;
+    position: absolute; 
+    bottom: -1.25rem;
   }
 
   & .MuiInputBase-input::placeholder {
@@ -34,7 +34,7 @@ const StyledTextField = styled(TextField)<TextProps>`
   }
 
   & .MuiOutlinedInput-root {
-    border-radius: 1rem; /* Zaokrąglenie ramki */
+    border-radius: 1rem; 
     & fieldset {
     }
     &.Mui-focused fieldset {
