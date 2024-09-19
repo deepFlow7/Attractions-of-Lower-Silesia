@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
-import { colors, sizes} from "../Styles/Themes";
+import { sizes} from "../Styles/Themes";
+import { ContrastProps } from '../Providers/Colors'; 
+
 export interface ListContainerProps {
   three?: boolean;
   four?: boolean;
@@ -39,7 +41,7 @@ export const ChallengesContainer = styled.div`
   }
 `;
 
-export const AdminContainer = styled.div`
+export const AdminContainer = styled.div<ContrastProps>`
   width: 32%;
   height: calc(98vh - ${sizes.navbarHeight} - ${sizes.buttonHeight} - 2rem);
   overflow: auto;
@@ -47,7 +49,7 @@ export const AdminContainer = styled.div`
 
   & > * {
     & > * {
-  background-color: ${colors.primary};
+  background-color: ${props => props.colors.primary};
   box-shadow: none;
     }
   }

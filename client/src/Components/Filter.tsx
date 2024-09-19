@@ -2,31 +2,31 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FormControlLabel, Checkbox, CardContent } from '@mui/material';
-
-import { colors } from '../Styles/Themes'; 
 import { bodyMixin } from '../Styles/Typography';
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 interface FilterProps {
   options: string[];
   onChange: (selectedOptions: string[]) => void;
 }
 
-const StyledFormControlLabel = styled(FormControlLabel)`
+const StyledFormControlLabel = styled(FormControlLabel)<ContrastProps>`
   display: block;
   .MuiFormControlLabel-label {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
   }
 `;
 
-const CustomCheckbox = styled(Checkbox)`
+const CustomCheckbox = styled(Checkbox)<ContrastProps>`
   &.Mui-checked {
-    color: ${colors.secondary};
+    color: ${props => props.colors.secondary}
   }
 `;
 
 const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(options);
   const [selectAll, setSelectAll] = useState(true);
+  const { toggleTheme, colors } = useColors();
 
   const handleCheckboxChange = (option: string) => {
     const updatedOptions = selectedOptions.includes(option)
@@ -53,10 +53,11 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
 
   return (
     <CardContent >
-      <StyledFormControlLabel
+      <StyledFormControlLabel colors={colors} 
         key="all"
         control={
           <CustomCheckbox
+          colors={colors}
             checked={selectAll}
             onChange={handleSelectAllChange}
             name="all"
@@ -65,10 +66,11 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
         label="wszystkie"
       />
       {options.map((option) => (
-        <StyledFormControlLabel
+        <StyledFormControlLabel colors={colors} 
           key={option}
           control={
             <CustomCheckbox
+            colors={colors}
               checked={selectedOptions.includes(option)}
               onChange={() => handleCheckboxChange(option)}
               name={option}

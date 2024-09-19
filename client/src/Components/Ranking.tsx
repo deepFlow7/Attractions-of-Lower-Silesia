@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell} from '@mui/material';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import { ChallengeRanking } from '../types';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { Body } from '../Styles/Typography';
-import { colors } from '../Styles/Themes';
+
 const StyledTable = styled(Table)`
   && {
     min-width: 300px;
-    background-color: transparent; /* Ustawienie przezroczystego tła dla tabeli */
+    background-color: transparent; 
   }
 `;
 
-const StyledTableCell = styled(TableCell)`
+const StyledTableCell = styled(TableCell)<ContrastProps>`
   && {
-    background-color: ${colors.primary}; /* Przezroczyste tło dla komórek */
+    background-color: ${props => props.colors.primary}; 
   }
 `;
 
@@ -27,6 +27,7 @@ interface RankingTableProps {
 const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
   const [rankings, setRankings] = useState<ChallengeRanking[] | null>(null);
   const { isAuthenticated, username } = useAuth();
+  const { toggleTheme, colors } = useColors();
 
   useEffect(() => {
     if (challengeId) {
@@ -49,11 +50,11 @@ const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
       <StyledTable>
         <TableHead>
           <TableRow>
-            <StyledTableCell>
-              <Body>Username</Body>
+            <StyledTableCell colors={colors}>
+              <Body colors={colors}>Username</Body>
             </StyledTableCell>
-            <StyledTableCell align="right">
-              <Body>Points</Body>
+            <StyledTableCell align="right" colors={colors}>
+              <Body colors={colors}>Points</Body>
             </StyledTableCell>
           </TableRow>
         </TableHead>
@@ -66,11 +67,11 @@ const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
                   isAuthenticated && ranking.login === username ? 'lightblue' : 'transparent',
               }}
             >
-              <StyledTableCell>
-                <Body>{ranking.login}</Body>
+              <StyledTableCell colors={colors}>
+                <Body colors={colors}>{ranking.login}</Body>
               </StyledTableCell>
-              <StyledTableCell align="right">
-                <Body>{ranking.score}</Body>
+              <StyledTableCell  colors={colors} align="right" >
+                <Body colors={colors}>{ranking.score}</Body>
               </StyledTableCell>
             </TableRow>
           ))}

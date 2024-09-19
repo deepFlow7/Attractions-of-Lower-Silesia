@@ -15,7 +15,7 @@ import { FilterContainer } from '../Styles/Filter';
 import { Input } from '../Styles/Input';
 import { Body, Title } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
-import { colors } from '../Styles/Themes';
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 const ScrollableBox = styled.div`
   overflow-y: auto;
@@ -28,6 +28,7 @@ const RoutePlanner: React.FC = () => {
   const [selectedSubtypes, setSelectedSubtypes] = useState<Subtypes[]>(possibleSubtypes);
   const [search, setSearch] = useState<string>('');
   const [refreshKey, setRefreshKey] = useState(0);
+  const { toggleTheme, colors } = useColors();
 
   const mapRef = useRef<MapRef>(null);
   const isMobile = useMediaQuery('(max-width:1300px)');
@@ -180,9 +181,9 @@ const RoutePlanner: React.FC = () => {
   };
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors}>
       <MapContainer four onDrop={handleDrop} onDragOver={handleDragOver}>
-        <Title small>Zaplanuj trasę</Title>
+        <Title  colors={colors} small>Zaplanuj trasę</Title>
         <Map
           key={refreshKey}
           ref={mapRef}
@@ -195,8 +196,8 @@ const RoutePlanner: React.FC = () => {
       </MapContainer>
 
       <DropListContainer four>
-        <Title small>Atrakcje</Title>
-        <Body margin>(przeciągnij wybrane na mapkę)</Body>
+        <Title colors={colors} small>Atrakcje</Title>
+        <Body colors={colors} margin>(przeciągnij wybrane na mapkę)</Body>
         <Input
           placeholder="Wyszukaj..."
           inputProps={{ 'aria-label': 'search' }}
@@ -217,7 +218,7 @@ const RoutePlanner: React.FC = () => {
                   <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1, textDecoration: 'none' }}>
                     {attraction.name}
                   </a>
-                  <StyledButton
+                  <StyledButton colors={colors} 
                     variant="contained"
                     big={true}
                     onClick={() => setSelectedAttractions((prevSelected) => [...prevSelected, attraction.id])}
@@ -232,7 +233,7 @@ const RoutePlanner: React.FC = () => {
                 onDragStart={(event) => handleDragStart(event, attraction)}
                 style={{ padding: '.5rem', cursor: 'move' }}
               >
-                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark, textDecoration: 'none' }}>
+                <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark as string, textDecoration: 'none' }}>
                   {attraction.name}
                 </a>
               </div>
@@ -245,14 +246,14 @@ const RoutePlanner: React.FC = () => {
       </FilterContainer>
 
       <ListContainer four>
-        <Title small>Długość trasy: {calculateTotalDistance()} km</Title>
-          <StyledButton onClick={reset}>
+        <Title  colors={colors} small>Długość trasy: {calculateTotalDistance()} km</Title>
+          <StyledButton  colors={colors} onClick={reset}>
             Zresetuj trasę
           </StyledButton>
-        <StyledButton onClick={calculateShortestPath}>
+        <StyledButton colors={colors}  onClick={calculateShortestPath}>
             Sprawdź najkrótszą trasę
         </StyledButton>
-        <Title small>Wybrane atrakcje (dostosuj kolejność)</Title>
+        <Title colors={colors} small>Wybrane atrakcje (dostosuj kolejność)</Title>
         <ScrollableBox>
           {selectedAttractions.map((selected, index) => {
             const attraction = attractions.find(attr => attr.id === selected);
@@ -264,14 +265,14 @@ const RoutePlanner: React.FC = () => {
                 <IconButton onClick={() => handleMoveDown(index)} disabled={index === selectedAttractions.length - 1}>
                   <ArrowDownward />
                 </IconButton>
-                <Body>
+                <Body colors={colors}>
                   {attraction &&
-                    <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark, textDecoration: 'none' }}>
+                    <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: colors.dark as string, textDecoration: 'none' }}>
                       {attraction.name}
                     </a>}
                 </Body>
                 
-                <StyledButton onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
+                <StyledButton colors={colors}  onClick={() => handleRemoveAttraction(selected)}>Usuń</StyledButton>
               </div>
             );
           })}

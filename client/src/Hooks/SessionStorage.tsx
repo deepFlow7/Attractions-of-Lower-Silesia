@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-
 export const useSessionStorage = (key: string, initialValue: any) => {
   const [value, setValue] = useState(() => {
     const storedValue = window.sessionStorage.getItem(key);

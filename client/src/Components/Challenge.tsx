@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CardContent } from "@mui/material";
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import api from '../API/api';
 import Map from "./Map";
 import ChallengeAttractionsList from "./ChallengeAttractionsList";
@@ -35,6 +35,7 @@ function haversineDistanceBetweenPoints(
 }
 
 const ChallengeView: React.FC = () => {
+  const { toggleTheme, colors } = useColors();
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const { isAuthenticated, user, role } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
@@ -170,10 +171,10 @@ const ChallengeView: React.FC = () => {
   };
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors} >
       <MapContainer four challenge>
-        <Title>{challenge.name}</Title>
-        <Body margin>{challenge.description}</Body>
+        <Title colors={colors} >{challenge.name}</Title>
+        <Body  colors={colors} margin>{challenge.description}</Body>
 
           <Map
             x={challenge.coords.x}
@@ -196,10 +197,10 @@ const ChallengeView: React.FC = () => {
       </DictionaryContainer>
       <DictionaryContainer second>
         <CardContent>
-          <Title>Ranking</Title>
+          <Title colors={colors} >Ranking</Title>
           <RankingTable key={refreshKey} challengeId={id ? parseInt(id) : null} />
           {user && role === "user" && !takesPart && (
-            <StyledButton onClick={handleParticipation}>
+            <StyledButton colors={colors}  onClick={handleParticipation}>
               Weź udział
             </StyledButton>
           )}

@@ -15,7 +15,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { colors } from "../Styles/Themes";
 import Filter from "./Filter";
 import {
   possibleTypes,
@@ -26,6 +25,7 @@ import {
   Preferences,
 } from "../types";
 import { Body, Title } from "../Styles/Typography";
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 interface FilterListProps {
   onChange: (
@@ -71,13 +71,14 @@ const FilterList: React.FC<FilterListProps> = ({
     setSelectedPreferences(preferences);
     onChange(selectedTypes, selectedSubtypes, preferences);
   };
+  const { toggleTheme, colors } = useColors();
 
   return (
     <Grid container spacing={3}>
       {showPreferences && (
         <Grid item xs={12}>
           <Button onClick={() => setOpenPreferences(!openPreferences)}>
-            <Title>
+            <Title  colors={colors}>
               Moje{" "}
               {isSmallScreen ? (
                 <svg
@@ -91,7 +92,7 @@ const FilterList: React.FC<FilterListProps> = ({
                     fill-rule="evenodd"
                     clip-rule="evenodd"
                     d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z"
-                    fill={colors.secondary}
+                    fill={colors.secondary as string}
                   />
                 </svg>
               ) : (
@@ -115,18 +116,19 @@ const FilterList: React.FC<FilterListProps> = ({
                     value={preference}
                     control={
                       <Radio
-                        sx={{
-                          color: colors.secondary,
-                          "&.Mui-checked": {
-                            color: colors.secondary,
-                          },
-                          "&:hover": {
-                            color: colors.tertiary,
-                          },
-                        }}
-                      />
+                      sx={{
+                        color: colors.secondary as string, 
+                        "&.Mui-checked": {
+                          color: typeof colors.secondary === 'string' ? colors.secondary : '', // Sprawdzenie czy color jest stringiem
+                        },
+                        "&:hover": {
+                          color: typeof colors.tertiary === 'string' ? colors.tertiary : '', // Sprawdzenie czy color jest stringiem
+                        },
+                      }}
+                    />
+                    
                     }
-                    label={<Body>{preference}</Body>}
+                    label={<Body colors={colors}>{preference}</Body>}
                     sx={{
                       marginLeft: 1,
                     }}
@@ -139,7 +141,7 @@ const FilterList: React.FC<FilterListProps> = ({
       )}
       <Grid item xs={12}>
         <Button onClick={() => setOpenTypes(!openTypes)}>
-          <Title>
+          <Title  colors={colors}>
             Typy{" "}
             {isSmallScreen ? (
               <svg
@@ -153,7 +155,7 @@ const FilterList: React.FC<FilterListProps> = ({
                   fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z"
-                  fill={colors.secondary}
+                  fill={colors.secondary as string}
                 />
               </svg>
             ) : (
@@ -172,7 +174,7 @@ const FilterList: React.FC<FilterListProps> = ({
       </Grid>
       <Grid item xs={12}>
         <Button onClick={() => setOpenSubtypes(!openSubtypes)}>
-          <Title>
+          <Title colors={colors}>
             Podtypy
             {isSmallScreen ? (
               <svg
@@ -186,7 +188,7 @@ const FilterList: React.FC<FilterListProps> = ({
                   fill-rule="evenodd"
                   clip-rule="evenodd"
                   d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z"
-                  fill={colors.secondary}
+                  fill={colors.secondary as string}
                 />
               </svg>
             ) : (

@@ -6,16 +6,17 @@ import api from "../API/api";
 import { useAuth } from "../Providers/AuthContext";
 import { Title, Body } from "../Styles/Typography";
 import styled from "@emotion/styled";
-import { colors, shadows } from "../Styles/Themes";
+import { shadows } from "../Styles/Themes";
 import { StyledButton } from "../Styles/Button";
 import StyledTextField from "../Styles/TextField";
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
-export const Container = styled.div`
+export const Container = styled.div<ContrastProps>`
   display: flex;
   gap: 1rem;
   flex-direction: column;
   & > * {
-    background-color: ${colors.primary};
+    background-color: ${props => props.colors.primary};
     box-shadow: ${shadows.default};
   }
 `;
@@ -37,6 +38,7 @@ const Comments: React.FC<CommentsProps> = ({
   onDisapprove,
   onApprovalRemove,
 }) => {
+  const { toggleTheme, colors } = useColors();
   const { user, isAuthenticated, isBlocked, role } = useAuth();
   const [newComment, setNewComment] = useState("");
 
@@ -87,15 +89,15 @@ const Comments: React.FC<CommentsProps> = ({
   };
 
   return (
-    <Container>
+    <Container colors={colors}>
       <div>
-        <Title small>Komentarze</Title>
+        <Title colors={colors} small>Komentarze</Title>
         <List>
           {comments.map((comment) => (
             <ListItem key={comment.id}>
               <div>
-                <Body>{comment.content}</Body>
-                <Body gray>
+                <Body colors={colors} >{comment.content}</Body>
+                <Body  colors={colors} gray>
                   Autor: {comment.author}, Głosy: {comment.vote_sum}
                 </Body>
                 {isAuthenticated && role == "user" && (
@@ -112,8 +114,8 @@ const Comments: React.FC<CommentsProps> = ({
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill={comment.approval_status === "approve"
-                          ? colors.tertiary
-                          :colors.dark}
+                          ? colors.tertiary as string
+                          :colors.dark as string}
                         width="1.5rem"
                         height="1.5rem"
                         viewBox="0 0 24 24"
@@ -133,8 +135,8 @@ const Comments: React.FC<CommentsProps> = ({
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill={comment.approval_status === "disapprove"
-                          ? colors.tertiary
-                          :colors.dark}
+                          ? colors.tertiary as string
+                          :colors.dark as string}
                         width="1.5rem"
                         height="1.5rem"
                         viewBox="0 0 24 24"
@@ -160,8 +162,8 @@ const Comments: React.FC<CommentsProps> = ({
       </div>
       {isAuthenticated && role === "user" && (
         <CardContent>
-          <Title small>Dodaj komentarz</Title>
-          <StyledTextField
+          <Title  colors={colors} small>Dodaj komentarz</Title>
+          <StyledTextField colors={colors} 
             label="Treść komentarza"
             multiline
             rows={4}
@@ -169,7 +171,7 @@ const Comments: React.FC<CommentsProps> = ({
             onChange={handleCommentChange}
             fullWidth
           />
-          <StyledButton onClick={handleAddComment}>Dodaj</StyledButton>
+          <StyledButton  colors={colors} onClick={handleAddComment}>Dodaj</StyledButton>
         </CardContent>
       )}
     </Container>

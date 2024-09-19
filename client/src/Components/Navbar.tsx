@@ -9,14 +9,15 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Box } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
-
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import { colors, sizes } from "../Styles/Themes";
+import { useColors, ContrastProps } from '../Providers/Colors';
+import { sizes } from "../Styles/Themes";
 import { Title, Body } from '../Styles/Typography';
 
-const StyledAppBar = styled(AppBar)`
-  background-color: ${colors.primary};
+
+const StyledAppBar = styled(AppBar)<ContrastProps>`
+  background-color: ${props => props.colors.primary};
   position: fixed;
   top: 0;
   left: 0;
@@ -25,12 +26,13 @@ const StyledAppBar = styled(AppBar)`
   height: ${sizes.navbarHeight};
 `;
 
-const StyledIconButton = styled(IconButton)`
-  color: ${colors.secondary}; /* Apply primary color to the IconButton */
+const StyledIconButton = styled(IconButton)<ContrastProps>`
+  color: ${props => props.colors.secondary};
 `;
 
 const Navbar = () => {
   const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
+  const { toggleTheme, colors } = useColors();
   const location = useLocation();
   const currentUrl = location.pathname + location.search;
   const navigate = useNavigate();
@@ -72,24 +74,30 @@ const Navbar = () => {
   };
 
   return (
-    <StyledAppBar position="static">
+    <StyledAppBar position="static" colors={colors}>
       <Toolbar>
+        
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <Button component={Link} to="/" color="inherit">
-            <Title>Atrakcje Dolnego Śląska</Title>
+            <Title colors={colors}>Atrakcje Dolnego Śląska</Title>
           </Button>
         </Box>
 
+
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
           {isAuthenticated && !isVerySmallScreen && (
-            <Body big gray>Witaj {username}!</Body>
+            <Body colors={colors} big gray>Witaj {username}!</Body>
           )}
         </Box>
-
+        <Button onClick={toggleTheme}>
+        <svg fill={colors.dark as string} width="2rem" height="2rem" viewBox="0 4 40 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 16q0 3.264 1.28 6.24t3.392 5.088 5.12 3.424 6.208 1.248q3.264 0 6.24-1.248t5.088-3.424 3.392-5.088 1.28-6.24-1.28-6.208-3.392-5.12-5.088-3.392-6.24-1.28q-3.264 0-6.208 1.28t-5.12 3.392-3.392 5.12-1.28 6.208zM4 16q0-3.264 1.6-6.016t4.384-4.352 6.016-1.632 6.016 1.632 4.384 4.352 1.6 6.016-1.6 6.048-4.384 4.352-6.016 1.6-6.016-1.6-4.384-4.352-1.6-6.048zM16 26.016q2.72 0 5.024-1.344t3.648-3.648 1.344-5.024-1.344-4.992-3.648-3.648-5.024-1.344v20z"></path>
+</svg></Button>
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
           {isMediumScreen ? (
             <>
               <StyledIconButton
+               colors={colors}
                 edge="end"
                 aria-label="menu"
                 onClick={handleMenuOpen}
@@ -137,28 +145,28 @@ const Navbar = () => {
             <>
               {isAuthenticated && (
                 <Button onClick={redirectToNewAttraction} color="inherit">
-                  <Body big>Dodaj atrakcję</Body>
+                  <Body colors={colors} big>Dodaj atrakcję</Body>
                 </Button>
               )}
               {isAuthenticated && role === "admin" ? (
                 <Button onClick={() => redirectWithReturnUrl('/new_challenge')} color="inherit">
-                  <Body big>Dodaj wyzwanie</Body>
+                  <Body  colors={colors}big>Dodaj wyzwanie</Body>
                 </Button>
               ) : (
                 <Button component={Link} to="/challenges" color="inherit">
-                  <Body big>Wyzwania</Body>
+                  <Body  colors={colors}big>Wyzwania</Body>
                 </Button>
               )}
               <Button component={Link} to="/route_planner" color="inherit">
-                <Body big>Trasy</Body>
+                <Body colors={colors} big>Trasy</Body>
               </Button>
               {isAuthenticated && user ? (
                 <Button onClick={handleLogout} color="inherit">
-                  <Body big>Wyloguj</Body>
+                  <Body colors={colors} big>Wyloguj</Body>
                 </Button>
               ) : (
                 <Button color="inherit" onClick={() => redirectWithReturnUrl('/login')}>
-                  <Body big secondary>Zaloguj</Body>
+                  <Body colors={colors} big secondary>Zaloguj</Body>
                 </Button>
               )}
             </>

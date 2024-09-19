@@ -1,10 +1,10 @@
 import { TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { bodyMixin } from './Typography';
-import { colors } from './Themes'; // Importuj kolory, jeśli są w osobnym pliku
 
 export interface TextProps {
   slim?: boolean;
+  colors: { [key: string]: string | boolean };
 }
 
 const StyledTextField = styled(TextField)<TextProps>`
@@ -12,11 +12,11 @@ const StyledTextField = styled(TextField)<TextProps>`
   margin: 0.7rem 2.5%;
 
   & .MuiInputLabel-root {
-    ${bodyMixin};
+    ${({ colors }) => bodyMixin(colors)}; 
   }
 
   & .MuiInputBase-input {
-    ${bodyMixin};
+    ${({ colors }) => bodyMixin(colors)}; 
     height: ${(props) => (props.slim ? '2rem' : 'auto')}; /* Warunkowa wysokość */
     padding: ${(props) => (props.slim ? '0.25rem' : 'auto')}; /* Zmniejszenie paddingu dla slim */
     padding-left: 1rem;
@@ -30,7 +30,7 @@ const StyledTextField = styled(TextField)<TextProps>`
   }
 
   & .MuiInputBase-input::placeholder {
-    ${bodyMixin};
+    ${({ colors }) => bodyMixin(colors)}; 
   }
 
   & .MuiOutlinedInput-root {
@@ -38,7 +38,7 @@ const StyledTextField = styled(TextField)<TextProps>`
     & fieldset {
     }
     &.Mui-focused fieldset {
-      border-color: ${colors.tertiary}; /* Kolor ramki na focus */
+      border-color:  ${props => props.colors.tertiary};
     }
   }
 `;

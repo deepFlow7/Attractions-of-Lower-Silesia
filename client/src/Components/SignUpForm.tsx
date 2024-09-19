@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
-
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
 import { NewUser } from '../types';
@@ -12,6 +11,8 @@ import { StyledButton } from '../Styles/Button';
 import { Title } from '../Styles/Typography';
 import { FormContainer, FormContent } from '../Styles/Form';
 import styled from '@emotion/styled';
+import { useColors, ContrastProps } from '../Providers/Colors'; 
+
 const Squeeze = styled.div`
   margin-bottom: -1rem;
 `;
@@ -25,6 +26,7 @@ const Registration: React.FC = () => {
   const [registerError, setRegisterError] = useState<string>('');
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { toggleTheme, colors } = useColors();
 
   if (isAuthenticated) navigate('/');
 
@@ -91,7 +93,7 @@ const Registration: React.FC = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer  colors={colors}>
       {registerError && (
         <Typography color="error" style={{ marginBottom: '1rem' }}>{registerError}</Typography>
       )}
@@ -99,10 +101,10 @@ const Registration: React.FC = () => {
 
       <FormContent>
       <Squeeze>
-      <Title>Rejestracja</Title>
+      <Title colors={colors}>Rejestracja</Title>
       </Squeeze>
         <InputContainer>
-          <StyledTextField slim 
+          <StyledTextField colors={colors} slim 
             fullWidth
             label="Imię"
             value={name}
@@ -112,7 +114,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField slim 
+          <StyledTextField colors={colors} slim 
             fullWidth
             label="Nazwisko"
             value={surname}
@@ -122,7 +124,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField slim 
+          <StyledTextField colors={colors} slim 
             fullWidth
             label="Login"
             value={login}
@@ -132,7 +134,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField slim 
+          <StyledTextField colors={colors} slim 
             fullWidth
             label="Adres e-mail"
             value={mail}
@@ -142,7 +144,7 @@ const Registration: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField slim 
+          <StyledTextField  colors={colors} slim 
             fullWidth
             label="Hasło"
             type="password"
@@ -152,7 +154,7 @@ const Registration: React.FC = () => {
             helperText={errors.password}
           />
         </InputContainer>
-        <StyledButton onClick={handleSubmit} fullWidth>
+        <StyledButton  colors={colors} onClick={handleSubmit} fullWidth>
           Zarejestruj się
         </StyledButton>
       </FormContent>

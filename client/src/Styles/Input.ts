@@ -7,13 +7,10 @@ export interface InputProps {
 export const Input = styled(InputBase)<InputProps>`
   & .MuiInputBase-input {
     ${bodyMixin};
-    height: ${(props) => (props.slim ? '2rem' : 'auto')}; /* Warunkowa wysokość */
-    padding: ${(props) => (props.slim ? '0.25rem' : '0.5rem')}; /* Zmniejszenie paddingu dla slim */
+    height: ${(props) => (props.slim ? '2rem' : 'auto')}; 
+    padding: ${(props) => (props.slim ? '0.25rem' : '0.5rem')};
   }
   
-  & .MuiInputBase-input::placeholder {
-    /* Możesz dodać styl placeholdera tutaj */
-  }
   
   & .MuiInputBase-adornedStart {
     margin-right: 0.5rem;

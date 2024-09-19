@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import { Challenge } from "../types"; 
 import { useAuth } from "../Providers/AuthContext";
 import { Title, bodyMixin } from "../Styles/Typography";
@@ -36,9 +36,9 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)`
+const StyledListItemText = styled(ListItemText)<ContrastProps>`
   .MuiListItemText-primary {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
   }
 `;
 
@@ -50,6 +50,7 @@ const ChallengesList: React.FC<ListProps> = ({
 }) => {
   const { isAuthenticated, role } = useAuth();
   const [editedChallenges, setEditedChallenges] = useState<{ [id: number]: string }>({});
+  const { toggleTheme, colors } = useColors();
 
   const handleInputChange = (id: number, newName: string) => {
     setEditedChallenges({
@@ -66,12 +67,12 @@ const ChallengesList: React.FC<ListProps> = ({
 
   return (
     <StyledList>
-      <Title>Wyzwania</Title>
+      <Title colors={colors}>Wyzwania</Title>
       {challenges.map((challenge) => (
         <StyledListItem key={challenge.id}>
           {isAuthenticated && role === "admin" && isManaging ? (
             <>
-              <StyledTextField
+              <StyledTextField  colors={colors}
                 value={editedChallenges[challenge.id] || challenge.name}
                 onChange={(e) => handleInputChange(challenge.id, e.target.value)}
                 fullWidth
@@ -100,7 +101,7 @@ const ChallengesList: React.FC<ListProps> = ({
               color="inherit"
               style={{ flexGrow: 1 }}
             >
-              <StyledListItemText primary={challenge.name} />
+              <StyledListItemText  colors={colors} primary={challenge.name} />
             </Button>
           )}
         </StyledListItem>

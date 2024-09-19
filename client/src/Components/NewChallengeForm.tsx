@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Box, IconButton, InputBase, Button, useMediaQuery } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import { ChallengeForm, Attraction, ChallengeAttractionInput, PossibleType, 
   Subtypes, possibleSubtypes, possibleTypes } from '../types';
 import FilterList from './FilterList';
@@ -30,14 +30,15 @@ const FormContainer = styled(ViewContainer)`
   }
 `;
 
-const StyledInputBase = styled(InputBase)`
+const StyledInputBase = styled(InputBase)<ContrastProps>`
   flex-grow: 1;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
   padding: 4px 8px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-  ${bodyMixin};
+  ${({ colors }) => bodyMixin(colors)} 
+
 
   &:hover {
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
@@ -64,6 +65,7 @@ const NewChallengeForm = () => {
   const [mapView, setMapView] = useState<{ center: { x: number; y: number }, zoom: number }>(initialMapView);
   const [search, setSearch] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; description?: string; attractions?: string }>({});
+  const { toggleTheme, colors } = useColors();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -172,11 +174,11 @@ const NewChallengeForm = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer colors={colors}>
       <TitleContainer>
-        <Title>Nowe Wyzwanie</Title>
+        <Title colors={colors}>Nowe Wyzwanie</Title>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField colors={colors}
             fullWidth
             label="Nazwa"
             value={name}
@@ -188,7 +190,7 @@ const NewChallengeForm = () => {
       </TitleContainer>
 
       <InputContainer style={{ width: 'calc(100vw - 24rem)' }}>
-        <StyledTextField
+        <StyledTextField colors={colors}
           fullWidth
           multiline
           rows={4}
@@ -211,10 +213,10 @@ const NewChallengeForm = () => {
       </MapContainer>
 
       <DropListContainer four>
-        <Body>
+        <Body colors={colors}>
           Atrakcje ({isMobile ? 'zaznacz, aby dodać' : 'przeciągnij wybrane na mapkę'})
         </Body>
-        <StyledInputBase
+        <StyledInputBase colors={colors}
           placeholder="Wyszukaj..."
           inputProps={{ 'aria-label': 'search' }}
           onChange={onSearchChange}
@@ -234,7 +236,7 @@ const NewChallengeForm = () => {
                   <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black', flexGrow: 1 }}>
                     {attraction.name}
                   </a>
-                  <StyledButton
+                  <StyledButton colors={colors}
                     variant="contained"
                     big={true}
                     onClick={() => selectAttraction(attraction)}
@@ -263,20 +265,20 @@ const NewChallengeForm = () => {
       </FilterContainer>
 
       <ListContainer four>
-        <Body>Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Body>
+        <Body colors={colors}>Wybrane atrakcje z punktami za odwiedzenie (z zakresu 1 - 100)</Body>
         <ScrollableBox style={{ minHeight: '50px' }}>
           {selectedAttractions.map((selected, index) => {
             const attraction = attractions.find(attr => attr.id === selected.id);
             return (
               <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }}>
-                <Body>
+                <Body colors={colors}>
                   {attraction && (
                     <a href={`/attraction/${attraction.id}`} target="_blank" style={{ color: 'black' }}>
                       {attraction.name}
                     </a>
                   )}
                 </Body>
-                <StyledTextField
+                <StyledTextField colors={colors}
                   type="number"
                   label="Punkty"
                   inputProps={{ min: 1, max: 100 }}
@@ -292,13 +294,13 @@ const NewChallengeForm = () => {
                     }
                   }}
                 />
-                <StyledButton onClick={() => handleRemoveAttraction(selected.id)}>Usuń</StyledButton>
+                <StyledButton colors={colors} onClick={() => handleRemoveAttraction(selected.id)}>Usuń</StyledButton>
               </div>
             );
           })}
         </ScrollableBox>
-        {!!errors.attractions && <Body error>{errors.attractions}</Body>}
-        <StyledButton onClick={handleSubmit}>Zapisz Wyzwanie</StyledButton>
+        {!!errors.attractions && <Body colors={colors} error>{errors.attractions}</Body>}
+        <StyledButton colors={colors} onClick={handleSubmit}>Zapisz Wyzwanie</StyledButton>
       </ListContainer>
     </FormContainer>
   );

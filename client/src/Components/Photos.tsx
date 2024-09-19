@@ -5,6 +5,7 @@ import { Photo } from '../types';
 import { Title, Body } from '../Styles/Typography';
 import { StyledButton } from '../Styles/Button';
 import styled from '@emotion/styled';
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 
 interface PhotoProps {
   photos: Photo[];
@@ -28,11 +29,13 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => 
   const handlePreviousPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
   };
+  const { toggleTheme, colors } = useColors();
+
 
   return (
     <CardContent>
       <Grid item xs={12}>
-        <Title small>{title}</Title>
+        <Title  colors={colors}small>{title}</Title>
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -43,15 +46,15 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => 
                 alt={`Photo ${currentPhotoIndex + 1}`}
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
-              <Body>{photos[currentPhotoIndex].caption}</Body>
+              <Body colors={colors}>{photos[currentPhotoIndex].caption}</Body>
             </>
           )}
         </Grid>
         <ButtonContainer display={displayButton}>
-            <StyledButton onClick={handlePreviousPhoto} >
+            <StyledButton colors={colors} onClick={handlePreviousPhoto} >
               Poprzednie
             </StyledButton>
-            <StyledButton onClick={handleNextPhoto}>
+            <StyledButton colors={colors}  onClick={handleNextPhoto}>
               Następne
             </StyledButton>
         </ButtonContainer>

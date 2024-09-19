@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { List, ListItem, ListItemText, Button } from '@mui/material';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
@@ -24,17 +24,19 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)`
+const StyledListItemText = styled(ListItemText)<ContrastProps>`
   .MuiListItemText-primary {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
   }
 `;
+
 
 const Challenges = () => {
   const [allChallenges, setAllChallenges] = useState<Challenge[] | null>(null);
   const [completedChallenges, setCompletedChallenges] = useState<BasicChallengeInfo[]>([]);
   const [challengesInProgress, setChallengesInProgress] = useState<BasicChallengeInfo[]>([]);
   const { isAuthenticated, user, role } = useAuth();
+  const { toggleTheme, colors } = useColors();
 
   useEffect(() => {
     api.get('/api/challenges')
@@ -69,14 +71,14 @@ const Challenges = () => {
   }
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors}>
       <ChallengesContainer>
         <ChallengesList challenges={allChallenges} />
       </ChallengesContainer>
       {isAuthenticated && role === 'user' && (
         <>
           <ChallengesContainer>
-            <Title>Podjęte wyzwania</Title>
+            <Title colors={colors}>Podjęte wyzwania</Title>
             <StyledList>
               {challengesInProgress.map(challenge => (
                 <Button
@@ -87,8 +89,8 @@ const Challenges = () => {
                   fullWidth
                 >
                   <StyledListItem>
-                    <StyledListItemText primary={challenge.name} />
-                    <StyledListItemText
+                    <StyledListItemText colors={colors} primary={challenge.name} />
+                    <StyledListItemText colors={colors}
                       primary={challenge.points.toString()}
                       sx={{ marginLeft: 2 }}
                     />
@@ -98,7 +100,7 @@ const Challenges = () => {
             </StyledList>
         </ChallengesContainer>
         <ChallengesContainer>
-          <Title>Ukończone wyzwania</Title>
+          <Title colors={colors}>Ukończone wyzwania</Title>
           <StyledList>
             {completedChallenges.map(challenge => (
               <Button
@@ -109,8 +111,8 @@ const Challenges = () => {
                 fullWidth
               >
                 <StyledListItem>
-                  <StyledListItemText primary={challenge.name} />
-                  <StyledListItemText
+                  <StyledListItemText colors={colors} primary={challenge.name} />
+                  <StyledListItemText colors={colors}
                     primary={challenge.points.toString()}
                     sx={{ marginLeft: 2 }}
                   />

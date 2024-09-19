@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Grid, Typography, MenuItem, CircularProgress } from '@mui/material';
-
+import { useColors, ContrastProps } from '../Providers/Colors'; 
 import { NewAttraction, NewPhoto, PossibleType, Subtypes, possibleTypes, possibleSubtypes } from '../types';
 import Map, { MapRef } from './Map';
 import api from '../API/api';
@@ -33,7 +33,7 @@ const NewAttractionForm = () => {
   const [isLocalizationLoading, setIsLocalizationLoading] = useState<boolean>(false);
   const mapRef = useRef<MapRef>(null);
   const { isBlocked } = useAuth();
-
+  const { toggleTheme, colors } = useColors();
   const navigate = useNavigate();
   const location = useLocation();
   const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
@@ -157,11 +157,11 @@ const NewAttractionForm = () => {
   };
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors}>
       <ChallengesContainer>
-        <Title>Nowa Atrakcja</Title>
+        <Title colors={colors}>Nowa Atrakcja</Title>
 
-        <StyledTextField
+        <StyledTextField colors={colors}
           fullWidth
           label="Nazwa"
           value={attractionName}
@@ -170,7 +170,7 @@ const NewAttractionForm = () => {
           helperText={formErrors.name}
         />
 
-        <StyledTextField
+        <StyledTextField colors={colors}
           select
           fullWidth
           label="Typ"
@@ -184,7 +184,7 @@ const NewAttractionForm = () => {
         </StyledTextField>
         {formErrors.type && <Typography variant="body2" color="error">{formErrors.type}</Typography>}
 
-        <StyledTextField
+        <StyledTextField colors={colors} 
           select
           fullWidth
           label="Podtyp"
@@ -198,7 +198,7 @@ const NewAttractionForm = () => {
         </StyledTextField>
         {formErrors.subtype && <Typography variant="body2" color="error">{formErrors.subtype}</Typography>}
 
-        <StyledTextField
+        <StyledTextField colors={colors}
           fullWidth
           multiline
           rows={4}
@@ -209,7 +209,7 @@ const NewAttractionForm = () => {
           helperText={formErrors.description}
         />
 
-        <StyledTextField
+        <StyledTextField colors={colors}
           type="number"
           fullWidth
           label="Interaktywność (1-10)"
@@ -220,7 +220,7 @@ const NewAttractionForm = () => {
           helperText={formErrors.interactivity}
         />
 
-        <StyledTextField
+        <StyledTextField colors={colors}
           type="number"
           fullWidth
           label="Czas zwiedzania (minuty)"
@@ -231,8 +231,8 @@ const NewAttractionForm = () => {
           helperText={formErrors.timeItTakes}
         />
 
-        <Title>Wybierz lokalizację</Title>
-        <StyledButton onClick={handleUseMyLocation} color="primary">
+        <Title colors={colors}>Wybierz lokalizację</Title>
+        <StyledButton colors={colors} onClick={handleUseMyLocation} color="primary">
           {isLocalizationLoading ? (
             <> Pobieram lokalizację <CircularProgress size={20} /> </>
           ) : (
@@ -253,7 +253,7 @@ const NewAttractionForm = () => {
         </MapContainer>
         {formErrors.coords && <Typography variant="body2" color="error" margin={'3px'}>{formErrors.coords}</Typography>}
 
-        <Title>Zdjęcia</Title>
+        <Title colors={colors}>Zdjęcia</Title>
         <Grid container spacing={2}>
           {attractionPhotos.map((photo, index) => (
             <Grid item key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
@@ -261,13 +261,13 @@ const NewAttractionForm = () => {
               <Typography variant="caption" style={{ marginTop: '8px', padding: '0 4px' }}>
                 {photo.caption}
               </Typography>
-              <StyledButton onClick={() => handleRemovePhoto(index)} style={{ marginTop: '8px' }}>
+              <StyledButton colors={colors} onClick={() => handleRemovePhoto(index)} style={{ marginTop: '8px' }}>
                 Usuń
               </StyledButton>
             </Grid>
           ))}
           <Grid item>
-            <StyledTextField
+            <StyledTextField colors={colors}
               fullWidth
               label="URL Zdjęcia"
               value={photoUrls[attractionPhotos.length] || ''}
@@ -275,16 +275,16 @@ const NewAttractionForm = () => {
               error={!!formErrors.photoUrl}
               helperText={formErrors.photoUrl}
             />
-            <StyledTextField
+            <StyledTextField colors={colors}
               fullWidth
               label="Podpis Zdjęcia"
               value={photoCaptions[attractionPhotos.length] || ''}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhotoCaptions([...photoCaptions.slice(0, attractionPhotos.length), e.target.value])}
             />
-            <StyledButton onClick={handleAddPhoto}>Dodaj Zdjęcie</StyledButton>
+            <StyledButton colors={colors} onClick={handleAddPhoto}>Dodaj Zdjęcie</StyledButton>
           </Grid>
         </Grid>
-        <StyledButton onClick={handleSubmit}>Zapisz Atrakcję</StyledButton>
+        <StyledButton colors={colors} onClick={handleSubmit}>Zapisz Atrakcję</StyledButton>
       </ChallengesContainer>
     </ViewContainer>
   );
