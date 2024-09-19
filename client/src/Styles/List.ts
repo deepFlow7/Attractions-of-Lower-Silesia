@@ -23,11 +23,12 @@ max-height: 85vh;
   @media (max-width: 660px) {
     width: ${props => (props.four ? '30%' : '48%')};
   }
-  @media (max-width: 550px) {
-    width: ${props => (props.four ? '100%' : '48%')};
+  @media (max-width: 560px) {
+    width: ${props => (props.four ? '100%' : '47%')};
   }
   @media (max-width: 500px) {
     width: 100%;
+    height: 20rem;
   }
 `;
 
