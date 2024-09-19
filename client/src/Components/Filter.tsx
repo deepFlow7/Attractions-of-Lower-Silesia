@@ -52,7 +52,7 @@ const Filter: React.FC<FilterProps> = ({ options, onChange }) => {
   };
 
   return (
-    <CardContent style={{ maxHeight: '45vh', overflow: 'auto' }}>
+    <CardContent >
       <StyledFormControlLabel
         key="all"
         control={

@@ -33,6 +33,7 @@ export const titleMixin = `
 
 export const bodyMixin = `
   color: ${colors.dark};
+  line-height: 1.5;
   font-family: 'Englebert', sans-serif;
   text-decoration: none;
   font-size: ${sizes.fontSize};
