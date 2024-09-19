@@ -21,63 +21,63 @@ const StyledTableCell = styled(TableCell)`
 `;
 
 interface RankingTableProps {
-    challengeId: number | null;
+  challengeId: number | null;
 }
 
 const RankingTable: React.FC<RankingTableProps> = ({ challengeId }) => {
-    const [rankings, setRankings] = useState<ChallengeRanking[] | null>(null);
-    const { isAuthenticated, username } = useAuth();
+  const [rankings, setRankings] = useState<ChallengeRanking[] | null>(null);
+  const { isAuthenticated, username } = useAuth();
 
-    useEffect(() => {
-        if (challengeId) {
-            api.get(`/api/challenges/${challengeId}/ranking`)
-                .then((response) => {
-                    setRankings(response.data);
-                })
-                .catch((error) => {
-                    console.error('There was an error fetching the data!', error);
-                });
-        }
-    }, [challengeId]);
-
-    if (!rankings) {
-        return <div>Loading...</div>;
+  useEffect(() => {
+    if (challengeId) {
+      api.get(`/api/challenges/${challengeId}/ranking`)
+        .then((response) => {
+          setRankings(response.data);
+        })
+        .catch((error) => {
+          console.error('There was an error fetching the data!', error);
+        });
     }
+  }, [challengeId]);
 
-    return (
-        <TableContainer>
-            <StyledTable>
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>
-                            <Body>Username</Body>
-                        </StyledTableCell>
-                        <StyledTableCell align="right">
-                            <Body>Points</Body>
-                        </StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rankings.map((ranking, index) => (
-                        <TableRow
-                            key={index}
-                            style={{
-                                backgroundColor:
-                                    isAuthenticated && ranking.login === username ? 'lightblue' : 'transparent',
-                            }}
-                        >
-                            <StyledTableCell>
-                                <Body>{ranking.login}</Body>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <Body>{ranking.score}</Body>
-                            </StyledTableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </StyledTable>
-        </TableContainer>
-    );
+  if (!rankings) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <TableContainer>
+      <StyledTable>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>
+              <Body>Username</Body>
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              <Body>Points</Body>
+            </StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rankings.map((ranking, index) => (
+            <TableRow
+              key={index}
+              style={{
+                backgroundColor:
+                  isAuthenticated && ranking.login === username ? 'lightblue' : 'transparent',
+              }}
+            >
+              <StyledTableCell>
+                <Body>{ranking.login}</Body>
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <Body>{ranking.score}</Body>
+              </StyledTableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </StyledTable>
+    </TableContainer>
+  );
 };
 
 export default RankingTable;

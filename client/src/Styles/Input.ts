@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { InputBase } from "@mui/material";
 import { bodyMixin } from "./Typography";
 export interface InputProps {
-    slim?: boolean;
+  slim?: boolean;
 };
 export const Input = styled(InputBase) <InputProps>`
   & .MuiInputBase-input {

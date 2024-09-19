@@ -2,14 +2,14 @@
 import styled from "@emotion/styled";
 
 export interface MapContainerProps {
-    three?: boolean;
-    four?: boolean;
-    challenge?: boolean;
+  three?: boolean;
+  four?: boolean;
+  challenge?: boolean;
 }
 
 export interface DropListContainerProps {
-    three?: boolean;
-    four?: boolean;
+  three?: boolean;
+  four?: boolean;
 }
 
 export const DropListContainer = styled.div<DropListContainerProps>`

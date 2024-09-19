@@ -4,10 +4,10 @@ import { colors, sizes, transitions, shadows, animations, gradients } from './Th
 import { bodyMixin } from './Typography';
 import Button, { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 export interface ButtonProps extends MUIButtonProps {
-    secondary?: boolean;
-    hidden?: boolean;
-    background?: boolean;
-    big?: boolean;
+  secondary?: boolean;
+  hidden?: boolean;
+  background?: boolean;
+  big?: boolean;
 }
 
 export const ButtonMixin = `

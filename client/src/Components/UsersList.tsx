@@ -9,10 +9,10 @@ import { shadows, colors } from "../Styles/Themes";
 import { StyledButton } from "../Styles/Button";
 
 interface UsersListProps {
-    users: UserWithLogin[];
-    isManaging?: boolean;
-    changeUserBlock?: (id: number) => void;
-    blockedUsers?: number[];
+  users: UserWithLogin[];
+  isManaging?: boolean;
+  changeUserBlock?: (id: number) => void;
+  blockedUsers?: number[];
 }
 
 const StyledList = styled(List)`
@@ -36,46 +36,46 @@ const StyledSecondaryTypography = styled.span`
 `;
 
 const UsersList: React.FC<UsersListProps> = ({
-    users,
-    isManaging,
-    changeUserBlock,
-    blockedUsers,
+  users,
+  isManaging,
+  changeUserBlock,
+  blockedUsers,
 }) => {
-    const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
-    const isUserBlocked = (id: number) => {
-        return blockedUsers?.includes(id);
-    };
+  const isUserBlocked = (id: number) => {
+    return blockedUsers?.includes(id);
+  };
 
-    return (
-        <StyledList>
-            <Title>Użytkownicy</Title>
-            {users.map((user, index) => (
-                <StyledListItem key={index}>
-                    <ListItemText
-                        primary={
-                            <StyledPrimaryTypography>
-                                {`${user.name} ${user.surname}`}
-                            </StyledPrimaryTypography>
-                        }
-                        secondary={
-                            <StyledSecondaryTypography>
-                                {`${user.login} ${user.mail}`}
-                            </StyledSecondaryTypography>
-                        }
-                    />
-                    {isAuthenticated && role === "admin" && isManaging && (
-                        <StyledButton
-                            color={isUserBlocked(user.id) ? "secondary" : "primary"}
-                            onClick={() => changeUserBlock?.(user.id)}
-                        >
-                            {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}
-                        </StyledButton>
-                    )}
-                </StyledListItem>
-            ))}
-        </StyledList>
-    );
+  return (
+    <StyledList>
+      <Title>Użytkownicy</Title>
+      {users.map((user, index) => (
+        <StyledListItem key={index}>
+          <ListItemText
+            primary={
+              <StyledPrimaryTypography>
+                {`${user.name} ${user.surname}`}
+              </StyledPrimaryTypography>
+            }
+            secondary={
+              <StyledSecondaryTypography>
+                {`${user.login} ${user.mail}`}
+              </StyledSecondaryTypography>
+            }
+          />
+          {isAuthenticated && role === "admin" && isManaging && (
+            <StyledButton
+              color={isUserBlocked(user.id) ? "secondary" : "primary"}
+              onClick={() => changeUserBlock?.(user.id)}
+            >
+              {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}
+            </StyledButton>
+          )}
+        </StyledListItem>
+      ))}
+    </StyledList>
+  );
 };
 
 export default UsersList;

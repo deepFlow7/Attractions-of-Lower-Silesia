@@ -32,111 +32,111 @@ const StyledInput = styled(MUIInput)`
 `;
 
 const Home: React.FC = () => {
-    const initialLat = 51.1079;
-    const initialLng = 17.0385;
-    const [attractions, setAttractions] = useState<Attraction[] | null>(null);
-    const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
-    const [search, setSearch] = useState<string>("");
-    const [favouriteAttractions, setFavouriteAttractions] = useState<number[]>([]);
-    const [wantsToVisitAttractions, setWantsToVisitAttractions] = useState<number[]>([]);
-    const { isAuthenticated, role } = useAuth();
+  const initialLat = 51.1079;
+  const initialLng = 17.0385;
+  const [attractions, setAttractions] = useState<Attraction[] | null>(null);
+  const [filteredAttractions, setFilteredAttractions] = useState<Attraction[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [favouriteAttractions, setFavouriteAttractions] = useState<number[]>([]);
+  const [wantsToVisitAttractions, setWantsToVisitAttractions] = useState<number[]>([]);
+  const { isAuthenticated, role } = useAuth();
 
-    useEffect(() => {
-        api.get('/api/attractions')
-            .then(response => {
-                setAttractions(response.data);
-                setFilteredAttractions(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the data!', error);
-            });
+  useEffect(() => {
+    api.get('/api/attractions')
+      .then(response => {
+        setAttractions(response.data);
+        setFilteredAttractions(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the data!', error);
+      });
 
-        if (isAuthenticated && role == "user") {
-            api.get('/api/attractions/favourites')
-                .then(response => {
-                    setFavouriteAttractions(response.data);
-                })
-                .catch(error => {
-                    console.error('There was an error fetching favourite attractions:', error);
-                });
+    if (isAuthenticated && role == "user") {
+      api.get('/api/attractions/favourites')
+        .then(response => {
+          setFavouriteAttractions(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching favourite attractions:', error);
+        });
 
-            api.get('/api/attractions/toVisit')
-                .then(response => {
-                    setWantsToVisitAttractions(response.data);
-                })
-                .catch(error => {
-                    console.error('There was an error fetching wants to visit attractions:', error);
-                });
-        }
-    }, []);
-
-    if (!attractions) {
-        return <div>Loading...</div>;
+      api.get('/api/attractions/toVisit')
+        .then(response => {
+          setWantsToVisitAttractions(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching wants to visit attractions:', error);
+        });
     }
+  }, []);
 
-    const handleFilterChange = (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[], selectedPreferences?: Preferences) => {
-        if (attractions) {
-            setFilteredAttractions(attractions.filter(attraction => {
-                if (!selectedSubtypes.includes(attraction.subtype) || !selectedTypes.includes(attraction.type)) {
-                    return false;
-                }
+  if (!attractions) {
+    return <div>Loading...</div>;
+  }
 
-                if (!isAuthenticated || selectedPreferences == 'wszystkie') {
-                    return true;
-                }
-
-                if (selectedPreferences == 'ulubione') {
-                    return favouriteAttractions.includes(attraction.id);
-                }
-
-                if (selectedPreferences === 'do odwiedzenia') {
-                    return wantsToVisitAttractions.includes(attraction.id);
-                }
-
-                return true;
-            }));
+  const handleFilterChange = (selectedTypes: PossibleType[], selectedSubtypes: Subtypes[], selectedPreferences?: Preferences) => {
+    if (attractions) {
+      setFilteredAttractions(attractions.filter(attraction => {
+        if (!selectedSubtypes.includes(attraction.subtype) || !selectedTypes.includes(attraction.type)) {
+          return false;
         }
-    };
 
-    const filterBySearch = (attractions: Attraction[], searchTerm: string) => {
-        return attractions.filter(attraction =>
-            attraction.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    };
+        if (!isAuthenticated || selectedPreferences == 'wszystkie') {
+          return true;
+        }
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value);
-    };
+        if (selectedPreferences == 'ulubione') {
+          return favouriteAttractions.includes(attraction.id);
+        }
 
-    return (
-        <ViewContainer>
-            <MapContainer>
-                <Map
-                    x={initialLat}
-                    y={initialLng}
-                    attractions={filterBySearch(filteredAttractions, search)}
-                />
-            </MapContainer>
-            <FilterContainer>
-                <FilterList onChange={handleFilterChange} showPreferences={isAuthenticated && role == 'user'} />
-            </FilterContainer>
-            <ListContainer>
-                <InputContainer>
-                    <StyledInput
-                        placeholder="Wyszukaj..."
-                        inputProps={{ 'aria-label': 'search' }}
-                        onChange={handleSearchChange}
-                        startAdornment={
-                            <IconButton sx={{ p: 0 }} disabled aria-label="search">
-                                <SearchIcon />
-                            </IconButton>
-                        }
-                    />
-                </InputContainer>
-                <AttractionsList attractions={filterBySearch(filteredAttractions, search)} />
-            </ListContainer>
-        </ViewContainer>
+        if (selectedPreferences === 'do odwiedzenia') {
+          return wantsToVisitAttractions.includes(attraction.id);
+        }
+
+        return true;
+      }));
+    }
+  };
+
+  const filterBySearch = (attractions: Attraction[], searchTerm: string) => {
+    return attractions.filter(attraction =>
+      attraction.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  return (
+    <ViewContainer>
+      <MapContainer>
+        <Map
+          x={initialLat}
+          y={initialLng}
+          attractions={filterBySearch(filteredAttractions, search)}
+        />
+      </MapContainer>
+      <FilterContainer>
+        <FilterList onChange={handleFilterChange} showPreferences={isAuthenticated && role == 'user'} />
+      </FilterContainer>
+      <ListContainer>
+        <InputContainer>
+          <StyledInput
+            placeholder="Wyszukaj..."
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={handleSearchChange}
+            startAdornment={
+              <IconButton sx={{ p: 0 }} disabled aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            }
+          />
+        </InputContainer>
+        <AttractionsList attractions={filterBySearch(filteredAttractions, search)} />
+      </ListContainer>
+    </ViewContainer>
+  );
 };
 
 export default Home;

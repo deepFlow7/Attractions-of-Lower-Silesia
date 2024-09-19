@@ -2,15 +2,15 @@ import styled from "@emotion/styled";
 import { colors, sizes, transitions, shadows } from './Themes';
 
 export interface TitleProps {
-    small?: boolean;
+  small?: boolean;
 }
 
 export interface BodyProps {
-    gray?: boolean;
-    big?: boolean;
-    margin?: boolean;
-    secondary?: boolean;
-    error?: boolean;
+  gray?: boolean;
+  big?: boolean;
+  margin?: boolean;
+  secondary?: boolean;
+  error?: boolean;
 }
 
 export const titleMixin = `
