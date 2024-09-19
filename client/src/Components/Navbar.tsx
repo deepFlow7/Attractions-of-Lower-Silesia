@@ -30,7 +30,7 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 const Navbar = () => {
-  const { isAuthenticated, isBlocked, logout, user, role, updateUser, username } = useAuth();
+  const { isAuthenticated, isBlocked, logout, user, role, username } = useAuth();
   const location = useLocation();
   const currentUrl = location.pathname + location.search;
   const navigate = useNavigate();

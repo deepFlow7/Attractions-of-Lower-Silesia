@@ -1,6 +1,6 @@
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 
-import { useSessionStorage } from '../Hooks/SessionStorage';
+
 import api from '../API/api';
 import { User, Role } from '../types';
 
@@ -20,11 +20,11 @@ interface Context {
 const AuthContext = createContext({} as Context);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?', false);
-  const [isBlocked, setIsBlocked] = useSessionStorage('blocked?', false);
-  const [user, setUser] = useSessionStorage('user', null);
-  const [role, setRole] = useSessionStorage('role', null);
-  const [username, updateUsername] = useSessionStorage('username', null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
+  const [user, setUser] = useState<User|null>(null);
+  const [role, setRole] = useState<Role|null>(null);
+  const [username, updateUsername] = useState<string|null>(null);
 
   const fetchSession = async () => {
     try {

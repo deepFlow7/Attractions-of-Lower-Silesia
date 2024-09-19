@@ -37,7 +37,7 @@ const AttractionView: React.FC = () => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [savedUserRating, setSavedUserRating] = useState(0);
-  const { user, isBlocked, role, isAuthenticated } = useAuth();
+  const { isBlocked, role, isAuthenticated } = useAuth();
   const [refreshKey, setRefreshKey] = useState(1);
   const { attractionId } = useParams();
 
