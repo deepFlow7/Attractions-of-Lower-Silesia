@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
-import background from "/backgrounds/attraction.png";
+import background from "/backgrounds/attraction.webp";
 
 export interface ViewContainerProps {
   buttonOnTop?: boolean;

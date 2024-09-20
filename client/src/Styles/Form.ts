@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { ContrastProps } from '../Providers/Colors';
 import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
-import background from "/backgrounds/login.png";
-import background2 from "/backgrounds/login2.jpeg";
+import background from "/backgrounds/login.webp";
+import background2 from "/backgrounds/login2.webp";
 
 export const FormContainer = styled.div<ContrastProps>`
   box-sizing: border-box;
