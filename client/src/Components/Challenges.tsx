@@ -1,17 +1,16 @@
 /** @jsxImportSource @emotion/react */
+import styled from '@emotion/styled';
+import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
-import { List, ListItem, ListItemText, Button } from '@mui/material';
-
-import ChallengesList from './ChallengesList';
 import api from '../API/api';
 import { useAuth } from '../Providers/AuthContext';
-import { Challenge, CompletedChallenge } from '../types'; 
-import { ViewContainer } from '../Styles/View';
-import { Title } from '../Styles/Typography';
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { ChallengesContainer } from '../Styles/List';
-import { bodyMixin } from '../Styles/Typography';
+import { bodyMixin, Title } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { BasicChallengeInfo, Challenge } from '../types';
+import ChallengesList from './ChallengesList';
 
 const StyledList = styled(List)`
   border-radius: 8px;
@@ -24,16 +23,19 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledListItemText = styled(ListItemText)`
+const StyledListItemText = styled(ListItemText) <ContrastProps>`
   .MuiListItemText-primary {
-    ${bodyMixin}
+    ${({ colors }) => bodyMixin(colors)} 
   }
 `;
 
+
 const Challenges = () => {
   const [allChallenges, setAllChallenges] = useState<Challenge[] | null>(null);
-  const [completedChallenges, setCompletedChallenges] = useState<CompletedChallenge[]>([]);
+  const [completedChallenges, setCompletedChallenges] = useState<BasicChallengeInfo[]>([]);
+  const [challengesInProgress, setChallengesInProgress] = useState<BasicChallengeInfo[]>([]);
   const { isAuthenticated, user, role } = useAuth();
+  const { colors } = useColors();
 
   useEffect(() => {
     api.get('/api/challenges')
@@ -45,12 +47,20 @@ const Challenges = () => {
       });
 
     if (user) {
-      api.get(`/api/completed_challenges`)
+      api.get('/api/challenges/completed')
         .then(response => {
           setCompletedChallenges(response.data);
         })
         .catch(error => {
           console.error('There was an error fetching completed challenges:', error);
+        });
+
+      api.get('/api/challenges/inProgress')
+        .then(response => {
+          setChallengesInProgress(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching challenges in progress:', error);
         });
     }
   }, [user]);
@@ -60,34 +70,59 @@ const Challenges = () => {
   }
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors}>
       <ChallengesContainer>
         <ChallengesList challenges={allChallenges} />
       </ChallengesContainer>
       {isAuthenticated && role === 'user' && (
-        <ChallengesContainer>
-          <Title>Ukończone wyzwania</Title>
-          <StyledList>
-            {completedChallenges.map(challenge => (
-              <Button
-                key={challenge.id}
-                component={Link}
-                to={`/challenge/${challenge.id}`}
-                color="inherit"
-                fullWidth
-              >
-                <StyledListItem>
-                  <StyledListItemText primary={challenge.name} />
-                  <StyledListItemText
-                    primary={challenge.points.toString()}
-                    sx={{ marginLeft: 2 }}
-                  />
-                </StyledListItem>
-              </Button>
-            ))}
-          </StyledList>
-        </ChallengesContainer>
-      )}
+        <>
+          <ChallengesContainer>
+            <Title colors={colors}>Podjęte wyzwania</Title>
+            <StyledList>
+              {challengesInProgress.map(challenge => (
+                <Button
+                  key={challenge.id}
+                  component={Link}
+                  to={`/challenge/${challenge.id}`}
+                  color="inherit"
+                  fullWidth
+                >
+                  <StyledListItem>
+                    <StyledListItemText colors={colors} primary={challenge.name} />
+                    <StyledListItemText colors={colors}
+                      primary={challenge.points.toString()}
+                      sx={{ marginLeft: 2 }}
+                    />
+                  </StyledListItem>
+                </Button>
+              ))}
+            </StyledList>
+          </ChallengesContainer>
+          <ChallengesContainer>
+            <Title colors={colors}>Ukończone wyzwania</Title>
+            <StyledList>
+              {completedChallenges.map(challenge => (
+                <Button
+                  key={challenge.id}
+                  component={Link}
+                  to={`/challenge/${challenge.id}`}
+                  color="inherit"
+                  fullWidth
+                >
+                  <StyledListItem>
+                    <StyledListItemText colors={colors} primary={challenge.name} />
+                    <StyledListItemText colors={colors}
+                      primary={challenge.points.toString()}
+                      sx={{ marginLeft: 2 }}
+                    />
+                  </StyledListItem>
+                </Button>
+              ))}
+            </StyledList>
+          </ChallengesContainer>
+        </>
+      )
+      }
     </ViewContainer>
   );
 };

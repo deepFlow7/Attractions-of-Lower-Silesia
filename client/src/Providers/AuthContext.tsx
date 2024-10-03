@@ -1,34 +1,33 @@
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-import { useSessionStorage } from '../Hooks/SessionStorage';
 import api from '../API/api';
-import { User, Role } from '../types';
+import { Role, User } from '../types';
 
 interface Context {
   isAuthenticated: boolean;
   isBlocked: boolean;
-  login: (username: string, password: string) => void;
-  logout: () => void;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   user: User | null;
   username: string;
   role: Role;
   setRole: (r: Role) => void;
   updateUsername: (s: string) => void;
-  updateUser: (new_user: User | null) => void;
+  updateUser: (newUser: User | null) => void;
 }
 
 const AuthContext = createContext({} as Context);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useSessionStorage('authenticated?', false);
-  const [isBlocked, setIsBlocked] = useSessionStorage('blocked?', false);
-  const [user, setUser] = useSessionStorage('user', null);
-  const [role, setRole] = useSessionStorage('role', null);
-  const [username, updateUsername] = useSessionStorage('username', null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
+  const [username, updateUsername] = useState<string | null>(null);
 
   const fetchSession = async () => {
     try {
-      const response = await api.get('/profile');
+      const response = await api.get('/api/user/profile');
       if (response.data.authenticated) {
         setIsAuthenticated(true);
         setIsBlocked(response.data.blocked);
@@ -51,16 +50,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
 
-  const updateUser = (new_user: User | null) => {
-    setUser(new_user);
+  const updateUser = (newUser: User | null) => {
+    setUser(newUser);
   }
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await api.post('/login', { login: username, password });
+      const response = await api.post('/api/user/login', { login: username, password });
       if (response.data.authenticated) {
         setIsAuthenticated(true);
-        fetchSession();
+        await fetchSession();
       }
       else {
         throw response.data.error;
@@ -72,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      await api.get('/logout');
+      await api.get('/api/user/logout');
       setIsAuthenticated(false);
       setUser(null);
       updateUsername('');
@@ -95,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role,
         updateUsername,
         setRole,
-        updateUser
+        updateUser,
       } as Context}
     >
       {children}

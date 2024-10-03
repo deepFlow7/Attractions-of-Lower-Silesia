@@ -1,4 +1,4 @@
---USAGE: psql -f skrypt_bazowy.sql
+--USAGE: psql -f db_script.sql
 
 CREATE DATABASE maps;
 
@@ -19,6 +19,7 @@ ALTER ROLE pg SET timezone TO 'UTC';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO pg;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO pg;
 
+---------- TABLES ----------------------------------------------------------------------------------------
 CREATE TYPE possible_type as ENUM ('natura', 'urbanistyka');
 CREATE TYPE subtypes AS ENUM (
     'zamek',
@@ -105,9 +106,16 @@ CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     author INTEGER NOT NULL REFERENCES users(id),
     content TEXT NOT NULL,
-    votes INTEGER NOT NULL DEFAULT 0,
     attraction INTEGER NOT NULL REFERENCES attractions(id) ON DELETE CASCADE,
-    parent INTEGER REFERENCES comments(id)
+    vote_sum INTEGER DEFAULT 0
+);
+
+CREATE TYPE approval_type AS ENUM ('approve', 'disapprove');
+CREATE TABLE comment_approvals (
+    comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+    voter INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    approval_status approval_type NOT NULL,
+    UNIQUE (comment_id, voter)
 );
 
 CREATE TABLE challenges (
@@ -143,7 +151,8 @@ CREATE TABLE visited_challenge_attractions (
     UNIQUE (challenge_id, attraction_id, user_id)
 );
 
---  TRIGGERS
+----------  TRIGGERS -------------------------------------------------------------------------------------
+--- CHALLENGE POINTS ---
 CREATE OR REPLACE FUNCTION update_challenge_points()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -223,6 +232,7 @@ AFTER DELETE ON challenge_attractions
 FOR EACH ROW
 EXECUTE FUNCTION subtract_challenge_points();
 
+--- RATING ---
 CREATE OR REPLACE FUNCTION calculate_rating()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -241,3 +251,60 @@ CREATE TRIGGER calculate_rating_trigger
 AFTER INSERT OR UPDATE ON ratings
 FOR EACH ROW
 EXECUTE FUNCTION calculate_rating();
+
+--- COMMENT APPROVAL ---
+CREATE OR REPLACE FUNCTION handle_comment_approval_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE comments
+  SET vote_sum = vote_sum + CASE NEW.approval_status
+                               WHEN 'approve' THEN 1
+                               WHEN 'disapprove' THEN -1
+                             END
+  WHERE id = NEW.comment_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION handle_comment_approval_update()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF OLD.approval_status <> NEW.approval_status THEN
+    UPDATE comments
+    SET vote_sum = vote_sum + CASE NEW.approval_status
+                                 WHEN 'approve' THEN 2
+                                 WHEN 'disapprove' THEN -2
+                               END
+    WHERE id = NEW.comment_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION handle_comment_approval_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE comments
+  SET vote_sum = vote_sum + CASE OLD.approval_status
+                               WHEN 'approve' THEN -1
+                               WHEN 'disapprove' THEN 1
+                             END
+  WHERE id = OLD.comment_id;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER comment_approvals_insert
+AFTER INSERT ON comment_approvals
+FOR EACH ROW
+EXECUTE FUNCTION handle_comment_approval_insert();
+
+CREATE TRIGGER comment_approvals_update
+AFTER UPDATE ON comment_approvals
+FOR EACH ROW
+EXECUTE FUNCTION handle_comment_approval_update();
+
+CREATE TRIGGER comment_approvals_delete
+AFTER DELETE ON comment_approvals
+FOR EACH ROW
+EXECUTE FUNCTION handle_comment_approval_delete();

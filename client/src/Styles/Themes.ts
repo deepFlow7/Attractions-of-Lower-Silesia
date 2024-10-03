@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 
 export const colors = {
   primary: '#e9cbb0',
@@ -13,7 +12,7 @@ export const colors = {
 
 export const gradients = {
   primaryToSecondary: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
- };
+};
 
 export const sizes = {
   borderRadius: '2rem',

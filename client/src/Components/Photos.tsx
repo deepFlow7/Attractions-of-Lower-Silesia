@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { Grid, CardContent } from '@mui/material';
-import { Photo } from '../types';
-import { Title, Body } from '../Styles/Typography';
-import { StyledButton } from '../Styles/Button';
 import styled from '@emotion/styled';
+import { CardContent, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
+import { Body, Title } from '../Styles/Typography';
+import { Photo } from '../types';
 
 interface PhotoProps {
   photos: Photo[];
@@ -12,13 +13,13 @@ interface PhotoProps {
   displayButton: boolean;
 }
 interface ButtonContainerProps {
-  display:boolean;
+  display: boolean;
 }
 const ButtonContainer = styled.div<ButtonContainerProps>`
-  display: ${props => (props.display ?  'inline-block' : 'none')};
+  display: ${props => (props.display ? 'inline-block' : 'none')};
   
 `;
-const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => {
+const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton = true }) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const handleNextPhoto = () => {
@@ -28,11 +29,13 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => 
   const handlePreviousPhoto = () => {
     setCurrentPhotoIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
   };
+  const { colors } = useColors();
+
 
   return (
     <CardContent>
       <Grid item xs={12}>
-        <Title small>{title}</Title>
+        <Title colors={colors} small>{title}</Title>
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -43,17 +46,17 @@ const Photos: React.FC<PhotoProps> = ({ photos, title, displayButton=true }) => 
                 alt={`Photo ${currentPhotoIndex + 1}`}
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
-              <Body>{photos[currentPhotoIndex].caption}</Body>
+              <Body colors={colors}>{photos[currentPhotoIndex].caption}</Body>
             </>
           )}
         </Grid>
         <ButtonContainer display={displayButton}>
-            <StyledButton onClick={handlePreviousPhoto} >
-              Poprzednie
-            </StyledButton>
-            <StyledButton onClick={handleNextPhoto}>
-              Następne
-            </StyledButton>
+          <StyledButton colors={colors} onClick={handlePreviousPhoto} >
+            Poprzednie
+          </StyledButton>
+          <StyledButton colors={colors} onClick={handleNextPhoto}>
+            Następne
+          </StyledButton>
         </ButtonContainer>
       </Grid>
     </CardContent>

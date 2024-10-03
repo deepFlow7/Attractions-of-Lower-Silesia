@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export interface DictionaryContainerProps {
-    second?: boolean;
-  }
+  second?: boolean;
+}
 
 export const DictionaryContainer = styled.div<DictionaryContainerProps>`
   width: 23%;

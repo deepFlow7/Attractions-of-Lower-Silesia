@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { CardContent } from "@mui/material";
-
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import api from '../API/api';
-import Map from "./Map";
-import ChallengeAttractionsList from "./ChallengeAttractionsList";
-import RankingTable from "./Ranking";
 import { useAuth } from "../Providers/AuthContext";
-import { Challenge, ChallengeAttraction } from "../types";
-import { ViewContainer } from '../Styles/View';
-import { MapContainer } from '../Styles/Map';
-import { DictionaryContainer } from '../Styles/Dictionary';
-import { Title, Body } from '../Styles/Typography';
+import { useColors } from '../Providers/Colors';
 import { StyledButton } from '../Styles/Button';
+import { DictionaryContainer } from '../Styles/Dictionary';
+import { MapContainer } from '../Styles/Map';
+import { Body, Title } from '../Styles/Typography';
+import { ViewContainer } from '../Styles/View';
+import { Challenge, ChallengeAttraction } from "../types";
+import ChallengeAttractionsList from "./ChallengeAttractionsList";
+import Map from "./Map";
+import RankingTable from "./Ranking";
 
 function haversineDistanceBetweenPoints(
   lat1: number,
@@ -35,6 +35,7 @@ function haversineDistanceBetweenPoints(
 }
 
 const ChallengeView: React.FC = () => {
+  const { colors } = useColors();
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const { isAuthenticated, user, role } = useAuth();
   const [takesPart, setTakesPart] = useState<boolean>(false);
@@ -46,11 +47,11 @@ const ChallengeView: React.FC = () => {
   >([]);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { id } = useParams();
+  const { challengeId } = useParams();
 
   const getChallengeData = () => {
     api
-      .get(`/api/challenge/${id}`)
+      .get(`/api/challenges/${challengeId}`)
       .then((response) => {
         setChallenge(response.data);
       })
@@ -63,12 +64,12 @@ const ChallengeView: React.FC = () => {
     getChallengeData();
     if (user && role === "user") {
       api
-        .get(`/api/takes_part_in_challenge/${id}/`)
+        .get(`/api/challenges/${challengeId}/userParticipates`)
         .then((response) => {
           setTakesPart(response.data);
           if (response.data) {
             api
-              .get(`/api/challenge/visited_attractions/${id}`)
+              .get(`/api/challenges/${challengeId}/visited`)
               .then((response) => {
                 setVisitedAttractions(response.data);
               })
@@ -81,7 +82,7 @@ const ChallengeView: React.FC = () => {
           console.error("There was an error fetching the data!", error);
         });
     }
-  }, [id, user]);
+  }, [challengeId, user]);
 
   if (!challenge) {
     return <div>Loading...</div>;
@@ -90,7 +91,7 @@ const ChallengeView: React.FC = () => {
   const handleParticipation = () => {
     if (!user || role !== "user") return;
     api
-      .post(`/api/start_challenge/${challenge.id}`)
+      .post(`/api/challenges/${challengeId}/start`)
       .then(() => {
         setTakesPart(true);
         getChallengeData();
@@ -100,7 +101,7 @@ const ChallengeView: React.FC = () => {
         console.error("There was an error starting the challenge:", error);
       });
     api
-      .get(`/api/challenge/visited_attractions/${id}`)
+      .get(`/api/challenges/${challengeId}/visited`)
       .then((response) => {
         setVisitedAttractions(response.data);
       })
@@ -146,7 +147,7 @@ const ChallengeView: React.FC = () => {
 
         api
           .post(
-            `/api/visit_challenge_attraction/${challenge.id}/${attraction.id}/${user.id}`
+            `/api/challenges/${challengeId}/visit/${attraction.id}`
           )
           .then(() => {
             setVisitedAttractions((prev) => [
@@ -170,18 +171,18 @@ const ChallengeView: React.FC = () => {
   };
 
   return (
-    <ViewContainer>
+    <ViewContainer colors={colors} >
       <MapContainer four challenge>
-        <Title>{challenge.name}</Title>
-        <Body margin>{challenge.description}</Body>
+        <Title colors={colors} >{challenge.name}</Title>
+        <Body colors={colors} margin>{challenge.description}</Body>
 
-          <Map
-            x={challenge.coords.x}
-            y={challenge.coords.y}
-            zoom={challenge.zoom}
-            attractions={challenge.attractions}
-          />
-        
+        <Map
+          x={challenge.coords.x}
+          y={challenge.coords.y}
+          zoom={challenge.zoom}
+          attractions={challenge.attractions}
+        />
+
       </MapContainer>
       <DictionaryContainer>
         <CardContent>
@@ -196,10 +197,10 @@ const ChallengeView: React.FC = () => {
       </DictionaryContainer>
       <DictionaryContainer second>
         <CardContent>
-          <Title>Ranking</Title>
-          <RankingTable key={refreshKey} challengeId={id ? parseInt(id) : null} />
+          <Title colors={colors} >Ranking</Title>
+          <RankingTable key={refreshKey} challengeId={challengeId ? parseInt(challengeId) : null} />
           {user && role === "user" && !takesPart && (
-            <StyledButton onClick={handleParticipation}>
+            <StyledButton colors={colors} onClick={handleParticipation}>
               Weź udział
             </StyledButton>
           )}

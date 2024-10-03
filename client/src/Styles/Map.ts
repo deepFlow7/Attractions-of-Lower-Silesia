@@ -52,13 +52,18 @@ export const MapContainer = styled.div<MapContainerProps>`
   }
 
   @media (max-width: 850px) {
-    width: 67%;
+    width: ${props => (props.challenge ? '100%' : '67%')};
+
   }
 
   @media (max-width: 760px) {
     width: ${props => (props.four ? '67%' : '100%')};
+
   }
   @media (max-width: 660px) {
     width:100%;
+  }
+  @media (max-width: 500px) {
+    height: 20rem;
   }
 `;

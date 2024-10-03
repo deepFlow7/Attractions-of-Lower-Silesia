@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
-import background from "/backgrounds/login.png";
-import background2 from "/backgrounds/login2.jpeg";
+import { ContrastProps } from '../Providers/Colors';
 import { sizes } from "./Themes";
 import { bodyMixin } from "./Typography";
+import background from "/backgrounds/login.webp";
+import background2 from "/backgrounds/login2.webp";
 
-export const FormContainer = styled.div`
+export const FormContainer = styled.div<ContrastProps>`
   box-sizing: border-box;
   width: calc(100vw + 5px);
   display: flex;
@@ -14,7 +15,7 @@ export const FormContainer = styled.div`
   position: absolute;
   left: -5px;
   top: ${sizes.navbarHeight};
-  ${bodyMixin}
+  ${({ colors }) => bodyMixin(colors)} 
   padding: 1rem;
   min-height: calc(100vh - ${sizes.navbarHeight});
   display: flex; /* Ustawienie flexboxa */
@@ -28,7 +29,7 @@ export const FormContainer = styled.div`
   @media (min-width: 1450px) {
     background-image: url(${background2}); /* Zmiana tła powyżej 1300px szerokości */
   }
-  @media (max-width: 800px) {
+  @media (max-width: 1000px) {
     background-image: url(${background}); /* Ustawienie tła */
     background-size: cover; /* Dopasowanie tła do rozmiaru kontenera */
     background-position: center; /* Wyśrodkowanie tła */
@@ -41,6 +42,11 @@ export const FormContent = styled.div`
 
   @media (max-width: 700px) {
     width: 26rem;
+    margin-top: -6%;
+
+  }
+  @media (max-width: 450px) {
+    width: 90%;
     margin-top: -6%;
 
   }

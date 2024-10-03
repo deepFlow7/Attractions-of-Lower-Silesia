@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Providers/AuthContext';
-import StyledTextField from '../Styles/TextField';
-import { InputContainer } from '../Styles/TextField';
-import { StyledButton} from '../Styles/Button';
-import { Title } from '../Styles/Typography';
-import styled from '@emotion/styled';
+import { useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
 import { FormContainer, FormContent } from '../Styles/Form';
-import { colors, sizes } from '../Styles/Themes';
+import StyledTextField, { InputContainer } from '../Styles/TextField';
+import { sizes } from '../Styles/Themes';
+import { Title } from '../Styles/Typography';
+
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { colors } = useColors();
   const returnUrl = (location.state as { returnUrl?: string })?.returnUrl;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,11 +51,11 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <FormContainer>
+    <FormContainer colors={colors}>
       <FormContent>
-      <Title>Logowanie</Title>
+        <Title colors={colors}>Logowanie</Title>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField colors={colors}
             fullWidth
             label="Login"
             value={username}
@@ -64,7 +64,7 @@ const LoginForm: React.FC = () => {
           />
         </InputContainer>
         <InputContainer>
-          <StyledTextField
+          <StyledTextField colors={colors}
             fullWidth
             label="Hasło"
             type="password"
@@ -75,21 +75,21 @@ const LoginForm: React.FC = () => {
           />
         </InputContainer>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <StyledButton onClick={handleSubmit} fullWidth>
+        <StyledButton colors={colors} onClick={handleSubmit} fullWidth>
           Zaloguj się
         </StyledButton>
         <Button
-  component={Link}
-  to="/signup"
-  style={{
-    color: colors.tertiary,
-    fontFamily: "'Englebert', sans-serif",
-    textDecoration: 'none',
-    fontSize: sizes.fontSize,
-  }}
->
-  Zarejestruj
-</Button>
+          component={Link}
+          to="/signup"
+          style={{
+            color: colors.tertiary as string,
+            fontFamily: "'Englebert', sans-serif",
+            textDecoration: 'none',
+            fontSize: sizes.fontSize,
+          }}
+        >
+          Zarejestruj
+        </Button>
 
       </FormContent>
     </FormContainer>

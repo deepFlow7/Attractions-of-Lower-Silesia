@@ -29,6 +29,7 @@ export const FilterContainer = styled.div<FilterContainerProps>`
   }
   @media (max-width: 500px) {
     width: 100%;
+    height: 20rem;
   }
 `;
 

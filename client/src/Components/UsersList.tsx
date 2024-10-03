@@ -1,12 +1,13 @@
-import React from "react";
 import styled from "@emotion/styled";
-import { List, ListItem, ListItemText, Typography, Button } from "@mui/material";
+import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import React from "react";
 
-import { UserWithLogin } from "../types";
 import { useAuth } from "../Providers/AuthContext";
-import { Title, bodyMixin } from "../Styles/Typography";
-import { shadows, colors } from "../Styles/Themes";
+import { ContrastProps, useColors } from '../Providers/Colors';
 import { StyledButton } from "../Styles/Button";
+import { shadows } from "../Styles/Themes";
+import { Title, bodyMixin } from "../Styles/Typography";
+import { UserWithLogin } from "../types";
 
 interface UsersListProps {
   users: UserWithLogin[];
@@ -26,9 +27,9 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const StyledPrimaryTypography = styled(Typography)`
-  ${bodyMixin}
-  color: ${colors.gray};
+const StyledPrimaryTypography = styled(Typography) <ContrastProps>`
+   ${({ colors }) => bodyMixin(colors)} 
+  color: ${props => props.colors.gray};
 `;
 
 const StyledSecondaryTypography = styled.span`
@@ -46,15 +47,16 @@ const UsersList: React.FC<UsersListProps> = ({
   const isUserBlocked = (id: number) => {
     return blockedUsers?.includes(id);
   };
+  const { colors } = useColors();
 
   return (
     <StyledList>
-      <Title>Użytkownicy</Title>
+      <Title colors={colors}>Użytkownicy</Title>
       {users.map((user, index) => (
         <StyledListItem key={index}>
           <ListItemText
             primary={
-              <StyledPrimaryTypography>
+              <StyledPrimaryTypography colors={colors}>
                 {`${user.name} ${user.surname}`}
               </StyledPrimaryTypography>
             }
@@ -65,8 +67,9 @@ const UsersList: React.FC<UsersListProps> = ({
             }
           />
           {isAuthenticated && role === "admin" && isManaging && (
-            <StyledButton
-              color={isUserBlocked(user.id) ? "secondary" : "primary"}
+            <StyledButton colors={colors}
+              highlight={isUserBlocked(user.id)}
+              secondary={isUserBlocked(user.id)}
               onClick={() => changeUserBlock?.(user.id)}
             >
               {isUserBlocked(user.id) ? "Odblokuj" : "Zablokuj"}

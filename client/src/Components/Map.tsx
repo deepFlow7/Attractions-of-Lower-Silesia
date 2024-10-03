@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useColors } from '../Providers/Colors';
 import { Attraction, possibleSubtypes, Subtypes } from '../types';
-import { colors } from '../Styles/Themes';
 
 interface MapProps {
   x: number;
@@ -46,6 +45,7 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const [markerInstance, setMarkerInstance] = useState<L.Marker | null>(null);
+  const { colors } = useColors();
 
   useEffect(() => {
     if (mapContainer.current && !mapInstance.current) {
@@ -95,22 +95,22 @@ const Map = forwardRef<MapRef, MapProps>(({ x, y, zoom = 13, path, attractions, 
         marker.bindPopup(link).closePopup();
       });
 
-      
+
       const zoomLevel = mapInstance.current!.getZoom();
       const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
       if (mapContainer.current) {
-          $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
+        $('#' + mapContainer.current.id + ' .ikona').css({ 'width': newZoomSize, 'height': newZoomSize });
       }
 
       if (path) {
-        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), {color:colors.secondary}).addTo(mapInstance.current!);
+        L.polyline(attractions.map(attraction => [attraction.coords.x, attraction.coords.y]), { color: colors.secondary as string }).addTo(mapInstance.current!);
       }
 
       mapInstance.current.on('zoomend', () => {
         const zoomLevel = mapInstance.current!.getZoom();
         const newZoomSize = `${7 / 2 * (zoomLevel - 1)}px`;
         if (mapContainer.current) {
-            $('#'+mapContainer.current.id+' .ikona').css({'width':newZoomSize,'height':newZoomSize}); 
+          $('#' + mapContainer.current.id + ' .ikona').css({ 'width': newZoomSize, 'height': newZoomSize });
         }
       });
     }

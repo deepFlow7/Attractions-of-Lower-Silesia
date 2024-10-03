@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Grid, Button, Card, CardContent, Typography, Rating } from '@mui/material';
+import { Card, CardContent, Rating } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import api from '../API/api';
+import { useAuth } from '../Providers/AuthContext';
+import { ContrastProps, useColors } from '../Providers/Colors';
+import { StyledButton } from '../Styles/Button';
+import { shadows } from '../Styles/Themes';
 import { Title } from '../Styles/Typography';
+import { AttractionContainer } from '../Styles/View';
+import { AttractionWithComments, Comment } from '../types';
+import AttractionInfo from './AttractionInfo';
 import Comments from './Comments';
 import Photos from './Photos';
-import AttractionInfo from './AttractionInfo';
-import { useAuth } from '../Providers/AuthContext';
-import api from '../API/api';
-import { AttractionWithComments, Comment } from '../types';
-import { colors, shadows } from '../Styles/Themes';
-import {AttractionContainer } from '../Styles/View';
-import { StyledButton } from '../Styles/Button';
 
-export const PhotoContainer = styled.div`
-  background-color: ${colors.primary};
+export const PhotoContainer = styled.div<ContrastProps>`
+  background-color: ${props => props.colors.primary}; 
   box-shadow: ${shadows.default};
   align-self: start;
 `;
@@ -26,8 +27,8 @@ export const InfoContainer = styled.div`
   gap: 1rem;
 `;
 
-const TileCard = styled(Card)`
-background-color: ${colors.primary};
+const TileCard = styled(Card) <ContrastProps>`
+background-color: ${props => props.colors.primary};
 `;
 
 
@@ -37,13 +38,14 @@ const AttractionView: React.FC = () => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [savedUserRating, setSavedUserRating] = useState(0);
-  const { user, isBlocked, role, isAuthenticated } = useAuth();
+  const { isBlocked, role, isAuthenticated } = useAuth();
   const [refreshKey, setRefreshKey] = useState(1);
-  const { id } = useParams();
+  const { attractionId } = useParams();
+  const { colors } = useColors();
 
   useEffect(() => {
     if (isAuthenticated && role === 'user') {
-      api.get(`/api/attraction/is_favourite/${id}/user`)
+      api.get(`/api/attractions/${attractionId}/isFavourite`)
         .then(response => {
           setIsFavourite(response.data.favourite);
         })
@@ -51,15 +53,15 @@ const AttractionView: React.FC = () => {
           console.error('There was an error fetching the data!', error);
         });
 
-      api.get(`/api/attraction/is_to_visit/${id}`)
+      api.get(`/api/attractions/${attractionId}/toVisit`)
         .then(response => {
-          setToVisit(response.data.to_visit);
+          setToVisit(response.data.toVisit);
         })
         .catch(error => {
           console.error('There was an error fetching the data!', error);
         });
 
-      api.get(`/api/attraction/rating/${id}`)
+      api.get(`/api/attractions/${attractionId}/rating`)
         .then(response => {
           setUserRating(response.data.rating);
           setSavedUserRating(response.data.rating);
@@ -69,18 +71,18 @@ const AttractionView: React.FC = () => {
         });
     }
 
-    api.get(`/api/attraction/${id}`)
+    api.get(`/api/attractions/${attractionId}`)
       .then(response => {
         setAttractionInfo(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the data!', error);
       });
-  }, [id]);
+  }, [attractionId]);
 
   const handleFavouriteToggle = async () => {
     try {
-      await api.post('/api/changeFavourites', { userId: user?.id, attractionId: id });
+      await api.post(`/api/attractions/${attractionId}/changeFavourite`);
       setIsFavourite(prev => !prev);
     } catch (error) {
       console.error('Error updating favourite status:', error);
@@ -89,10 +91,10 @@ const AttractionView: React.FC = () => {
 
   const handleToVisitToggle = async () => {
     try {
-      await api.post('/api/changeWantsToVisit', { userId: user?.id, attractionId: id });
+      await api.post(`/api/attractions/${attractionId}/changeToVisit`);
       setToVisit(prev => !prev);
     } catch (error) {
-      console.error('Error updating to_visit status:', error);
+      console.error('Error updating to visit status:', error);
     }
   };
 
@@ -116,9 +118,9 @@ const AttractionView: React.FC = () => {
     if (newRating) {
       try {
         setUserRating(newRating);
-        await api.post('/api/changeRating', { userId: user?.id, attractionId: id, rating: newRating });
+        await api.post(`/api/attractions/${attractionId}/changeRating`, { newRating });
 
-        await api.get('/api/attraction/rating/' + id)
+        await api.get(`/api/attractions/${attractionId}/rating/`)
           .then(response => {
             setAttractionInfo(prevInfo => ({
               ...prevInfo!,
@@ -136,6 +138,72 @@ const AttractionView: React.FC = () => {
     }
   };
 
+  const onApprove = async (commentId: number) => {
+    try {
+      await api.post(`/api/comments/${commentId}/approve`);
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+
+        const updatedComments = prevState.comments.map(comment =>
+          comment.id === commentId
+            ? { ...comment, approval_status: 'approve' }
+            : comment
+        );
+
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error approving comment:', error);
+    }
+  };
+
+  const onDisapprove = async (commentId: number) => {
+    try {
+      await api.post(`/api/comments/${commentId}/disapprove`);
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+
+        const updatedComments = prevState.comments.map(comment =>
+          comment.id === commentId
+            ? { ...comment, approval_status: 'disapprove' }
+            : comment
+        );
+
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error disapproving comment:', error);
+    }
+  };
+
+  const onApprovalRemove = async (commentId: number) => {
+    try {
+      await api.post(`/api/comments/${commentId}/removeApproval`);
+      setAttractionInfo(prevState => {
+        if (!prevState) return null;
+
+        const updatedComments = prevState.comments.map(comment =>
+          comment.id === commentId
+            ? { ...comment, approval_status: null }
+            : comment
+        );
+
+        return {
+          attraction: prevState.attraction,
+          comments: updatedComments
+        };
+      });
+    } catch (error) {
+      console.error('Error removing approval:', error);
+    }
+  };
+
   if (!attractionInfo) {
     return <div>Loading...</div>;
   }
@@ -144,22 +212,22 @@ const AttractionView: React.FC = () => {
   const { name, photos } = attraction;
 
   return (
-    <AttractionContainer>
-      <PhotoContainer>
-        <Photos photos={photos} title={name} displayButton={photos.length > 1}/>
+    <AttractionContainer colors={colors}>
+      <PhotoContainer colors={colors}>
+        <Photos photos={photos} title={name} displayButton={photos.length > 1} />
       </PhotoContainer>
       <InfoContainer>
         {isAuthenticated && role === 'user' && (
           <>
-            <StyledButton
-             background={true}
-             
+            <StyledButton colors={colors}
+              background={true}
+
               onClick={handleFavouriteToggle}
             >
               {isFavourite ? 'Ulubione' : 'Dodaj do ulubionych'}
             </StyledButton>
-            <StyledButton
-             background={true}
+            <StyledButton colors={colors}
+              background={true}
               onClick={handleToVisitToggle}
             >
               {toVisit ? 'Do odwiedzenia' : 'Dodaj na listę do odwiedzenia'}
@@ -168,9 +236,9 @@ const AttractionView: React.FC = () => {
         )}
         <AttractionInfo attraction={attraction} />
         {isAuthenticated && role === 'user' && (
-          <TileCard>
+          <TileCard colors={colors}>
             <CardContent>
-              <Title>
+              <Title colors={colors}>
                 Twoja ocena
               </Title>
               <Rating
@@ -183,7 +251,14 @@ const AttractionView: React.FC = () => {
             </CardContent>
           </TileCard>
         )}
-          <Comments comments={comments} attractionId={attraction.id} addComment={addComment} />
+        <Comments
+          comments={comments}
+          attractionId={attraction.id}
+          addComment={addComment}
+          onApprove={onApprove}
+          onDisapprove={onDisapprove}
+          onApprovalRemove={onApprovalRemove}
+        />
       </InfoContainer>
     </AttractionContainer>
   );
