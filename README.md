@@ -11,5 +11,5 @@
 Discover Lower Silesia with ease using our web app! Browse interesting attractions, save your favorites, and participate in exciting tourist challenges. Find your next great experience in Lower Silesia!
 
 ## Link to Google Cloud Application
-[Uncover the Best of Lower Silesia](https://atrakcje-dolnego-slaska.uc.r.appspot.com)
-
+~~[Uncover the Best of Lower Silesia](https://atrakcje-dolnego-slaska.uc.r.appspot.com)~~
+No longer maintained
